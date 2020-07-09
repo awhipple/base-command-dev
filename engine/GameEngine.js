@@ -20,7 +20,7 @@ export default class GameEngine {
   eventTimers = {};
 
   constructor(options = {}) {
-    this.window = new GameWindow(this, "gameCanvas", this.gameObjects.all);
+    this.window = new GameWindow(this, "gameCanvas", this.gameObjects.all, options);
     this.images.preload("fullscreen");
 
     this.dev = window.location.href.indexOf("localhost") !== -1;
