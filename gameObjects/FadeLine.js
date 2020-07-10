@@ -1,12 +1,11 @@
-import GameObject from "../engine/objects/GameObject.js";
-
 export default class FadeLine {
   z = 4;
   alpha = 0.5;
   
-  constructor(engine, line) {
+  constructor(engine, line, color = "white") {
     this.engine = engine;
     this.line = line;
+    this.color = color;
   }
 
   update() {
@@ -21,7 +20,7 @@ export default class FadeLine {
     ctx.globalAlpha = this.alpha;
     ctx.beginPath();
     ctx.lineWidth = 5;
-    ctx.strokeStyle = "#0f0";
+    ctx.strokeStyle = this.color;
     ctx.moveTo(this.line.x1, this.line.y1);
     ctx.lineTo(this.line.x2, this.line.y2);
     ctx.stroke();

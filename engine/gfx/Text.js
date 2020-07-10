@@ -6,7 +6,6 @@ export default class Text {
   alpha = 1;
 
   constructor(str, x, y, options = {}) {
-    this.str = str;
     this.x = x;
     this.y = y;
     this.center = options.center;
@@ -18,6 +17,7 @@ export default class Text {
     this.fontColor = options.fontColor ?? "#000";
 
     this._updateStyle();
+    this.setText(str);
   }
 
   draw(ctx) {
@@ -40,6 +40,11 @@ export default class Text {
     this._singleton.center = options.center ?? false;
     this._singleton._updateStyle();
     this._singleton.draw(ctx);
+  }
+
+  getWidth(ctx) {
+    ctx.font = this.style;
+    return ctx.measureText(this.str).width;
   }
 
   setText(str) {

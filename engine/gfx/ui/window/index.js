@@ -11,22 +11,32 @@ export default class UIWindow extends GameObject {
     this.ui = ui;
 
     this.z = options.z ?? 100;
+    this.bgColor = options.bgColor;
     this.outerPadding = options.outerPadding ?? 10;
     this.innerPadding = options.innerPadding ?? options.padding ?? 15;
     
     this.scrollSpeed = options.scrollSpeed ?? 30;
+
+    this._generateComponents();
+  }
+
+  update() {
+    this.components.forEach(component => {
+      component.update?.();
+    });
   }
 
   draw(ctx) {
     ctx.save();
 
-    if ( !this.components ) {
-      this._generateComponents();
+    super.draw(ctx, this.engine, this.bgColor ?? "#fff");
+
+    if ( this.bgColor ) {
+      this.ctx.fillStyle = this.bgColor;
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    } else {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-
-    super.draw(ctx, this.engine, "#fff");
-
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     var currentY = this.innerPadding;
     this.components.forEach(component => {
       var img = component.getDisplayImage();
@@ -50,7 +60,7 @@ export default class UIWindow extends GameObject {
   }
 
   onMouseClick(event) {
-    this._triggerEventInComponent(event, "onMouseClick");
+    this._triggerEventInComponents(event, "onMouseClick");
   }
 
   onMouseWheel(event) {
@@ -67,7 +77,7 @@ export default class UIWindow extends GameObject {
   }
 
   onMouseMove(event) {
-    this._triggerEventInComponent(event, "onMouseMove");
+    this._triggerEventInComponents(event, "onMouseMove");
   }
 
   get x() {
@@ -113,28 +123,16 @@ export default class UIWindow extends GameObject {
     this.maxScroll = Math.max(0, this.canvas.height - this.rect.h + this.outerPadding * 2);
   }
 
-  _triggerEventInComponent(event, type) {
+  _triggerEventInComponents(event, type) {
     var totalPadding = this.outerPadding + this.innerPadding;
 
-    if ( event.relPos.x < totalPadding || event.relPos > this.rect.w - totalPadding) {
-      return;
-    }
-
-    var comY = event.relPos.y + this.scroll - totalPadding;
+    event.pos = { x: event.relPos.x - totalPadding, y: event.relPos.y + this.scroll - totalPadding };
+    delete event.relPos;
     for ( var i = 0; i < this.componentHeightMap.length; i++ ) {
-      if ( comY < 0 ) {
-        return;
+      if ( typeof this.componentHeightMap[i][1][type] === "function") {
+        this.componentHeightMap[i][1][type](event);
       }
-      comY -= this.componentHeightMap[i][0];
-      if ( comY < 0 ) {
-        if ( typeof this.componentHeightMap[i][1][type] === "function") {
-          event.pos = { x: event.relPos.x - totalPadding, y: comY + this.componentHeightMap[i][0] };
-          delete event.relPos;
-          this.componentHeightMap[i][1][type](event);
-        }
-        return;
-      }
-      comY -= this.innerPadding;
+      event.pos.y -= this.componentHeightMap[i][0] + this.innerPadding;
     }
   }
 }

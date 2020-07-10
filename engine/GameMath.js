@@ -101,6 +101,10 @@ export class BoundingRect {
   }
 
   contains(x, y) {
+    if ( x instanceof Coord || typeof x === "object" ) {
+      y = x.y;
+      x = x.x;
+    }
     return (
       x >= this.x && x < this.x + this.w &&
       y >= this.y && y < this.y + this.h

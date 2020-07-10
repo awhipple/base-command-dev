@@ -88,6 +88,10 @@ export default class GameEngine {
       return;
     }
 
+    if ( object.on === undefined ) {
+      object.on = true;
+    }
+
     this.gameObjects.all.push(object);
 
     // Store in its own collection if requested
@@ -101,16 +105,23 @@ export default class GameEngine {
   }
 
   unregister(object) {
-    var objectIndex = this.gameObjects.all.indexOf(object);
-    if ( objectIndex !== -1 ) {
-      this.gameObjects.all.splice(objectIndex, 1);
-    }
+    if ( typeof object === "string" ) {
+      for ( var key in this.gameObjects[object]) {
+        var obj = this.gameObjects[object][key];
+        this.unregister(obj);
+      }
+    } else {
+      var objectIndex = this.gameObjects.all.indexOf(object);
+      if ( objectIndex !== -1 ) {
+        this.gameObjects.all.splice(objectIndex, 1);
+      }
 
-    var keys = Object.keys(this.gameObjects);
-    for ( var i = 0; i < keys.length; i++) {
-      if ( keys[i] !== "all" ) {
-        if ( this.gameObjects[keys[i]][object._hash] ) {
-          delete this.gameObjects[keys[i]][object._hash];
+      var keys = Object.keys(this.gameObjects);
+      for ( var i = 0; i < keys.length; i++) {
+        if ( keys[i] !== "all" ) {
+          if ( this.gameObjects[keys[i]][object._hash] ) {
+            delete this.gameObjects[keys[i]][object._hash];
+          }
         }
       }
     }
@@ -139,11 +150,9 @@ export default class GameEngine {
   }
 
   update() {
-    for ( var i = 0; i < this.gameObjects.all.length; i++ ) {
-      if ( this.gameObjects.all[i].update ) {
-        this.gameObjects.all[i].update(this);
-      }
-    }
+    this.gameObjects.all.forEach(obj => {
+      obj.on && obj.update?.(this);
+    });
   
     var pressedKeys = Object.keys(this.pressedKeys);
     for( var i = 0; i < this.keyDownCallbacks.length; i++ ) {
@@ -163,7 +172,7 @@ export default class GameEngine {
 
     // Game Object rectangle collision callbacks
     this.gameObjects.all.forEach(obj => {
-      if ( obj.collisionCallbacks ) {
+      if ( obj.on && obj.collisionCallbacks ) {
         for ( var key in obj.collisionCallbacks ) {
           for ( var targetKey in this.gameObjects[key] ?? {} ) {
             var target = this.gameObjects[key][targetKey];
@@ -176,7 +185,12 @@ export default class GameEngine {
           };
         }
       }
-    })
+    });
+
+    if ( this.cursor !== this.window.canvas.style.cursor ) {
+      this.window.canvas.style.cursor = this.cursor;
+    }
+    this.cursor = '';
   }
 
   load() {

@@ -8,6 +8,7 @@ export default class Base extends GameObject {
   fireRate = 0.5;
   fireIn = this.fireRate;
   firePos = new Coord(0, 0);
+  on = false;
 
   constructor(engine) {
     super(engine, {
@@ -26,7 +27,7 @@ export default class Base extends GameObject {
     if ( this.fireIn < 0 ) {
       this.fireIn += this.fireRate;
 
-      this.engine.sounds.play("shot", {volume: 0.2});
+      this.engine.sounds.play("shot", {volume: 0.5});
       setTimeout(() => 
         this.engine.register(new Projectile(this.engine, this.firePos.x, this.firePos.y, this.sprite.rad, 300), "projectile"),
       150);

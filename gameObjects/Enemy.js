@@ -21,9 +21,7 @@ export default class Enemy extends GameObject {
   damage(dmg) {
     this.hp -= dmg;
     if ( this.hp <= 0 ) {
-      for ( var i = 0; i < this.cash; i++ ) {
-        this.engine.register(new Cash(this.engine, this.x, this.y));
-      }
+      this._createCash();
       this.engine.sounds.play("spark");
       this.engine.unregister(this);
     }
@@ -32,10 +30,35 @@ export default class Enemy extends GameObject {
   update() {
     this.x += this.xv;
     this.y += this.yv;
+
+    if ( this.rect.y + this.rect.h > this.engine.window.height - 100 ) {
+      this.engine.sounds.play("explosion");
+      this.engine.trigger("enemyCollide");
+    }
   }
 
   draw(ctx) {
     this.rect.draw(ctx);
     Text.draw(ctx, this.hp, this.x, this.y - 25, {center: true, fontColor: "#fff", fontSize: 40})
+  }
+
+  _createCash() {
+    var color = "yellow", amount = 100;
+    while ( this.cash > 0 ) {
+      if ( this.cash < 100 ) {
+        color = "red";
+        amount = 25;
+      }
+      if ( this.cash < 25 ) {
+        color = "blue";
+        amount = 5;
+      }
+      if ( this.cash < 5 ) {
+        color = "green";
+        amount = 1;
+      }
+      this.engine.register(new Cash(this.engine, this.x, this.y, amount, color), "cash");
+      this.cash -= amount;
+    }
   }
 }

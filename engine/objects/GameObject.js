@@ -1,6 +1,7 @@
 import { BoundingRect, Coord } from "../GameMath.js";
 
 export default class GameObject {
+  on = true;
   collisionCallbacks = {};
 
   constructor(engine, shape = {}) {

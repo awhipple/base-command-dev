@@ -9,7 +9,11 @@ export default class Title extends UIComponent{
 
     this.icon = options.icon;
 
-    this.text = new Text(options.text ?? '', 0, 0, options);
+    this.text = new Text(
+      options.text ?? '', 
+      options.center ? suggestedWidth/2 : 0, 0, 
+      options
+    );
 
     if ( this.icon ) {
       this.text.x += this.text.fontSize + 10;

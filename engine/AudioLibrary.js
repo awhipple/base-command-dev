@@ -54,7 +54,7 @@ class Sound {
 
   play(options = {}) {
     if ( options.loop ) {
-      this.playLoop();
+      this.playLoop(options);
       return;
     } 
 
@@ -69,11 +69,12 @@ class Sound {
     channel.play();
   }
 
-  playLoop() {
+  playLoop(options = {}) {
     if ( !this.loopAudio ) {
       this.loopAudio = this.channels[0].cloneNode();
       this.loopAudio.loop = true;
     }
+    this.loopAudio.volume = options.volume ?? 1;
     this.loopAudio.play();
   }
 

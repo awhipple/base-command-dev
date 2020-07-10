@@ -5,15 +5,17 @@ import FadeLine from "./FadeLine.js";
 export default class Cash extends GameObject {
   z = 3;
 
-  value = 1;
   maxSpeed = 300;
   accel = 5;
 
   color = "#5b5";
   hideBorder = true;
 
-  constructor(engine, x, y) {
+  constructor(engine, x, y, value = 1, color = "green") {
     super(engine, {x: x, y: y, radius: 3});
+
+    this.value = value;
+    this.color = color;
 
     this.dir = Math.random()*Math.PI*2;
     this.speed = Math.random()*200+100;
@@ -39,13 +41,13 @@ export default class Cash extends GameObject {
     this.engine.register(new FadeLine(this.engine, {
       x1: oldX, y1: oldY,
       x2: this.x, y2: this.y,
-    }));
+    }, this.color));
 
     this.dir = slideDirectionTowards(this.dir, getDirectionFrom(this.pos, this.base.pos), 1/20);
   }
 
   _collect() {
-    if ( this.pos.distanceToLessThan(this.base.pos, 50) || this.offScreen()) {
+    if ( this.pos.distanceToLessThan(this.base.pos, 50) || this.y > this.engine.window.height) {
       this.engine.globals.cash += this.value;
       this.engine.unregister(this);
     }
