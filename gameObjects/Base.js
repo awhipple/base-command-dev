@@ -5,7 +5,7 @@ import Projectile from "./Projectile.js";
 
 export default class Base extends GameObject {
   z = 5;
-  fireRate = 1;
+  fireRate = 0.5;
   fireIn = this.fireRate;
   firePos = new Coord(0, 0);
 
