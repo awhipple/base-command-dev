@@ -1,5 +1,9 @@
 import GameEngine from "./engine/GameEngine.js";
 import Base from "./gameObjects/Base.js";
+import Enemy from "./gameObjects/Enemy.js";
+import Spawner from "./gameObjects/Spawner.js";
+import Text from "./engine/gfx/Text.js";
+import GameUI from "./gameObjects/GameUI.js";
 
 export default class Game {
   constructor() {
@@ -16,14 +20,17 @@ export default class Game {
 
   start() {
     this.engine.images.preload("base");
+    this.engine.globals.cash = 0;
 
     this.engine.load().then(() => {
-      this.base = new Base(engine);
-      this.engine.register(this.base);
-
+      this.engine.register(this.engine.globals.base = new Base(engine), "base");
       this.engine.onMouseMove(event => {
-        this.base.pointTo(event.pos);
+        this.engine.globals.base.pointTo(event.pos);
       });
+      
+      this.engine.register(new Spawner(this.engine));
+
+      this.engine.register(new GameUI(this.engine));
     });
   }
 }

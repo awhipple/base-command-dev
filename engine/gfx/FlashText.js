@@ -6,7 +6,7 @@ export default class FlashText extends Text {
   z = 100;
   
   constructor(engine) {
-    super('YOLO', engine.window.width/2, 20, {fontColor: "#a33", center: true});
+    super('', engine.window.width/2, 20, {fontColor: "#a33", center: true});
   }
 
   show(str) {

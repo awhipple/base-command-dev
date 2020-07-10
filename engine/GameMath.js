@@ -106,6 +106,23 @@ export class BoundingRect {
       y >= this.y && y < this.y + this.h
     );
   }
+
+  overlaps(other) {
+    return (
+      this.x < other.x + other.w &&
+      this.x + this.w > other.x &&
+      this.y < other.y + other.h &&
+      this.y + this.h > other.y
+    );
+  }
+
+  draw(ctx) {
+    ctx.save();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#fff";
+    ctx.strokeRect(this.x, this.y, this.w, this.h);
+    ctx.restore();
+  }
 }
 
 export function getDirectionFrom(pointA, pointB) {
@@ -117,6 +134,29 @@ export function getDirectionFrom(pointA, pointB) {
     direction += Math.PI * 2;
   }
   return direction;
+}
+
+export function slideDirectionTowards(dir, target, amount=1/60) {
+  if ( dir === target ) {
+    return dir;
+  }
+  
+  dir = normalizeRad(dir);
+  target = normalizeRad(target);
+  
+  var distance = target > dir ?
+    target - dir :
+    2*Math.PI - dir + target;
+
+  if ( distance < amount || 2*Math.PI - distance < amount ) {
+    return target;
+  }
+
+  return normalizeRad(distance < Math.PI ? dir + amount : dir - amount);
+}
+
+export function normalizeRad(rad) {
+  return (rad < 0 ? 2*Math.PI : 0) + rad % (2*Math.PI);
 }
 
 export const numRotationsMap = {

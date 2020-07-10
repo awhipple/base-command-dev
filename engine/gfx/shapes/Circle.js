@@ -1,10 +1,13 @@
+import { Coord } from "../../GameMath.js";
+
 export default class Circle {
+  static _singleton = new Circle(new Coord(0, 0), 0);
   arc = 1;
   
   constructor(pos, radius, options = {}) {
     this.pos = pos;
     this.radius = radius;
-    
+
     this.color = options.color ?? "#000";
     this.alpha = options.alpha ?? 1;
     this.border = options.border ?? true;
@@ -38,5 +41,15 @@ export default class Circle {
     }
 
     ctx.restore();
+  }
+
+  static draw(ctx, x, y, radius, options = {}) {
+    this._singleton.pos.x = x;
+    this._singleton.pos.y = y;
+    this._singleton.radius = radius;
+
+    this._singleton.color = options.color ?? "#fff";
+
+    this._singleton.draw(ctx);
   }
 }

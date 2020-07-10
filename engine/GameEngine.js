@@ -6,6 +6,7 @@ import Button from './objects/Button.js';
 import FullscreenSplash from './objects/FullScreenSplash.js';
 import AudioLibrary from './AudioLibrary.js';
 import FlashText from './gfx/FlashText.js';
+import Enemy from '../gameObjects/Enemy.js';
 
 export default class GameEngine {
   images = new ImageLibrary();
@@ -138,14 +139,14 @@ export default class GameEngine {
   }
 
   update() {
-    for(var i = 0; i < this.gameObjects.all.length; i++) {
+    for ( var i = 0; i < this.gameObjects.all.length; i++ ) {
       if ( this.gameObjects.all[i].update ) {
         this.gameObjects.all[i].update(this);
       }
     }
   
     var pressedKeys = Object.keys(this.pressedKeys);
-    for(var i = 0; i < this.keyDownCallbacks.length; i++) {
+    for( var i = 0; i < this.keyDownCallbacks.length; i++ ) {
       for(var k = 0; k < pressedKeys.length; k++) {
         this.keyDownCallbacks[i]({key: pressedKeys[k]});
       }
@@ -155,9 +156,27 @@ export default class GameEngine {
       this.eventTimers[key] -= 1/60;
     }
 
+    // Developer provided game loop
     if ( this.gameLoop ) {
       this.gameLoop();
     }
+
+    // Game Object rectangle collision callbacks
+    this.gameObjects.all.forEach(obj => {
+      if ( obj.collisionCallbacks ) {
+        for ( var key in obj.collisionCallbacks ) {
+          for ( var targetKey in this.gameObjects[key] ?? {} ) {
+            var target = this.gameObjects[key][targetKey];
+            if ( target.rect && obj.rect.overlaps(target.rect) ) {
+              obj.collisionCallbacks[key](target);
+              if( this.gameObjects.all.indexOf(obj) === -1 ) {
+                break;
+              }
+            }
+          };
+        }
+      }
+    })
   }
 
   load() {
@@ -239,6 +258,16 @@ export default class GameEngine {
       this.eventTimers[key] += 1;
       callback();
     }
+  }
+
+  // A hack to stop the engine for debugging
+  stopUntilClick() {
+    this.nextTick = (new Date()).getTime() + 24 * 60 * 60 * 1000;
+    this.onMouseDown(() => {
+      if ( this.nextTick - (new Date()).getTime() > 1000 ) {
+        this.nextTick = (new Date()).getTime();
+      }
+    });
   }
 
   _keyEvent(event) {

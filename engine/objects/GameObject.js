@@ -1,6 +1,8 @@
 import { BoundingRect, Coord } from "../GameMath.js";
 
 export default class GameObject {
+  collisionCallbacks = {};
+
   constructor(engine, shape = {}) {
     this.engine = engine;
     
@@ -24,6 +26,19 @@ export default class GameObject {
     this.screenRect = this._cam ? this._cam.getScreenRect(this.rect) : this.rect;
   }
 
+  offScreen(by = 0) {
+    return (
+      this.rect.x + this.rect.w < -by ||
+      this.rect.y + this.rect.h < -by ||
+      this.rect.x > this.engine.window.width + by ||
+      this.rect.y > this.engine.window.height + by
+    );
+  }
+
+  onCollision(callback, target = "all") {
+    this.collisionCallbacks[target] = callback;
+  }
+    
   draw(ctx, engine, color = "#00f") {
     ctx.save();
     ctx.fillStyle = color;
