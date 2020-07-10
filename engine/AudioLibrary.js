@@ -25,14 +25,18 @@ export default class AudioLibrary {
     if ( typeof sounds === "string" ) {
       sounds = [ sounds ];
     }
-
     sounds.forEach(sound => {
       this._loadSound(sound);
     });
   }
 
-  _loadSound(name) {
-    var sound =  new Sound(this.root + name + ".mp3");
+  _loadSound(path) {
+    if ( path.indexOf('.') === -1 ) {
+      path += ".ogg";
+    }
+    var [name, ext] = path.split('.');
+    
+    var sound = new Sound(this.root + name + "." + ext);
     return this.sounds[name] = sound;
   }
 
@@ -60,7 +64,9 @@ class Sound {
       this._addChannel();
     }
 
-    this.channels[this.channelPointer].play();
+    var channel = this.channels[this.channelPointer];
+    channel.volume = options.volume ?? 1;
+    channel.play();
   }
 
   playLoop() {

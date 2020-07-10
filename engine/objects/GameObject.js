@@ -41,11 +41,13 @@ export default class GameObject {
     
   draw(ctx, engine, color = "#00f") {
     ctx.save();
-    ctx.fillStyle = color;
+    ctx.fillStyle = this.color ?? color;
     ctx.fillRect(this.screenRect.x, this.screenRect.y, this.screenRect.w, this.screenRect.h);
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 3;
-    ctx.strokeRect(this.screenRect.x, this.screenRect.y, this.screenRect.w, this.screenRect.h);
+    if ( !this.hideBorder ) {
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(this.screenRect.x, this.screenRect.y, this.screenRect.w, this.screenRect.h);
+    }
     ctx.restore();
   }
 

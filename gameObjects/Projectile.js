@@ -3,7 +3,7 @@ import Circle from "../engine/gfx/shapes/Circle.js";
 
 export default class Projectile extends GameObject {
   z = 1;
-  damage = 1;
+  damage = 100;
 
   constructor(engine, x, y, dir, speed = 60) {
     super(engine, {

@@ -24,6 +24,7 @@ export default class Enemy extends GameObject {
       for ( var i = 0; i < this.cash; i++ ) {
         this.engine.register(new Cash(this.engine, this.x, this.y));
       }
+      this.engine.sounds.play("spark");
       this.engine.unregister(this);
     }
   }

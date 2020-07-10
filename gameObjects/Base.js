@@ -26,7 +26,10 @@ export default class Base extends GameObject {
     if ( this.fireIn < 0 ) {
       this.fireIn += this.fireRate;
 
-      this.engine.register(new Projectile(this.engine, this.firePos.x, this.firePos.y, this.sprite.rad, 300), "projectile");
+      this.engine.sounds.play("shot", {volume: 0.2});
+      setTimeout(() => 
+        this.engine.register(new Projectile(this.engine, this.firePos.x, this.firePos.y, this.sprite.rad, 300), "projectile"),
+      150);
     }
   }
 

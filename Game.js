@@ -1,8 +1,6 @@
 import GameEngine from "./engine/GameEngine.js";
 import Base from "./gameObjects/Base.js";
-import Enemy from "./gameObjects/Enemy.js";
 import Spawner from "./gameObjects/Spawner.js";
-import Text from "./engine/gfx/Text.js";
 import GameUI from "./gameObjects/GameUI.js";
 
 export default class Game {
@@ -20,9 +18,12 @@ export default class Game {
 
   start() {
     this.engine.images.preload("base");
+    this.engine.sounds.preload(["shot", "spark", "lakitunes_chilled-beat.mp3"]);
+    this.engine.sounds.alias("music", "lakitunes_chilled-beat");
     this.engine.globals.cash = 0;
 
     this.engine.load().then(() => {
+      this.engine.on("firstInteraction", () => this.engine.sounds.play("music", {loop: true}));
       this.engine.register(this.engine.globals.base = new Base(engine), "base");
       this.engine.onMouseMove(event => {
         this.engine.globals.base.pointTo(event.pos);
