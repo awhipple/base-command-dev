@@ -43,6 +43,10 @@ export default class Button extends UIComponent{
     }
   }
 
+  hide() {
+    this.hover = false;
+  }
+
   drawComponent() {
     if ( this.bgColor ) {
       this.ctx.fillStyle = this.bgColor;

@@ -269,6 +269,7 @@ export default class GameEngine {
   oncePerSecond(callback, key = "onceOnly") {
     this.eventTimers[key] = this.eventTimers[key] ?? 0;
     if ( this.eventTimers[key] <= 0) {
+      this.eventTimers[key] = Math.max(this.eventTimers[key], -0.05);
       this.eventTimers[key] += 1;
       callback();
     }
@@ -302,7 +303,11 @@ export default class GameEngine {
     // The game window currently sorts all these objects in order of their z value
     for ( var i = this.gameObjects.all.length - 1; i >= 0; i-- ) {
       var obj = this.gameObjects.all[i];
-      if ( typeof obj[methodName] === "function" && obj.screenRect?.contains(event.pos.x, event.pos.y) ) {
+      if ( 
+        !obj.hide && 
+        typeof obj[methodName] === "function" && 
+        obj.screenRect?.contains(event.pos.x, event.pos.y) 
+      ) {
         event.relPos = { x: event.pos.x - obj.screenRect.x, y: event.pos.y - obj.screenRect.y };
         if ( !obj[methodName](event) ) {
           return;

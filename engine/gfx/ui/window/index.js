@@ -92,6 +92,15 @@ export default class UIWindow extends GameObject {
     this._setInnerRect();
   }
 
+  get hide() {
+    return this._hide;
+  }
+
+  set hide(val) {
+    this._hide = val;
+    this.components.forEach(component => component.hide?.());
+  }
+
   _setInnerRect() {
     this.innerRect = new BoundingRect(
       this.rect.x + this.outerPadding, this.rect.y + this.outerPadding,
