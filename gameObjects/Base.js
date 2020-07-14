@@ -5,8 +5,6 @@ import Projectile from "./Projectile.js";
 
 export default class Base extends GameObject {
   z = 5;
-  fireRate = 0.5;
-  fireIn = this.fireRate;
   firePos = new Coord(0, 0);
   on = false;
 
@@ -18,6 +16,8 @@ export default class Base extends GameObject {
     this.x = engine.window.width/2;
     this.y = engine.window.height;
 
+    this.fireIn = engine.globals.stats.speed.val;
+
     this.sprite = new Sprite(this.engine.images.get("base").img, this.x, this.y, 1);
     this.pointTo({x: engine.window.width/2, y: 0});
   }
@@ -25,11 +25,14 @@ export default class Base extends GameObject {
   update() {
     this.fireIn -= 1/60;
     if ( this.fireIn < 0 ) {
-      this.fireIn += this.fireRate;
+      this.fireIn += this.engine.globals.stats.speed.val;
 
       this.engine.sounds.play("shot", {volume: 0.5});
       setTimeout(() => 
-        this.engine.register(new Projectile(this.engine, this.firePos.x, this.firePos.y, this.sprite.rad, 300), "projectile"),
+        this.engine.register(new Projectile(
+          this.engine, this.firePos.x, this.firePos.y, this.sprite.rad, 
+          this.engine.globals.stats.power.val, 300
+        ), "projectile"),
       150);
     }
   }

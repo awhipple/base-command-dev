@@ -3,14 +3,15 @@ import Circle from "../engine/gfx/shapes/Circle.js";
 
 export default class Projectile extends GameObject {
   z = 1;
-  damage = 1;
 
-  constructor(engine, x, y, dir, speed = 60) {
+  constructor(engine, x, y, dir, damage = 1, speed = 60) {
     super(engine, {
       x: x,
       y: y,
       radius: 10,
     });
+
+    this.damage = damage;
 
     this.dir = dir;
     this.xv = Math.cos(dir) * (speed / 60);

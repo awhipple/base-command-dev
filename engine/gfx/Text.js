@@ -66,6 +66,15 @@ export default class Text {
     return this.textImage;    
   }
 
+  get fontSize() {
+    return this._fontSize;
+  }
+
+  set fontSize(val) {
+    this._fontSize = val;
+    this._updateStyle();
+  }
+
   _updateStyle() {
     this.style = this.fontWeight + this.fontSize + "px " + this.fontStyle;
   }

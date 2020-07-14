@@ -1,8 +1,8 @@
 import { UIComponent } from "../UIComponent.js";
 
 export default class Spacer extends UIComponent{
-  constructor(engine, suggestedWidth, options = {}) {
-    super(engine, suggestedWidth);
+  constructor(engine, options = {}) {
+    super(engine);
 
     this.height = options.height ?? 100;
   }

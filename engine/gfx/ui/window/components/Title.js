@@ -2,24 +2,26 @@ import { UIComponent } from "../UIComponent.js";
 import Text from "../../../Text.js";
 
 export default class Title extends UIComponent{
-  constructor(engine, suggestedWidth, options = {}) {
-    super(engine, suggestedWidth);
+  constructor(engine, options = {}) {
+    super(engine);
 
     this.bgColor = options.bgColor;
 
     this.icon = options.icon;
+    this.options = options;
 
-    this.text = new Text(
-      options.text ?? '', 
-      options.center ? suggestedWidth/2 : 0, 0, 
-      options
-    );
+    this.height = (options.fontSize ?? 50) * 1.2;
+  }
+
+  initialize() {
+    super.initialize();
+
+    this.text = this.options.textObj["str"] ?? this.options.textObj["title"];
+    this.text.x = this.options.center ? this.suggestedWidth/2 : 0;
 
     if ( this.icon ) {
-      this.text.x += this.text.fontSize + 10;
+      this.text.x += options.fontSize + 10;
     }
-
-    this.height = this.text.fontSize * 1.2;
   }
 
   drawComponent() {

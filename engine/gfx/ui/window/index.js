@@ -1,6 +1,7 @@
 import GameObject from '../../../objects/GameObject.js';
 import nativeComponents from './nativeComponents.js';
 import { BoundingRect } from '../../../GameMath.js';
+import Text from '../../Text.js';
 
 export default class UIWindow extends GameObject {
   scroll = 0;
@@ -39,11 +40,12 @@ export default class UIWindow extends GameObject {
     }
     var currentY = this.innerPadding;
     this.components.forEach(component => {
+      this._interpolateStrings(component);
       var img = component.getDisplayImage();
       img.draw(
         this.ctx,
-        this.innerPadding, currentY,
-        this.innerRect.w - this.innerPadding*2, img.height
+        this.innerPadding + component.left, currentY,
+        this.innerRect.w - this.innerPadding*2 - component.left, img.height
       );
       currentY += img.height + this.innerPadding;
     });
@@ -103,12 +105,20 @@ export default class UIWindow extends GameObject {
     this.componentHeightMap = [];
 
     this.ui.forEach(component => {
+      component.text = component.text || {};
+      if ( typeof component.text !== "object" ) {
+        component.text = { str: component.text };
+      }
       var Type = typeof component.type === "string" ?
         nativeComponents[component.type] :
         component.type;
       if ( Type ) {
-        var newComponent = new Type(this.engine, this.innerRect.w - this.innerPadding*2, component);
-        newComponent.initializeCanvas();
+        var newComponent = new Type(this.engine, component);
+        newComponent.suggestedWidth = this.innerRect.w - this.innerPadding*2 - (component.left ?? 0);
+        newComponent.left = component.left ?? 0;
+        newComponent.options = component;
+        this._interpolateStrings(newComponent);
+        newComponent.initialize();
         this.components.push(newComponent);
         this.componentHeightMap.push([newComponent.height, newComponent]);
       }
@@ -123,16 +133,43 @@ export default class UIWindow extends GameObject {
     this.maxScroll = Math.max(0, this.canvas.height - this.rect.h + this.outerPadding * 2);
   }
 
-  _triggerEventInComponents(event, type) {
+  _triggerEventInComponents(event, eventType) {
     var totalPadding = this.outerPadding + this.innerPadding;
 
-    event.pos = { x: event.relPos.x - totalPadding, y: event.relPos.y + this.scroll - totalPadding };
+    var windowX = event.relPos.x - totalPadding;
+    event.pos = { y: event.relPos.y + this.scroll - totalPadding };
     delete event.relPos;
     for ( var i = 0; i < this.componentHeightMap.length; i++ ) {
-      if ( typeof this.componentHeightMap[i][1][type] === "function") {
-        this.componentHeightMap[i][1][type](event);
+      var component = this.componentHeightMap[i][1];
+      if ( typeof component[eventType] === "function") {
+        event.pos.x = windowX * ( component.suggestedWidth / (this.innerRect.w - this.innerPadding*2 - component.left) ) - component.left;
+        component[eventType](event);
       }
       event.pos.y -= this.componentHeightMap[i][0] + this.innerPadding;
+    }
+  }
+
+  _interpolateStrings(component) {
+    if ( !component.options.textObj ) {
+      component.options.interpolatedStrings = {};
+      component.options.textObj = {};
+      if ( typeof component.options.text === "object" ) {
+        for ( var key in component.options.text ) {
+          component.options.textObj[key] = new Text('', 0, 0, component.options);
+        }
+      }
+    }
+    if ( typeof component.options.text === "object" ) {
+      for ( var key in component.options.text ) {
+        var text = component.options.text[key];
+        var inter = component.options.interpolatedStrings;
+        if ( typeof text === "string" ) {
+          inter[key] = text;
+        } else if ( typeof text === "function" ) {
+          inter[key] = text();
+        }
+        component.options.textObj[key].setText(inter[key] ?? '');
+      }
     }
   }
 }

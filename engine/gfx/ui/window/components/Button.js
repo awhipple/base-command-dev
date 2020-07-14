@@ -3,23 +3,28 @@ import Text from "../../../Text.js";
 import { BoundingRect } from "../../../../GameMath.js";
 
 export default class Button extends UIComponent{
-  constructor(engine, suggestedWidth, options = {}) {
-    super(engine, suggestedWidth);
+  constructor(engine, options = {}) {
+    super(engine);
 
     this.bgColor = options.bgColor;
     this.center = options.center;
     this.padding = options.padding ?? 15;
     this.callback = options.callback ?? (() => {});
+    this.options = options;
 
-    this.text = new Text(
-      options.text ?? '', 
-      this.center ? this.suggestedWidth/2 : this.padding, 2, 
-      options,
-    );
-
-    this.height = this.text.fontSize * 1.4;
+    this.height = (options.fontSize ?? 50) * 1.4;
 
     this.rect = new BoundingRect(0, 0, 0, this.height);
+  }
+
+  initialize() {
+    super.initialize();
+
+    this.text = new Text(
+      this.options.buttonText ?? this.options.text.button ?? '', 
+      this.center ? this.suggestedWidth/2 : this.padding, 2, 
+      this.options,
+    );
   }
 
   onMouseMove(event) {
