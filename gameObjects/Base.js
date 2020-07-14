@@ -16,7 +16,7 @@ export default class Base extends GameObject {
     this.x = engine.window.width/2;
     this.y = engine.window.height;
 
-    this.fireIn = engine.globals.stats.speed.val;
+    this.fireIn = 1/engine.globals.stats.speed.val;
 
     this.sprite = new Sprite(this.engine.images.get("base").img, this.x, this.y, 1);
     this.pointTo({x: engine.window.width/2, y: 0});
@@ -25,7 +25,7 @@ export default class Base extends GameObject {
   update() {
     this.fireIn -= 1/60;
     if ( this.fireIn < 0 ) {
-      this.fireIn += this.engine.globals.stats.speed.val;
+      this.fireIn += 1/this.engine.globals.stats.speed.val;
 
       this.engine.sounds.play("shot", {volume: 0.5});
       setTimeout(() => 

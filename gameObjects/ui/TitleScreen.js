@@ -40,7 +40,7 @@ export default class TitleScreen extends UIWindow {
       },
       {
         type: "title",
-        text: "Base Command",
+        text: () => "Base Command (" + engine.globals.reached + ")",
         fontColor: "#0f0",
         center: true,
       },
@@ -64,7 +64,7 @@ export default class TitleScreen extends UIWindow {
       // makeUpgradeUI("Power", power, engine.globals),
       {
         type: "spacer",
-        height: 80,
+        height: 120,
       },
       {
         type: "button",

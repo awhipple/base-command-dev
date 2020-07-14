@@ -43,6 +43,7 @@ export default class Enemy extends GameObject {
   }
 
   _createCash() {
+    this.engine.globals.reached = Math.max(this.engine.globals.reached, this.cash);
     var color = "yellow", amount = 100;
     while ( this.cash > 0 ) {
       if ( this.cash < 100 ) {
