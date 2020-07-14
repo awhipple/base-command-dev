@@ -22,7 +22,7 @@ export default class Game {
     this.engine.images.preload("base");
     this.engine.sounds.preload(["shot", "spark", "explosion", "lakitunes_chilled-beat.mp3"]);
     this.engine.sounds.alias("music", "lakitunes_chilled-beat");
-    this.engine.globals.cash = 50000;
+    this.engine.globals.cash = 0;
     this.engine.globals.stats = stats;
 
     this.engine.load().then(() => {
