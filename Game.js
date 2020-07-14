@@ -45,7 +45,6 @@ export default class Game {
       this.engine.on("enemyCollide", () => {
         this.menu.hide = false;
         this.engine.unregister("enemy");
-        this.engine.unregister("cash");
         this.engine.unregister("projectile");
         this.engine.globals.base.on = false;
         this.engine.globals.spawner.reset();
