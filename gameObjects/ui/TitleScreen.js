@@ -1,5 +1,6 @@
 import UIWindow from "../../engine/gfx/ui/window/index.js";
 import Upgrade from "./Upgrade.js";
+import LevelSelect from "./LevelSelect.js";
 
 function upgradeStat(stat, globals) {
   return () => {
@@ -40,7 +41,7 @@ export default class TitleScreen extends UIWindow {
       },
       {
         type: "title",
-        text: () => "Base Command (" + engine.globals.reached + ")",
+        text: "Base Command",
         fontColor: "#0f0",
         center: true,
       },
@@ -61,10 +62,15 @@ export default class TitleScreen extends UIWindow {
       },
       makeUpgradeUI("Power", stats.power, engine.globals),
       makeUpgradeUI("Speed", stats.speed, engine.globals),
-      // makeUpgradeUI("Power", power, engine.globals),
       {
         type: "spacer",
         height: 120,
+      },
+      {
+        type: LevelSelect,
+        text: {
+          level: () => "Level " + (engine.globals.selectedLevel + 1),
+        }
       },
       {
         type: "button",
@@ -76,7 +82,7 @@ export default class TitleScreen extends UIWindow {
         callback: () => {
           this.hide = true;
           this.engine.globals.base.on = true;
-          this.engine.globals.spawner.on = true;
+          this.engine.globals.spawner.start(engine.globals.levels[engine.globals.selectedLevel]);
         },
       },
     ], {

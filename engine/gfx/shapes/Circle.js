@@ -49,6 +49,7 @@ export default class Circle {
     this._singleton.radius = radius;
 
     this._singleton.color = options.color ?? "#fff";
+    this._singleton.alpha = options.alpha ?? 1;
 
     this._singleton.draw(ctx);
   }

@@ -1,36 +1,95 @@
 import Enemy from "./Enemy.js";
+import Circle from "../engine/gfx/shapes/Circle.js";
 
 export default class Spawner {
   on = false;
   spawnRate = 1;
   nextSpawn = this.spawnRate;
 
-  enemyHp = 1;
-
-  constructor(engine) {
+  constructor(engine, level) {
     this.engine = engine;
+    this.level = level;
+  }
+
+  start(level) {
+    this.level = level ?? this.level;
+    this.on = true;
+    this.enemiesLeft = this.enemies = this.level.enemies;
   }
 
   reset() {
     this.nextSpawn = this.spawnRate;
-    this.enemyHp = 1;
     this.on = false;
   }
 
   update() {
     if ( this.on ) {
       this.nextSpawn -= 1/60;
-      if ( this.nextSpawn < 0 ) {
-        this.nextSpawn += this.spawnRate;
+      if ( this.enemies > 0 && this.nextSpawn < 0 ) {
+        this.enemies--;
+        this.nextSpawn += this.level.spawnRate;
 
         this.engine.register(new Enemy(
           this.engine, 
-          Math.random()*(this.engine.window.width+200)-100,
-          this.enemyHp), 
+          Math.random()*(this.engine.window.width+200)-100, -20,
+          this.level.enemyHp), 
         "enemy");
-
-        this.enemyHp++;
       }
+
+      this.enemiesLeft = this.enemies + Object.keys(this.engine.gameObjects.enemy ?? {}).length;
+      if ( this.enemiesLeft === 0 && !this.rewardAnim) {
+        this.engine.globals.base.on = false;
+        this._victory();
+      }
+    }
+
+    if ( this.rewardAnim ) {
+      this.rewardAnim.alpha = Math.min(this.rewardAnim.alpha + 0.01, 1);
+      this.rewardAnim.rad += this.rewardAnim.speed * 0.02;
+      this.rewardAnim.dist-=this.rewardAnim.speed;
+      this.rewardAnim.speed += 0.07;
+
+      if ( this.rewardAnim.dist < 0 ) {
+        this.reset();
+        this.rewardAnim = null;
+        new Enemy(this.engine, this.engine.window.width/2, this.engine.window.height/2, this.level.reward)._createCash();
+        setTimeout(() => this.engine.trigger("levelWin"), 2500);
+      }
+    }
+  }
+
+  draw(ctx) {
+    if ( this.rewardAnim ) {
+      for ( var i = 0; i < this.rewardAnim.count; i++) {
+        Circle.draw(
+          ctx, 
+          this.engine.window.width/2 + Math.cos(this.rewardAnim.rad + i*(2*Math.PI/this.rewardAnim.count))*this.rewardAnim.dist,
+          this.engine.window.height/2 + Math.sin(this.rewardAnim.rad + i*(2*Math.PI/this.rewardAnim.count))*this.rewardAnim.dist,
+          15,
+          {
+            color: this.rewardAnim.colors[i],
+            alpha: this.rewardAnim.alpha,
+          }
+        );
+      }
+    }
+  }
+
+  _victory() {
+    this.engine.sounds.play("chime");
+    this.engine.flash.show("Victory!", {
+      y: 280,
+      color: "#0f0",
+      showFor: 2,
+    });
+
+    this.rewardAnim = {
+      dist: 350,
+      speed: 1,
+      rad: 0,
+      count: 5,
+      alpha: 0,
+      colors: ["red", "green", "yellow", "blue", "purple"],
     }
   }
 }

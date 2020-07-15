@@ -4,10 +4,10 @@ import Text from "../engine/gfx/Text.js";
 import Cash from "./Cash.js";
 
 export default class Enemy extends GameObject {
-  constructor(engine, x, hp) {
+  constructor(engine, x, y, hp) {
     super(engine, {
       x: x,
-      y: -50,
+      y: y,
       radius: 35,
     });
 
@@ -39,11 +39,10 @@ export default class Enemy extends GameObject {
 
   draw(ctx) {
     this.rect.draw(ctx);
-    Text.draw(ctx, this.hp, this.x, this.y - 25, {center: true, fontColor: "#fff", fontSize: 40})
+    Text.draw(ctx, this.hp, this.x, this.y - 25, {center: true, fontColor: "#fff", fontSize: 40});
   }
 
   _createCash() {
-    this.engine.globals.reached = Math.max(this.engine.globals.reached, this.cash);
     var color = "yellow", amount = 100;
     while ( this.cash > 0 ) {
       if ( this.cash < 100 ) {

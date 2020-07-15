@@ -9,15 +9,17 @@ export default class FlashText extends Text {
     super('', engine.window.width/2, 20, {fontColor: "#a33", center: true});
   }
 
-  show(str) {
+  show(str, options = {}) {
     this.str = str;
     this.alpha = 1;
     this.hide = false;
-    this.showTime = 4;
+    this.fontColor = options.color ?? "#a33";
+    this.showFor = options.showFor ?? 4;
+    this.y = options.y ?? 20;
   }
   
   update() {
-    this.showTime = Math.max(this.showTime -= 1/60, 0);
-    this.alpha = Math.min(this.alpha, this.showTime);
+    this.showFor = Math.max(this.showFor -= 1/60, 0);
+    this.alpha = Math.min(this.alpha, this.showFor);
   }
 }

@@ -6,7 +6,6 @@ import Button from './objects/Button.js';
 import FullscreenSplash from './objects/FullScreenSplash.js';
 import AudioLibrary from './AudioLibrary.js';
 import FlashText from './gfx/FlashText.js';
-import Enemy from '../gameObjects/Enemy.js';
 
 export default class GameEngine {
   images = new ImageLibrary();

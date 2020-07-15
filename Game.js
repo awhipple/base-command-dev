@@ -20,11 +20,32 @@ export default class Game {
 
   start() {
     this.engine.images.preload("base");
-    this.engine.sounds.preload(["shot", "spark", "explosion", "lakitunes_chilled-beat.mp3"]);
+    this.engine.sounds.preload(["shot", "spark", "explosion", "chime", "lakitunes_chilled-beat.mp3"]);
     this.engine.sounds.alias("music", "lakitunes_chilled-beat");
-    this.engine.globals.cash = 0;
-    this.engine.globals.reached = 0;
+    this.engine.globals.cash = 5000;
     this.engine.globals.stats = stats;
+
+    this.engine.globals.levels = [
+      {
+        enemies: 10,
+        spawnRate: 0.5,
+        enemyHp: 2,
+        reward: 20,
+      },
+      {
+        enemies: 10,
+        spawnRate: 0.5,
+        enemyHp: 6,
+        reward: 60,
+      },
+      {
+        enemies: 20,
+        spawnRate: 0.3,
+        enemyHp: 15,
+        reward: 275,
+      },
+    ];
+    this.engine.globals.selectedLevel = 0;
 
     this.engine.load().then(() => {
       if ( this.engine.prod ) {
@@ -35,7 +56,10 @@ export default class Game {
         this.engine.globals.base.pointTo(event.pos);
       });
       
-      this.engine.register(this.engine.globals.spawner = new Spawner(this.engine));
+      this.engine.register(this.engine.globals.spawner = new Spawner(
+        this.engine, 
+        this.engine.globals.levels[this.engine.globals.selectedLevel]
+      ));
 
       this.menu = new TitleScreen(this.engine);
       this.engine.register(this.menu);
@@ -48,6 +72,10 @@ export default class Game {
         this.engine.unregister("projectile");
         this.engine.globals.base.on = false;
         this.engine.globals.spawner.reset();
+      });
+
+      this.engine.on("levelWin", () => {
+        this.menu.hide = false;
       });
     });
   }

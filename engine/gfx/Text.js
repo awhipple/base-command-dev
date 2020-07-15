@@ -75,6 +75,15 @@ export default class Text {
     this._updateStyle();
   }
 
+  get fontColor() {
+    return this._fontColor;
+  }
+
+  set fontColor(val) {
+    this._fontColor = val;
+    this._updateStyle();
+  }
+
   _updateStyle() {
     this.style = this.fontWeight + this.fontSize + "px " + this.fontStyle;
   }
