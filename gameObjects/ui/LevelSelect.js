@@ -3,7 +3,7 @@ import { BoundingRect } from "../../engine/GameMath.js";
 import Text from "../../engine/gfx/Text.js";
 
 export default class LevelSelect extends UIComponent {
-  height = 50;
+  height = 80;
 
   initialize() {
     super.initialize();
@@ -19,6 +19,18 @@ export default class LevelSelect extends UIComponent {
     this.leftArrow = new Text("<", this.leftArrowRect.x, -9, {fontColor: "white", fontSize: 30});
     this.rightArrowRect = new BoundingRect(this.suggestedWidth/2-boxSize/2+60, 0, boxSize, boxSize);
     this.rightArrow = new Text(">", this.rightArrowRect.x, -9, {fontColor: "white", fontSize: 30});
+
+    this.enemiesText = this.options.textObj.enemies;
+    this.enemiesText.x = this.suggestedWidth/2 - 70;
+    this.enemiesText.y = 30;
+    this.enemiesText.fontColor = "white";
+    this.enemiesText.fontSize = 15;
+
+    this.rewardText = this.options.textObj.reward;
+    this.rewardText.x = this.suggestedWidth/2 - 70;
+    this.rewardText.y = 60;
+    this.rewardText.fontColor = "white";
+    this.rewardText.fontSize = 15;
   }
 
   onMouseMove(event) {
@@ -27,12 +39,12 @@ export default class LevelSelect extends UIComponent {
     this.hover = this.leftHover || this.rightHover;
   }
 
-  onMouseClick(event) {
-    if ( this.leftHover && this.engine.globals.selectedLevel > 0 ) {
-      this.engine.globals.selectedLevel--;
+  onMouseClick() {
+    if ( this.leftHover ) {
+      this.engine.globals.levels.selected--;
     }
-    if ( this.rightHover && this.engine.globals.selectedLevel < this.engine.globals.levels.length - 1) {
-      this.engine.globals.selectedLevel++;
+    if ( this.rightHover ) {
+      this.engine.globals.levels.selected++;
     }
   }
 
@@ -50,5 +62,8 @@ export default class LevelSelect extends UIComponent {
     this.levelText.draw(this.ctx);
     this.leftArrow.draw(this.ctx);
     this.rightArrow.draw(this.ctx);
+
+    this.enemiesText.draw(this.ctx);
+    this.rewardText.draw(this.ctx);
   }
 }

@@ -64,12 +64,14 @@ export default class TitleScreen extends UIWindow {
       makeUpgradeUI("Speed", stats.speed, engine.globals),
       {
         type: "spacer",
-        height: 120,
+        height: 80,
       },
       {
         type: LevelSelect,
         text: {
-          level: () => "Level " + (engine.globals.selectedLevel + 1),
+          level: () => "Level " + (engine.globals.levels.selected),
+          enemies: () => "Enemies: " + (engine.globals.levels.current.enemies) + " x " + (engine.globals.levels.current.enemyHp) + "hp",
+          reward: () => "Reward: " + (engine.globals.levels.current.reward),
         }
       },
       {
