@@ -24,7 +24,7 @@ export default class Game {
     this.engine.sounds.alias("music", "lakitunes_chilled-beat");
     this.engine.globals.cash = 0;
     this.engine.globals.stats = stats;
-    this.engine.globals.levels = new Levels();
+    this.engine.globals.levels = new Levels(this.engine);
 
     this.engine.load().then(() => {
       if ( this.engine.prod ) {

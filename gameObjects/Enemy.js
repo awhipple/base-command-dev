@@ -11,7 +11,9 @@ export default class Enemy extends GameObject {
       radius: 35,
     });
 
-    this.dir = getDirectionFrom(this.pos, engine.globals.base.pos);
+    if ( engine.globals.base ) {
+      this.dir = getDirectionFrom(this.pos, engine.globals.base.pos);
+    }
     this.xv = Math.cos(this.dir);
     this.yv = Math.sin(this.dir);
 

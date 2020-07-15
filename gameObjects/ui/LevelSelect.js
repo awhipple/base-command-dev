@@ -8,6 +8,8 @@ export default class LevelSelect extends UIComponent {
   initialize() {
     super.initialize();
 
+    this.iconRect = new BoundingRect(160, 42, 44, 44);
+
     this.levelText = this.options.textObj.level;
     this.levelText.x = this.suggestedWidth/2;
     this.levelText.center = true;
@@ -21,15 +23,13 @@ export default class LevelSelect extends UIComponent {
     this.rightArrow = new Text(">", this.rightArrowRect.x, -9, {fontColor: "white", fontSize: 30});
 
     this.enemiesText = this.options.textObj.enemies;
-    this.enemiesText.x = this.suggestedWidth/2;
-    this.enemiesText.center = true;
+    this.enemiesText.x = 220;
     this.enemiesText.y = 40;
     this.enemiesText.fontColor = "white";
     this.enemiesText.fontSize = 15;
 
     this.rewardText = this.options.textObj.reward;
-    this.rewardText.x = this.suggestedWidth/2;
-    this.rewardText.center = true;
+    this.rewardText.x = 220;
     this.rewardText.y = 70;
     this.rewardText.fontColor = "white";
     this.rewardText.fontSize = 15;
@@ -61,6 +61,8 @@ export default class LevelSelect extends UIComponent {
   }
 
   drawComponent() {
+    this.engine.globals.levels.current.icon.draw(this.ctx, this.iconRect);
+
     this.levelText.draw(this.ctx);
     this.leftArrow.draw(this.ctx);
     this.rightArrow.draw(this.ctx);

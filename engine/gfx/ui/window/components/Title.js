@@ -1,5 +1,4 @@
 import { UIComponent } from "../UIComponent.js";
-import Text from "../../../Text.js";
 
 export default class Title extends UIComponent{
   constructor(engine, options = {}) {

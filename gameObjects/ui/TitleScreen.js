@@ -70,7 +70,7 @@ export default class TitleScreen extends UIWindow {
         type: LevelSelect,
         text: {
           level: () => "Level " + (engine.globals.levels.selected),
-          enemies: () => "Enemies: " + (engine.globals.levels.current.enemies) + " x " + (engine.globals.levels.current.enemyHp) + "hp",
+          enemies: () => "Enemies: " + (engine.globals.levels.current.enemies),
           reward: () => "Reward: $" + (engine.globals.levels.current.reward),
         }
       },
