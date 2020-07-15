@@ -31,6 +31,7 @@ function makeUpgradeUI(name, stat, globals) {
 export default class TitleScreen extends UIWindow {
   constructor(engine) {
     var stats = engine.globals.stats;
+    var levels = engine.globals.levels;
     super(engine, {
       x: 0, y: 0,
       w: engine.window.width, h: engine.window.height,
@@ -69,9 +70,9 @@ export default class TitleScreen extends UIWindow {
       {
         type: LevelSelect,
         text: {
-          level: () => "Level " + (engine.globals.levels.selected),
-          enemies: () => "Enemies: " + (engine.globals.levels.current.enemies),
-          reward: () => "Reward: $" + (engine.globals.levels.current.reward),
+          level: () => "Level " + (levels.selected),
+          enemies: () => "Enemies: " + (levels.current.enemies),
+          reward: () => "Reward: " + (typeof levels.current.reward === "string" ? "" : "$") + (levels.current.reward),
         }
       },
       {
@@ -88,7 +89,7 @@ export default class TitleScreen extends UIWindow {
         callback: () => {
           this.hide = true;
           this.engine.globals.base.on = true;
-          this.engine.globals.spawner.start(engine.globals.levels[engine.globals.selectedLevel]);
+          this.engine.globals.spawner.start();
         },
       },
     ], {

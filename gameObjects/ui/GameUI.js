@@ -1,4 +1,4 @@
-import Text from "../engine/gfx/Text.js";
+import Text from "../../../engine/gfx/Text.js";
 
 export default class GameUI {
   z = 5;

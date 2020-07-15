@@ -3,6 +3,7 @@ import { BoundingRect, Coord } from "../GameMath.js";
 export default class GameObject {
   on = true;
   collisionCallbacks = {};
+  collision = "rectangle";
 
   constructor(engine, shape = {}) {
     this.engine = engine;
@@ -59,6 +60,7 @@ export default class GameObject {
   set x(val) {
     this._pos.x = val;
     this._rect.x = this.x - this._rect.w / 2;
+    this._radius = Math.min(this._pos.x, this._pos.y) / 2;
   }
 
   get y() {
@@ -68,6 +70,7 @@ export default class GameObject {
   set y(val) {
     this._pos.y = val;
     this._rect.y = this.y - this._rect.h / 2;
+    this._radius = Math.min(this._pos.x, this._pos.y) / 2;
   }
 
   get pos() {
@@ -87,6 +90,11 @@ export default class GameObject {
     this._rect = val;
     this._pos.x = val.x + val.w / 2;
     this._pos.y = val.y + val.h / 2;
+    this._radius = Math.min(this._pos.x, this._pos.y) / 2;
+  }
+
+  get radius() {
+    return this._radius;
   }
 
   get originX() {

@@ -45,10 +45,19 @@ export class Levels {
         reward: 750,
       },
       {
-        enemies: 30,
+        enemies: 25,
+        enemyType: "red",
         spawnRate: 0.5,
-        enemyHp: 60,
-        reward: 1800,
+        enemyHp: 20,
+        reward: 1500,
+      },
+      {
+        icon: engine.images.get("dragon-green"),
+        enemies: 25,
+        spawnRate: 1,
+        enemyHp: 100,
+        reward: "shot",
+        boss: true,
       },
     ];
 
@@ -68,7 +77,7 @@ export class Levels {
         var icon = document.createElement("canvas");
         icon.width = 70;
         icon.height = 70;
-        (new Enemy(this.engine, 35, 35, this.current.enemyHp)).draw(icon.getContext("2d"));
+        (new Enemy(this.engine, 35, 35, this.current.enemyHp, this.current.enemyType)).draw(icon.getContext("2d"));
         this.current.icon = new Image(icon);
       }
     }

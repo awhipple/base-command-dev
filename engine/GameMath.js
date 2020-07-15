@@ -120,10 +120,10 @@ export class BoundingRect {
     );
   }
 
-  draw(ctx) {
+  draw(ctx, color = "white") {
     ctx.save();
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "#fff";
+    ctx.strokeStyle = color;
     ctx.strokeRect(this.x, this.y, this.w, this.h);
     ctx.restore();
   }

@@ -1,7 +1,7 @@
 import GameEngine from "./engine/GameEngine.js";
 import Base from "./gameObjects/Base.js";
 import Spawner from "./gameObjects/Spawner.js";
-import GameUI from "./gameObjects/GameUI.js";
+import GameUI from "./gameObjects/ui/GameUI.js";
 import TitleScreen from "./gameObjects/ui/TitleScreen.js";
 import { stats, Levels } from "./gameObjects/Stats.js";
 
@@ -22,7 +22,7 @@ export default class Game {
     this.engine.images.preload("base");
     this.engine.sounds.preload(["shot", "spark", "explosion", "chime", "lakitunes_chilled-beat.mp3"]);
     this.engine.sounds.alias("music", "lakitunes_chilled-beat");
-    this.engine.globals.cash = 0;
+    this.engine.globals.cash = this.engine.prod ? 0 : 50000;
     this.engine.globals.stats = stats;
     this.engine.globals.levels = new Levels(this.engine);
 

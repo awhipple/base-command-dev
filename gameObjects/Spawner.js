@@ -1,5 +1,6 @@
 import Enemy from "./Enemy.js";
 import Circle from "../engine/gfx/shapes/Circle.js";
+import Boss from "./Boss.js";
 
 export default class Spawner {
   on = false;
@@ -13,6 +14,7 @@ export default class Spawner {
   start() {
     this.on = true;
     this.enemiesLeft = this.enemies = this.engine.globals.levels.current.enemies;
+    this.spawnBoss = true;
   }
 
   reset() {
@@ -30,12 +32,18 @@ export default class Spawner {
         this.engine.register(new Enemy(
           this.engine, 
           Math.random()*(this.engine.window.width+200)-100, -20,
-          this.engine.globals.levels.current.enemyHp), 
+          this.engine.globals.levels.current.enemyHp,
+          this.engine.globals.levels.current.enemyType), 
         "enemy");
       }
+    }
 
-      this.enemiesLeft = this.enemies + Object.keys(this.engine.gameObjects.enemy ?? {}).length;
-      if ( this.enemiesLeft === 0 && !this.rewardAnim) {
+    this.enemiesLeft = this.enemies + Object.keys(this.engine.gameObjects.enemy ?? {}).length;
+    if ( this.enemiesLeft === 0 && !this.rewardAnim) {
+      if ( this.engine.globals.levels.current.boss && this.spawnBoss ) {
+        this.engine.register(new Boss(this.engine, 800), "enemy");
+        this.spawnBoss = false;
+      } else {
         this.engine.globals.base.on = false;
         this._victory();
       }
