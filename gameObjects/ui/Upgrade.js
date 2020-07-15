@@ -10,7 +10,7 @@ export default class Upgrade extends Button {
     this.nameText.fontSize = 20;
 
     this.lvlText = this.options.textObj.lvl;
-    this.lvlText.x = 80 + this.ctx.measureText(this.nameText).width;
+    this.lvlText.x = 90 + this.ctx.measureText(this.nameText).width;
     this.lvlText.y = 8;
     this.lvlText.fontSize = 12;
 

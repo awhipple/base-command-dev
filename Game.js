@@ -37,7 +37,6 @@ export default class Game {
       
       this.engine.register(this.engine.globals.spawner = new Spawner(
         this.engine, 
-        this.engine.globals.levels[this.engine.globals.selectedLevel]
       ));
 
       this.menu = new TitleScreen(this.engine);

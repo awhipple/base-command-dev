@@ -3,7 +3,7 @@ import { BoundingRect } from "../../engine/GameMath.js";
 import Text from "../../engine/gfx/Text.js";
 
 export default class LevelSelect extends UIComponent {
-  height = 80;
+  height = 90;
 
   initialize() {
     super.initialize();
@@ -21,14 +21,16 @@ export default class LevelSelect extends UIComponent {
     this.rightArrow = new Text(">", this.rightArrowRect.x, -9, {fontColor: "white", fontSize: 30});
 
     this.enemiesText = this.options.textObj.enemies;
-    this.enemiesText.x = this.suggestedWidth/2 - 70;
-    this.enemiesText.y = 30;
+    this.enemiesText.x = this.suggestedWidth/2;
+    this.enemiesText.center = true;
+    this.enemiesText.y = 40;
     this.enemiesText.fontColor = "white";
     this.enemiesText.fontSize = 15;
 
     this.rewardText = this.options.textObj.reward;
-    this.rewardText.x = this.suggestedWidth/2 - 70;
-    this.rewardText.y = 60;
+    this.rewardText.x = this.suggestedWidth/2;
+    this.rewardText.center = true;
+    this.rewardText.y = 70;
     this.rewardText.fontColor = "white";
     this.rewardText.fontSize = 15;
   }

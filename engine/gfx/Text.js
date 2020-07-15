@@ -10,10 +10,9 @@ export default class Text {
     this.y = y;
     this.center = options.center;
 
-
     this.fontWeight = options.fontWeight ? options.fontWeight + ' ' : '';
     this.fontSize = options.fontSize ?? 50;
-    this.fontStyle = options.fontStyle ?? "Arial";
+    this.fontStyle = options.fontStyle ?? "Verdana";
     this.fontColor = options.fontColor ?? "#000";
 
     this._updateStyle();

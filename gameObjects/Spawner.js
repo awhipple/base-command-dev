@@ -6,15 +6,13 @@ export default class Spawner {
   spawnRate = 1;
   nextSpawn = this.spawnRate;
 
-  constructor(engine, level) {
+  constructor(engine) {
     this.engine = engine;
-    this.level = level;
   }
 
-  start(level) {
-    this.level = level ?? this.level;
+  start() {
     this.on = true;
-    this.enemiesLeft = this.enemies = this.level.enemies;
+    this.enemiesLeft = this.enemies = this.engine.globals.levels.current.enemies;
   }
 
   reset() {
@@ -27,12 +25,12 @@ export default class Spawner {
       this.nextSpawn -= 1/60;
       if ( this.enemies > 0 && this.nextSpawn < 0 ) {
         this.enemies--;
-        this.nextSpawn += this.level.spawnRate;
+        this.nextSpawn += this.engine.globals.levels.current.spawnRate;
 
         this.engine.register(new Enemy(
           this.engine, 
           Math.random()*(this.engine.window.width+200)-100, -20,
-          this.level.enemyHp), 
+          this.engine.globals.levels.current.enemyHp), 
         "enemy");
       }
 
@@ -52,7 +50,7 @@ export default class Spawner {
       if ( this.rewardAnim.dist < 0 ) {
         this.reset();
         this.rewardAnim = null;
-        new Enemy(this.engine, this.engine.window.width/2, this.engine.window.height/2, this.level.reward)._createCash();
+        new Enemy(this.engine, this.engine.window.width/2, this.engine.window.height/2, this.engine.globals.levels.current.reward)._createCash();
         setTimeout(() => this.engine.trigger("levelWin"), 2500);
       }
     }

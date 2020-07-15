@@ -43,8 +43,12 @@ export default class Enemy extends GameObject {
   }
 
   _createCash() {
-    var color = "yellow", amount = 100;
+    var color = "purple", amount = 500;
     while ( this.cash > 0 ) {
+      if ( this.cash < 500 ) {
+        color = "yellow";
+        amount = 100;
+      }
       if ( this.cash < 100 ) {
         color = "red";
         amount = 25;
