@@ -163,6 +163,10 @@ export function normalizeRad(rad) {
   return (rad < 0 ? 2*Math.PI : 0) + rad % (2*Math.PI);
 }
 
+export function constrain(number, min, max) {
+  return Math.max(min, Math.min(max, number));
+}
+
 export const numRotationsMap = {
   "left-up": 1,
   "left-right": 2,

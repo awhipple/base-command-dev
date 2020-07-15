@@ -7,6 +7,7 @@ export default class Button extends UIComponent{
     super(engine);
 
     this.bgColor = options.bgColor;
+    this.borderColor = options.borderColor ?? "white";
     this.center = options.center;
     this.padding = options.padding ?? 15;
     this.callback = options.callback ?? (() => {});
@@ -57,7 +58,7 @@ export default class Button extends UIComponent{
       this.rect.w = this.text.getWidth(this.ctx) + this.padding*2;
       this.rect.x = this.center ? this.canvas.width/2 - this.rect.w/2 : 0; 
     }
-    this.rect.draw(this.ctx);
+    this.rect.draw(this.ctx, this.borderColor);
     
     this.text.draw(this.ctx);
   }
