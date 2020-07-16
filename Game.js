@@ -4,8 +4,10 @@ import Spawner from "./gameObjects/Spawner.js";
 import GameUI from "./gameObjects/ui/GameUI.js";
 import TitleScreen from "./gameObjects/ui/TitleScreen.js";
 import { stats, Levels } from "./gameObjects/Stats.js";
-import Inventory from "./gameObjects/ui/Inventory.js";
 import { constrain } from "./engine/GameMath.js";
+import InventoryMenu from "./gameObjects/ui/InventoryMenu.js";
+import Inventory from "./gameObjects/Inventory.js";
+import Cursor from "./gameObjects/Cursor.js";
 
 export default class Game {
   constructor() {
@@ -34,9 +36,6 @@ export default class Game {
         this.engine.on("firstInteraction", () => this.engine.sounds.play("music", {loop: true, volume: 0.3}));
       }
       this.engine.register(this.engine.globals.base = new Base(engine), "base");
-      this.engine.onMouseMove(event => {
-        this.engine.globals.base.pointTo(event.pos);
-      });
       
       this.engine.register(this.engine.globals.spawner = new Spawner(
         this.engine, 
@@ -45,30 +44,52 @@ export default class Game {
       this.menu = new TitleScreen(this.engine);
       this.engine.register(this.menu);
 
-      this.inventory = new Inventory(this.engine);
-      // this.engine.register(this.inventory);
-      this.invSlide = 0;
+      this.inventory = this.engine.globals.inventory = new Inventory(engine);
+
+      this.engine.register(new Cursor(this.engine));
+
+      this.inventoryMenu = new InventoryMenu(this.engine, this.inventory);
+      this.engine.register(this.inventoryMenu);
+      this.invSlide = 20;
 
       this.engine.register(new GameUI(this.engine));
 
       this.engine.on("enemyCollide", () => {
         this.menu.hide = false;
+        this.inventoryMenu.hide = false;
         this.engine.unregister("enemy");
         this.engine.unregister("projectile");
         this.engine.globals.base.on = false;
         this.engine.globals.spawner.reset();
       });
 
+      this.engine.on("startGame", () => {
+        this.menu.hide = true;
+        this.inventoryMenu.hide = true;
+        this.engine.globals.base.on = true;
+        this.engine.globals.spawner.start();
+      });
+
       this.engine.on("levelWin", () => {
         this.menu.hide = false;
+        this.inventoryMenu.hide = false;
       });
 
       this.engine.on("closeInventory", () => {
         this.invSlide = 20;
+        this.invHide = true;
+      });
+
+      this.engine.on("openInventory", () => {
+        this.invSlide = -20;
       });
 
       this.engine.onUpdate(() => {
-        this.inventory.originX = constrain(this.inventory.originX + this.invSlide, 0, this.engine.window.width);
+        this.inventoryMenu.originX = constrain(this.inventoryMenu.originX + this.invSlide, 0, this.engine.window.width);
+        if ( this.invHide && this.inventoryMenu.originX === this.engine.window.width ) {
+          this.inventoryMenu.hideComponents();
+          this.invHide = false;
+        }
       });
     });
   }

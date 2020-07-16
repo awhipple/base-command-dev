@@ -2,7 +2,7 @@ export default class Sprite {
   _rad = 0;
   rotated = false;
 
-  constructor(img, x, y, scale) {
+  constructor(img, x, y, scale = 1) {
     this.img = img;
     this.x = x || 0;
     this.y = y || 0;

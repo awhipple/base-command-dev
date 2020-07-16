@@ -239,10 +239,10 @@ export default class GameEngine {
     this.eventListeners[eventName].push(callback);
   }
 
-  trigger(eventName) {
+  trigger(eventName, ...args) {
     var listeners = this.eventListeners[eventName] || [];
     for ( var i = 0; i < listeners.length; i++ ) {
-      listeners[i]();
+      listeners[i].apply(null, args);
     }
   }
 

@@ -28,6 +28,13 @@ export class UIComponent {
     
     return this.img;
   }
+
+  drawComponent() {
+    this.ctx.save();
+    this.ctx.fillStyle = "blue";
+    this.ctx.fillRect(0, 0, this.width, this.height);
+    this.ctx.restore();
+  }
   
   _clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

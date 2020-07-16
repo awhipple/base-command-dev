@@ -115,8 +115,8 @@ export default class Image {
 
   _rotateImage() {
     var newCanvas = document.createElement("canvas");
-    newCanvas.width = this.img.width;
-    newCanvas.height = this.img.height;
+    newCanvas.width = this.img.height;
+    newCanvas.height = this.img.width;
     var newCtx = newCanvas.getContext("2d");
 
     newCtx.save();
@@ -124,7 +124,8 @@ export default class Image {
     newCtx.clearRect(0, 0, newCanvas.width, newCanvas.height);
     newCtx.translate(newCanvas.width/2, newCanvas.height/2);
     newCtx.rotate(Math.PI/2);
-    newCtx.drawImage(this.img, -(newCanvas.width/2), -(newCanvas.height/2));
+    newCtx.translate(-newCanvas.height/2, -newCanvas.width/2);
+    newCtx.drawImage(this.img, 0, 0);
     newCtx.restore();
 
     return newCanvas;

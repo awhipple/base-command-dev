@@ -20,6 +20,10 @@ export default class Base extends GameObject {
 
     this.sprite = new Sprite(this.engine.images.get("base").img, this.x, this.y, 1);
     this.pointTo({x: engine.window.width/2, y: 0});
+
+    this.engine.onMouseMove(event => {
+      this.pointTo(event.pos);
+    });
   }
 
   update() {

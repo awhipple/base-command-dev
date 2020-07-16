@@ -41,12 +41,12 @@ export default class GameObject {
     this.collisionCallbacks[target] = callback;
   }
     
-  draw(ctx, engine, color = "#00f") {
+  draw(ctx, engine, color = "#00f", borderColor = "#000") {
     ctx.save();
     ctx.fillStyle = this.color ?? color;
     ctx.fillRect(this.screenRect.x, this.screenRect.y, this.screenRect.w, this.screenRect.h);
     if ( !this.hideBorder ) {
-      ctx.strokeStyle = "#000";
+      ctx.strokeStyle = borderColor;
       ctx.lineWidth = 3;
       ctx.strokeRect(this.screenRect.x, this.screenRect.y, this.screenRect.w, this.screenRect.h);
     }

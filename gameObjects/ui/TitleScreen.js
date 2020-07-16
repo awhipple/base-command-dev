@@ -87,9 +87,7 @@ export default class TitleScreen extends UIWindow {
         fontColor: "#0f0",
         center: true,
         callback: () => {
-          this.hide = true;
-          this.engine.globals.base.on = true;
-          this.engine.globals.spawner.start();
+          engine.trigger("startGame");
         },
       },
     ], {

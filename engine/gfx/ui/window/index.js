@@ -2,6 +2,7 @@ import GameObject from '../../../objects/GameObject.js';
 import nativeComponents from './nativeComponents.js';
 import { BoundingRect } from '../../../GameMath.js';
 import Text from '../../Text.js';
+import { shallow } from '../../../Tools.js';
 
 export default class UIWindow extends GameObject {
   scroll = 0;
@@ -12,11 +13,14 @@ export default class UIWindow extends GameObject {
     this.ui = ui;
 
     this.z = options.z ?? 100;
-    this.bgColor = options.bgColor;
+    this.bgColor = options.bgColor ?? "#fff";
+    this.borderColor = options.borderColor ?? "#000";
     this.outerPadding = options.outerPadding ?? 10;
     this.innerPadding = options.innerPadding ?? options.padding ?? 15;
     
     this.scrollSpeed = options.scrollSpeed ?? 30;
+
+    this.debug = options.debug ?? false;
 
     this._generateComponents();
   }
@@ -30,7 +34,7 @@ export default class UIWindow extends GameObject {
   draw(ctx) {
     ctx.save();
 
-    super.draw(ctx, this.engine, this.bgColor ?? "#fff");
+    super.draw(ctx, this.engine, this.bgColor, this.borderColor);
 
     if ( this.bgColor ) {
       this.ctx.fillStyle = this.bgColor;
@@ -66,6 +70,10 @@ export default class UIWindow extends GameObject {
   }
 
   onMouseWheel(event) {
+    if ( this.debug ) {
+      console.log(event);
+    }
+
     if ( event.wheelDirection === "up" ) {
       this.scroll -= this.scrollSpeed;
     } else if ( event.wheelDirection === "down" ) {
@@ -76,6 +84,8 @@ export default class UIWindow extends GameObject {
     this.scroll = Math.min(this.maxScroll, this.scroll);
 
     this.onMouseMove(event);
+
+    this._triggerEventInComponents(event, "onMouseWheel");
   }
 
   onMouseMove(event) {
@@ -98,6 +108,10 @@ export default class UIWindow extends GameObject {
 
   set hide(val) {
     this._hide = val;
+    this.hideComponents();
+  }
+
+  hideComponents() {
     this.components.forEach(component => component.hide?.());
   }
 
@@ -145,6 +159,7 @@ export default class UIWindow extends GameObject {
   _triggerEventInComponents(event, eventType) {
     var totalPadding = this.outerPadding + this.innerPadding;
 
+    event = shallow(event, 2);
     var windowX = event.relPos.x - totalPadding;
     event.pos = { y: event.relPos.y + this.scroll - totalPadding };
     delete event.relPos;
