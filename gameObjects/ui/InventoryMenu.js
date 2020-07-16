@@ -31,6 +31,9 @@ export default class InventoryMenu extends UIWindow {
       {
         type: Items,
         inventory: inventory,
+        text: {
+          cash: () => '$' + engine.globals.cash,
+        }
       },
       {
         type: "spacer",
@@ -113,7 +116,7 @@ class Items extends UIComponent {
     super.initialize();
 
     var itemIndexes = [];
-    for ( var i = 0; i < 6; i++ ) {
+    for ( var i = 0; i < 4; i++ ) {
       itemIndexes.push(i*this.iconColumns);
     }
 
@@ -135,6 +138,27 @@ class Items extends UIComponent {
         innerPadding: this.iconPadding,
       },
     );
+
+    this.cashText = this.options.textObj.cash;
+    this.cashText.fontSize = 15;
+    this.cashText.fontColor = "#0f0";
+    this.cashText.x = 480;
+
+    this.sellRect = new BoundingRect(480, 30, 50, 129);
+    this.dollarText = new Text('$', 489, 59, {
+      fontColor: "#0f0",
+    });
+
+    this.engine.on("stopDragItem", item => {
+      if ( this.hoverSell ) {
+        this.engine.globals.cash += item.value;
+        this.options.inventory.remove(item);
+      }
+    });
+  }
+
+  onMouseMove(event) {
+    this.hoverSell = this.sellRect.contains(event.pos);
   }
 
   onMouseWheel(event) {
@@ -156,6 +180,9 @@ class Items extends UIComponent {
 
   drawComponent() {
     this.menu.draw(this.ctx);
+    this.cashText.draw(this.ctx);
+    this.sellRect.draw(this.ctx, this.hoverSell && this.engine.globals.dragItem ? "yellow" : "white");
+    this.dollarText.draw(this.ctx);
   }
 }
 

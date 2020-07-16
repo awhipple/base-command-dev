@@ -10,8 +10,7 @@ export default class Inventory {
       primary: new Item(engine, "shot"),
     };
 
-    this.items.push(new Item(engine, "base"));
-    this.items.push(new Item(engine, "dragon-green"));
+    this.items.push(new Item(engine, "rapid"));
   }
 
   add(item) {

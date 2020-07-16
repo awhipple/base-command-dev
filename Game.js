@@ -24,7 +24,7 @@ export default class Game {
 
   start() {
     this.engine.images.preload("base");
-    this.engine.sounds.preload(["shot", "spark", "explosion", "chime", "lakitunes_chilled-beat.mp3"]);
+    this.engine.sounds.preload(["shot", "rapid", "spark", "explosion", "chime", "lakitunes_chilled-beat.mp3"]);
     this.engine.sounds.alias("music", "lakitunes_chilled-beat");
 
     this.engine.globals.cash = this.engine.prod ? 10000 : 50000;
