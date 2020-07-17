@@ -1,7 +1,6 @@
 import GameObject from "../engine/objects/GameObject.js";
 import Sprite from "../engine/gfx/Sprite.js";
 import { getDirectionFrom, Coord } from "../engine/GameMath.js";
-import Projectile from "./Projectile.js";
 
 export default class Base extends GameObject {
   z = 5;
@@ -24,19 +23,18 @@ export default class Base extends GameObject {
     this.engine.onMouseMove(event => {
       this.pointTo(event.pos);
     });
+
+    this.equip = this.engine.globals.inventory.equipment;
   }
 
   update() {
     this.fireIn -= 1/60;
     if ( this.fireIn < 0 ) {
-      this.fireIn += 1/this.engine.globals.stats.speed.val;
+      this.fireIn += 1/(this.engine.globals.stats.speed.val * this.equip.primary.projectile.speed);
 
       this.engine.sounds.play("shot", {volume: 0.5});
       setTimeout(() => 
-        this.engine.register(new Projectile(
-          this.engine, this.firePos.x, this.firePos.y, this.sprite.rad, 
-          this.engine.globals.stats.power.val, 300
-        ), "projectile"),
+        this.equip.primary.shoot(this.firePos.x, this.firePos.y, this.sprite.rad),
       150);
     }
   }

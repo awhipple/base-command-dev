@@ -27,7 +27,7 @@ export default class Game {
     this.engine.sounds.preload(["shot", "rapid", "spark", "explosion", "chime", "lakitunes_chilled-beat.mp3"]);
     this.engine.sounds.alias("music", "lakitunes_chilled-beat");
 
-    this.engine.globals.cash = this.engine.prod ? 10000 : 50000;
+    this.engine.globals.cash = this.engine.prod ? 0 : 50000;
     this.engine.globals.stats = stats;
     this.engine.globals.levels = new Levels(this.engine);
 
@@ -35,6 +35,9 @@ export default class Game {
       if ( this.engine.prod ) {
         this.engine.on("firstInteraction", () => this.engine.sounds.play("music", {loop: true, volume: 0.3}));
       }
+      
+      this.inventory = this.engine.globals.inventory = new Inventory(engine);
+      
       this.engine.register(this.engine.globals.base = new Base(engine), "base");
       
       this.engine.register(this.engine.globals.spawner = new Spawner(
@@ -43,8 +46,6 @@ export default class Game {
 
       this.menu = new TitleScreen(this.engine);
       this.engine.register(this.menu);
-
-      this.inventory = this.engine.globals.inventory = new Inventory(engine);
 
       this.engine.register(new Cursor(this.engine));
 
