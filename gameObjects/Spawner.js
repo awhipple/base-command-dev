@@ -58,7 +58,8 @@ export default class Spawner {
       if ( this.rewardAnim.dist < 0 ) {
         this.reset();
         this.rewardAnim = null;
-        new Enemy(this.engine, this.engine.window.width/2, this.engine.window.height/2, this.engine.globals.levels.current.reward)._createCash();
+        new Enemy(this.engine, this.engine.window.width/2, this.engine.window.height/2, this.engine.globals.levels.current.cash)._createCash();
+        this.engine.globals.levels.rollForReward();
         setTimeout(() => this.engine.trigger("levelWin"), 2500);
       }
     }

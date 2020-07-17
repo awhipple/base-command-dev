@@ -22,7 +22,7 @@ export default class Cursor extends GameObject {
   draw(ctx) {
     if ( this.engine.globals.dragItem ) {
       this.engine.globals.dragItem.icon.draw(ctx, this.rect);
-      this.rect.draw(ctx);
+      this.rect.draw(ctx, this.engine.globals.dragItem.borderColor);
     }
   }
 }

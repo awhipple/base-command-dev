@@ -3,11 +3,13 @@ import Base from "./gameObjects/Base.js";
 import Spawner from "./gameObjects/Spawner.js";
 import GameUI from "./gameObjects/ui/GameUI.js";
 import TitleScreen from "./gameObjects/ui/TitleScreen.js";
-import { stats, Levels } from "./gameObjects/Stats.js";
+import stats from "./gameObjects/Stats.js";
+import Levels from "./gameObjects/Levels.js";
 import { constrain } from "./engine/GameMath.js";
 import InventoryMenu from "./gameObjects/ui/InventoryMenu.js";
 import Inventory from "./gameObjects/Inventory.js";
 import Cursor from "./gameObjects/Cursor.js";
+import Reward from "./gameObjects/Reward.js";
 
 export default class Game {
   constructor() {
@@ -24,7 +26,7 @@ export default class Game {
 
   start() {
     this.engine.images.preload("base");
-    this.engine.sounds.preload(["shot", "rapid", "spark", "explosion", "chime", "lakitunes_chilled-beat.mp3"]);
+    this.engine.sounds.preload(["shot", "spark", "explosion", "chime", "lakitunes_chilled-beat.mp3"]);
     this.engine.sounds.alias("music", "lakitunes_chilled-beat");
 
     this.engine.globals.cash = this.engine.prod ? 0 : 50000;
@@ -83,6 +85,10 @@ export default class Game {
 
       this.engine.on("openInventory", () => {
         this.invSlide = -20;
+      });
+
+      this.engine.on("displayReward", (item) => {
+        this.engine.register(new Reward(this.engine, item));
       });
 
       this.engine.onUpdate(() => {

@@ -144,21 +144,28 @@ class Items extends UIComponent {
     this.cashText.fontColor = "#0f0";
     this.cashText.x = 480;
 
-    this.sellRect = new BoundingRect(480, 30, 50, 129);
-    this.dollarText = new Text('$', 489, 59, {
+    this.sellRect = new BoundingRect(480, 50, 50, 109);
+    this.dollarText = new Text('$', 489, 69, {
       fontColor: "#0f0",
     });
+    this.sellValueText = new Text('', 480, 20, {fontColor: "#0f0", fontSize: 12});
 
     this.engine.on("stopDragItem", item => {
       if ( this.hoverSell ) {
         this.engine.globals.cash += item.value;
         this.options.inventory.remove(item);
+        this.sellValueText.setText('');
       }
     });
   }
 
   onMouseMove(event) {
     this.hoverSell = this.sellRect.contains(event.pos);
+    if ( this.hoverSell && this.engine.globals.dragItem ) {
+      this.sellValueText.setText("+$" + this.engine.globals.dragItem.value);
+    } else {
+      this.sellValueText.setText('');
+    }
   }
 
   onMouseWheel(event) {
@@ -181,6 +188,7 @@ class Items extends UIComponent {
   drawComponent() {
     this.menu.draw(this.ctx);
     this.cashText.draw(this.ctx);
+    this.sellValueText.draw(this.ctx);
     this.sellRect.draw(this.ctx, this.hoverSell && this.engine.globals.dragItem ? "yellow" : "white");
     this.dollarText.draw(this.ctx);
   }
@@ -215,11 +223,10 @@ class ItemRow extends UIComponent {
         var size = this.options.iconSize;
         this.iconRects[i] = new BoundingRect(x, 0, size, size);
       }
-      
-      if ( item !== this.engine.globals.dragItem ) {
-        item.icon.draw(this.ctx, this.iconRects[i]);
-        this.iconRects[i].draw(this.ctx);
-      }
+      var alpha = item === this.engine.globals.dragItem ? 0.3 : 1.0;
+      var borderColor = {weapon: "orange", gem: "white"}[item.type];
+      item.icon.draw(this.ctx, this.iconRects[i], {alpha});
+      this.iconRects[i].draw(this.ctx, borderColor, undefined, alpha);
     }
   }
 }
@@ -230,7 +237,8 @@ class Crafting extends UIComponent {
   initialize() {
     super.initialize();
 
-    this.borderRect = new BoundingRect(0, 0, this.width, this.height);
+    var w = 370;
+    this.borderRect = new BoundingRect(this.suggestedWidth/2-w/2, 0, w, this.height);
   }
 
   drawComponent() {
@@ -256,7 +264,7 @@ class Equipment extends UIComponent {
     };
 
     this.engine.on("stopDragItem", (item) => {
-      if ( this.equipHover ) {
+      if ( this.equipHover && item.type === "weapon" ) {
         this.engine.globals.inventory.equip(this.equipHover, item);
       }
     });
@@ -282,8 +290,7 @@ class Equipment extends UIComponent {
       var slot = this.equipSlots[key];
       equip.icon.draw(this.ctx, slot);
       slot.draw(
-        this.ctx,
-        slot.hover && this.engine.globals.dragItem ? "yellow" : "white",
+        this.ctx, equip.borderColor,
       );
     }
   }

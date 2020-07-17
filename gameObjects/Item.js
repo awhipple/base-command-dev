@@ -2,6 +2,11 @@ import Projectile from "./Projectile.js";
 
 export default class Item {
   static list = {
+    "redGem": {type: "gem", value: 500, icon: "red-gem"},
+    "greenGem": {type: "gem", value: 500, icon: "green-gem"},
+    "blueGem": {type: "gem", value: 500, icon: "blue-gem"},
+    "whiteGem": {type: "gem", value: 500, icon: "white-gem"},
+
     "shot": {type: "weapon", value: 100},
     "rapid": {type: "weapon", value: 100, projectile: {
       damage: 0.6,
@@ -15,6 +20,8 @@ export default class Item {
 
   constructor(engine, name) {
     this.engine = engine;
+
+    this.borderColor = Item.list[name].borderColor = Item.list[name].borderColor ?? {weapon: "orange", gem: "white"}[Item.list[name].type];
 
     this.name = name;
     this.icon = engine.images.get(Item.list[name].icon ?? name);
@@ -45,6 +52,6 @@ export default class Item {
   }
 
   get type() {
-    return Item[this.name].type;
+    return Item.list[this.name].type;
   }
 }

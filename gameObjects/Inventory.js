@@ -10,11 +10,16 @@ export default class Inventory {
       primary: new Item(engine, "shot"),
     };
 
-    this.items.push(new Item(engine, "rapid"));
+    this.add(new Item(engine, "redGem"));
+    this.add(new Item(engine, "blueGem"));
+    this.add(new Item(engine, "rapid"));
+    this.add(new Item(engine, "greenGem"));
+    this.add(new Item(engine, "whiteGem"));
   }
 
   add(item) {
     this.items.push(item);
+    this.items.sort((a, b) => a.type < b.type ? 1 : -1)
   }
 
   remove(item) {

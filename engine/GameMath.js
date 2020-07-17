@@ -120,8 +120,9 @@ export class BoundingRect {
     );
   }
 
-  draw(ctx, color = "white", bgColor) {
+  draw(ctx, color = "white", bgColor, alpha = 1) {
     ctx.save();
+    ctx.globalAlpha = alpha;
     if ( bgColor ) {
       ctx.fillStyle = bgColor;
       ctx.fillRect(this.x, this.y, this.w, this.h);
