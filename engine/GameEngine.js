@@ -58,6 +58,8 @@ export default class GameEngine {
 
     this.onMouseUp(event => {
       this.mouse[MouseButtonNames[event.button] || event.button] = false;
+      
+      this._sendMouseEvent(event, "onMouseUp");
     });
 
     document.addEventListener('fullscreenchange', (event) => {

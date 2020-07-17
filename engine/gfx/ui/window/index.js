@@ -69,6 +69,10 @@ export default class UIWindow extends GameObject {
     this._triggerEventInComponents(event, "onMouseClick");
   }
 
+  onMouseUp(event) {
+    this._triggerEventInComponents(event, "onMouseUp");
+  }
+
   onMouseWheel(event) {
     if ( this.debug ) {
       console.log(event);

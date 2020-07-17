@@ -166,6 +166,9 @@ class Items extends UIComponent {
     } else {
       this.sellValueText.setText('');
     }
+    event.relPos = event.pos;
+    event.relPos.x -= this.menu.originX;
+    this.menu.onMouseMove(event);
   }
 
   onMouseWheel(event) {
@@ -183,6 +186,12 @@ class Items extends UIComponent {
     event.relPos = event.pos;
     event.relPos.x -= this.menu.originX;
     this.menu.onMouseClick(event);
+  }
+
+  onMouseUp(event) {
+    event.relPos = event.pos;
+    event.relPos.x -= this.menu.originX;
+    this.menu.onMouseUp(event);
   }
 
   drawComponent() {
@@ -211,6 +220,29 @@ class ItemRow extends UIComponent {
       if ( this.iconRects[i].contains(event.pos) ) {
         this.engine.globals.dragItem = this.options.inventory.items[i + this.options.index];
       }
+    }
+  }
+
+  onMouseMove(event) {
+    var drag = this.engine.globals.dragItem;
+    if ( drag ) {
+      this.iconRects.forEach((rect, i) => {
+        if ( rect.contains(event.pos) ) {
+          var target = this.options.inventory.items[i + this.options.index];
+          if ( target && drag !== target ) {
+            this.dropTarget = target;
+            this.dropRect = rect;
+            return;
+          }
+        }
+      });
+    }
+  }
+
+  onMouseUp(event) {
+    var drag = this.engine.globals.dragItem;
+    if ( drag && this.dropTarget ) {
+      this.engine.globals.inventory.attemptMerge(drag, this.dropTarget);
     }
   }
 

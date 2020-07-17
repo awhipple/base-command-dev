@@ -7,14 +7,8 @@ export default class Inventory {
     this.items = [];
 
     this.equipment = {
-      primary: new Item(engine, "shot"),
+      primary: new Item(engine, "basic"),
     };
-
-    this.add(new Item(engine, "redGem"));
-    this.add(new Item(engine, "blueGem"));
-    this.add(new Item(engine, "rapid"));
-    this.add(new Item(engine, "greenGem"));
-    this.add(new Item(engine, "whiteGem"));
   }
 
   add(item) {
@@ -30,5 +24,13 @@ export default class Inventory {
     this.remove(item);
     this.add(this.equipment[slot]);
     this.equipment[slot] = item;
+  }
+
+  attemptMerge(first, second) {
+    if ( first !== second && first.stats.craft?.[second.name]) {
+      this.remove(first);
+      this.remove(second);
+      this.add(new Item(this.engine, first.stats.craft[second.name]));
+    }
   }
 }
