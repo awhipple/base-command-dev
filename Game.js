@@ -21,13 +21,21 @@ export default class Game {
 
     // Debug
     window.engine = this.engine;
-    // this.engine.setProd();
+    this.engine.setProd();
   }
 
   start() {
-    this.engine.images.preload("base");
-    this.engine.sounds.preload(["shot", "spark", "explosion", "chime", "lakitunes_chilled-beat.mp3"]);
-    this.engine.sounds.alias("music", "lakitunes_chilled-beat");
+    this.engine.images.preload([
+      "base", "dragon-green",
+      "shot", "triangle", "rapid",
+      "blue-gem", "green-gem", "red-gem", "white-gem",
+    ]);
+    this.engine.sounds.preload([
+      "shot", "spark", "explosion", "chime",
+      "lakitunes_chilled-beat.mp3",
+      "tsuwami_generic-fighting-game-music.mp3"
+    ]);
+    this.engine.sounds.alias("music", "tsuwami_generic-fighting-game-music");
 
     this.engine.globals.cash = this.engine.prod ? 0 : 50000;
     this.engine.globals.stats = stats;
@@ -35,7 +43,7 @@ export default class Game {
 
     this.engine.load().then(() => {
       if ( this.engine.prod ) {
-        this.engine.on("firstInteraction", () => this.engine.sounds.play("music", {loop: true, volume: 0.3}));
+        this.engine.on("firstInteraction", () => this.engine.sounds.play("music", {loop: true, volume: 0.6}));
       }
       
       this.inventory = this.engine.globals.inventory = new Inventory(engine);
