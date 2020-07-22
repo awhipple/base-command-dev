@@ -6,6 +6,12 @@ export default class Inventory {
 
     this.items = [];
 
+    if ( engine.dev ) {
+      for ( var i = 0; i < 4; i++ ) {
+        this.items.push(new Item(engine, "whiteGem"));
+      }
+    }
+
     this.equipment = {
       primary: new Item(engine, "basic"),
     };

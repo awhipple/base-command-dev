@@ -1,6 +1,6 @@
 import GameObject from "../engine/objects/GameObject.js";
 import Item from "./Item.js";
-import { BoundingRect, constrain } from "../engine/GameMath.js";
+import { BoundingRect } from "../engine/GameMath.js";
 
 export default class Reward extends GameObject {
   z = 110;
@@ -16,8 +16,6 @@ export default class Reward extends GameObject {
   }
 
   update() {
-    this.alpha = Math.min(this.alpha + 0.01, 1);
-    
     this.nextPulse -= 1/60;
     if ( this.nextPulse <= 0 ) {
       this.nextPulse += this.pulseRate;
@@ -33,7 +31,6 @@ export default class Reward extends GameObject {
     this.pulses = this.pulses.filter(pulse => pulse.alpha > 0);
 
     this.time -= 1/60;
-    this.alpha = constrain(this.time, 0, 1);
 
     if ( this.time < 1.5 ) {
       this.xv = this.xv ?? 0;
@@ -47,12 +44,12 @@ export default class Reward extends GameObject {
   }
 
   draw(ctx) {
-    this.rect.draw(ctx, this.item.borderColor, "black", this.alpha);
-    this.item.icon.draw(ctx, this.rect, { alpha: this.alpha });
+    this.rect.draw(ctx, this.item.borderColor, "black");
+    this.item.icon.draw(ctx, this.rect);
 
     this.pulses.forEach(pulse => {
       pulse.alpha = Math.max((100-pulse.w) / 100, 0);
-      pulse.draw(ctx, "yellow", undefined, pulse.alpha * this.alpha);
+      pulse.draw(ctx, "yellow", undefined, pulse.alpha);
     });
   }
 }

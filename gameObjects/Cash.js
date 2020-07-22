@@ -1,6 +1,6 @@
 import GameObject from "../engine/objects/GameObject.js";
 import { slideDirectionTowards, getDirectionFrom } from "../engine/GameMath.js";
-import FadeLine from "./FadeLine.js";
+import FadeLine from "./effects/FadeLine.js";
 
 export default class Cash extends GameObject {
   z = 3;
