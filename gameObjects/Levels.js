@@ -49,7 +49,8 @@ export default class Levels {
         enemyHp: 100,
         boss: true,
         reward: "blueGem",
-        chance: 100,
+        qty: 1,
+        chance: 50,
       },
     ];
 

@@ -19,12 +19,25 @@ export default class Inventory {
     };
   }
 
+  sort() {
+    this.items = this.items.filter(item => item);
+    this.items.sort((a, b) => a?.type < b?.type ? 1 : -1);
+  }
+
   add(item) {
-    this.items.push(item);
+    var index = this.items.findIndex(item => !item);
+    if ( index !== -1 ) {
+      this.items[index] = item;
+    } else {
+      this.items.push(item);
+    }
   }
 
   remove(item) {
-    this.items.splice(this.items.indexOf(item), 1);
+    var index = this.items.indexOf(item);
+    if ( index !== -1 ) {
+      this.items[index] = null;
+    }
   }
 
   equip(slot, item) {
@@ -42,9 +55,12 @@ export default class Inventory {
 
   attemptMerge(first, second) {
     if ( first !== second && first.stats.craft?.[second.name]) {
-      this.remove(first);
-      this.remove(second);
-      this.add(new Item(this.engine, first.stats.craft[second.name]));
+      var mergeIndex = this.items.indexOf(second);
+      if ( mergeIndex >= 0) {
+        this.remove(first);
+        this.remove(second);
+        this.items[mergeIndex] = new Item(this.engine, first.stats.craft[second.name]);
+      }
     }
   }
 }

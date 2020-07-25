@@ -69,7 +69,7 @@ export default class Game {
 
       this.inventoryMenu = new InventoryMenu(this.engine, this.inventory);
       this.engine.register(this.inventoryMenu);
-      this.invSlide = 20;
+      this.invSlide = this.engine.prod ? 20 : -20;
 
       this.engine.register(new GameUI(this.engine));
 

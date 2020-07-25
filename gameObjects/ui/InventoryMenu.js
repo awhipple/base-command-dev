@@ -144,12 +144,18 @@ class Items extends UIComponent {
     this.cashText.fontColor = "#0f0";
     this.cashText.x = 480;
 
-    this.sellRect = new BoundingRect(480, 50, 50, 109);
-    this.dollarText = new Text('$', 489, 69, {
+    this.sellRect = new BoundingRect(480, 50, 50, 60);
+    this.dollarText = new Text('$', 489, 48, {
       fontColor: "#0f0",
     });
     this.sellValueText = new Text('', 480, 20, {fontColor: "#0f0", fontSize: 12});
-
+    
+    this.sortRect = new BoundingRect(480, 130, 50, 28);
+    this.sortText = new Text('Sort', 487, 134, {
+      fontSize: 15,
+      fontColor: "#55f",
+    });
+    
     this.engine.on("stopDragItem", item => {
       if ( this.hoverSell ) {
         this.engine.globals.cash += item.value;
@@ -166,9 +172,11 @@ class Items extends UIComponent {
     } else {
       this.sellValueText.setText('');
     }
+
+    this.hoverSort = this.sortRect.contains(event.pos);
+
     event.relPos = event.pos;
     event.relPos.x -= this.menu.originX;
-    
     this.menu.onMouseMove(event);
   }
 
@@ -184,6 +192,10 @@ class Items extends UIComponent {
   }
 
   onMouseClick(event) {
+    if ( this.hoverSort ) {
+      this.engine.globals.inventory.sort();
+    }
+
     event.relPos = event.pos;
     event.relPos.x -= this.menu.originX;
     this.menu.onMouseClick(event);
@@ -201,6 +213,8 @@ class Items extends UIComponent {
     this.sellValueText.draw(this.ctx);
     this.sellRect.draw(this.ctx, this.hoverSell && this.engine.globals.dragItem ? "yellow" : "white");
     this.dollarText.draw(this.ctx);
+    this.sortRect.draw(this.ctx, this.hoverSort ? "yellow" : "white");
+    this.sortText.draw(this.ctx);
   }
 }
 
@@ -257,15 +271,17 @@ class ItemRow extends UIComponent {
     for ( var i = 0; i < this.options.itemCount && i + this.options.index < this.options.inventory.items.length; i++ ) {
       var item = this.options.inventory.items[i + this.options.index];
       
-      if ( !this.iconRects[i] ) {
-        var x = i * (this.options.iconSize + this.options.iconPadding);
-        var size = this.options.iconSize;
-        this.iconRects[i] = new BoundingRect(x, 0, size, size);
+      if ( item ) {
+        if ( !this.iconRects[i] ) {
+          var x = i * (this.options.iconSize + this.options.iconPadding);
+          var size = this.options.iconSize;
+          this.iconRects[i] = new BoundingRect(x, 0, size, size);
+        }
+        var alpha = item === this.engine.globals.dragItem ? 0.3 : 1.0;
+        var borderColor = Item.borderColors[item.type];
+        item.icon.draw(this.ctx, this.iconRects[i], {alpha});
+        this.iconRects[i].draw(this.ctx, borderColor, undefined, alpha);
       }
-      var alpha = item === this.engine.globals.dragItem ? 0.3 : 1.0;
-      var borderColor = Item.borderColors[item.type];
-      item.icon.draw(this.ctx, this.iconRects[i], {alpha});
-      this.iconRects[i].draw(this.ctx, borderColor, undefined, alpha);
     }
   }
 }
