@@ -93,15 +93,17 @@ export default class GameEngine {
       object.on = true;
     }
 
-    this.gameObjects.all.push(object);
+    if ( this.gameObjects.all.indexOf(object) === -1 ) {
+      this.gameObjects.all.push(object);
 
-    // Store in its own collection if requested
-    if ( name ) {
-      this.gameObjects[name] = this.gameObjects[name] || {};
-      do {
-        object._hash = Math.floor(Math.random()*1000000000);
-      } while (this.gameObjects[name][object._hash]);
-      this.gameObjects[name][object._hash] = object;
+      // Store in its own collection if requested
+      if ( name ) {
+        this.gameObjects[name] = this.gameObjects[name] || {};
+        do {
+          object._hash = Math.floor(Math.random()*1000000000);
+        } while (this.gameObjects[name][object._hash]);
+        this.gameObjects[name][object._hash] = object;
+      }
     }
   }
 

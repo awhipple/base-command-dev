@@ -68,7 +68,10 @@ export default class Game {
       this.engine.register(new Cursor(this.engine));
 
       this.inventoryMenu = new InventoryMenu(this.engine, this.inventory);
-      this.engine.register(this.inventoryMenu);
+      if ( this.engine.dev ) {
+        this.engine.register(this.inventoryMenu);
+      }
+
       this.invSlide = this.engine.prod ? 20 : -20;
 
       this.engine.register(new GameUI(this.engine));
@@ -87,6 +90,7 @@ export default class Game {
         this.inventoryMenu.hide = true;
         this.engine.globals.base.on = true;
         this.engine.globals.spawner.start();
+        this.engine.register(this.inventoryMenu);      
       });
 
       this.engine.on("levelWin", () => {

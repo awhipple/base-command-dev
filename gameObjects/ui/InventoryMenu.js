@@ -9,7 +9,6 @@ export default class InventoryMenu extends UIWindow {
   constructor(engine, inventory) {
     super(engine, {
       x: engine.window.width, y: 0,
-      // x: 0, y: 0,
       w: engine.window.width, h: engine.window.height,
     }, [
       {
@@ -41,13 +40,13 @@ export default class InventoryMenu extends UIWindow {
       },
       {
         type: "title",
-        text: "Crafting",
+        text: "Upgrades",
         fontSize: 40,
         fontColor: "white",
         center: true
       },
       {
-        type: Crafting,
+        type: Upgrades,
         inventory: inventory,
       },
       {
@@ -286,7 +285,7 @@ class ItemRow extends UIComponent {
   }
 }
 
-class Crafting extends UIComponent {
+class Upgrades extends UIComponent {
   height = 159;
 
   initialize() {

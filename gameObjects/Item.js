@@ -9,7 +9,7 @@ export default class Item {
   static list = {
     redGem: {type: "gem", value: 500, icon: "red-gem"},
     greenGem: {type: "gem", value: 500, icon: "green-gem"},
-    blueGem: {type: "gem", value: 500, icon: "blue-gem",
+    blueGem: {type: "gem", value: 2000, icon: "blue-gem",
       craft: {
         basic: "homing",
       }
@@ -19,7 +19,7 @@ export default class Item {
         whiteGem: "basic",
       }
     },
-    basic: {type: "weapon", value: 100, icon: "white-circle", 
+    basic: {type: "weapon", value: 750, icon: "white-circle", 
       craft: {
         basic: "rapid",
         blueGem: "homing",
@@ -28,7 +28,7 @@ export default class Item {
         imageName: "white-circle",
       }
     },
-    rapid: {type: "weapon", value: 100, icon: "white-rapid-icon",
+    rapid: {type: "weapon", value: 1500, icon: "white-rapid-icon",
       projectile: {
         damage: 0.6,
         speed: 2,
@@ -36,7 +36,7 @@ export default class Item {
         alternate: true,
       }
     },
-    homing: {type: "weapon", value: 100, icon: "blue-circle", 
+    homing: {type: "weapon", value: 2000, icon: "blue-circle", 
       craft: {
         homing: "homingRapid",
       },
@@ -45,7 +45,7 @@ export default class Item {
         homing : true,
       }
     },
-    homingRapid: {type: "weapon", value: 100, icon: "blue-rapid-icon",
+    homingRapid: {type: "weapon", value: 3500, icon: "blue-rapid-icon",
       projectile: {
         damage: 0.6,
         speed: 2,

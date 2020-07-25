@@ -12,6 +12,7 @@ export default class Inventory {
         this.items.push(new Item(engine, "blueGem"));
         this.items.push(new Item(engine, "rapid"));
       }
+      this.sort();
     }
 
     this.equipment = {
@@ -21,7 +22,7 @@ export default class Inventory {
 
   sort() {
     this.items = this.items.filter(item => item);
-    this.items.sort((a, b) => a?.type < b?.type ? 1 : -1);
+    this.items.sort((a, b) => a.type === b.type ? (a.name < b.name ? 1 : -1) : (a.type < b.type ? 1 : -1));
   }
 
   add(item) {
