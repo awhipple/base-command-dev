@@ -10,6 +10,7 @@ import InventoryMenu from "./gameObjects/ui/InventoryMenu.js";
 import Inventory from "./gameObjects/Inventory.js";
 import Cursor from "./gameObjects/Cursor.js";
 import Reward from "./gameObjects/Reward.js";
+import Circle from "./engine/gfx/shapes/Circle.js";
 
 export default class Game {
   constructor() {
@@ -27,7 +28,6 @@ export default class Game {
   start() {
     this.engine.images.preload([
       "base", "dragon-green",
-      "shot", "triangle", "rapid",
       "blue-gem", "green-gem", "red-gem", "white-gem",
     ]);
     this.engine.sounds.preload([
@@ -37,6 +37,12 @@ export default class Game {
     ]);
     this.engine.sounds.alias("music", "tsuwami_generic-fighting-game-music");
 
+    ["white", "blue"].forEach(color => {
+      this.engine.images.save(this.generateCircleImage(10, color), color + "-circle");
+      this.engine.images.save(this.generateTriangleImage(15, color), color + "-triangle");
+      this.engine.images.save(this.generateRapidIcon(color), color + "-rapid-icon");
+    });
+    
     this.engine.globals.cash = this.engine.prod ? 0 : 50000;
     this.engine.globals.stats = stats;
     this.engine.globals.levels = new Levels(this.engine);
@@ -84,6 +90,7 @@ export default class Game {
       this.engine.on("levelWin", () => {
         this.menu.hide = false;
         this.inventoryMenu.hide = false;
+        this.engine.unregister("projectile");
       });
 
       this.engine.on("closeInventory", () => {
@@ -107,5 +114,62 @@ export default class Game {
         }
       });
     });
+  }
+
+  generateCircleImage(radius, color = "white") {
+    var img = document.createElement("canvas");
+    img.width = img.height = radius*2;
+    var ctx = img.getContext("2d");
+
+    Circle.draw(ctx, radius, radius, radius, {
+      color: color,
+    });
+
+    return img;
+  }
+
+  generateTriangleImage(size, color = "white") {
+    var img = document.createElement("canvas");
+    img.width = img.height = size;
+    var ctx = img.getContext("2d");
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(size, size/2);
+    ctx.lineTo(0, size);
+    ctx.lineTo(0, 0);
+    ctx.closePath();
+
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = color;
+    ctx.stroke();
+
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    return img;
+  }
+
+  generateRapidIcon(color = "white") {
+    var img = document.createElement("canvas");
+    img.width = img.height = 100;
+    var ctx = img.getContext("2d");
+
+    ctx.beginPath();
+    [{x: 30, y: 16}, {x: 70, y: 56}].forEach(pos => {
+      ctx.moveTo(pos.x, pos.y);
+      ctx.lineTo(pos.x + 12, pos.y + 24);
+      ctx.lineTo(pos.x - 12, pos.y + 24);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.closePath();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = color;
+      ctx.stroke();
+  
+      ctx.fillStyle = color;
+      ctx.fill();
+    });
+
+    return img;
   }
 }

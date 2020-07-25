@@ -21,7 +21,6 @@ export default class Image {
         coord = null, 
         rect = null, 
         options = null;
-    // console.log(typeof a, typeof b);
     if ( a instanceof BoundingRect ) {
       rect = a;
       options = b || {};

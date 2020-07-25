@@ -16,21 +16,21 @@ export default class Levels {
         spawnRate: 0.5,
         enemyHp: 6,
         reward: "whiteGem",
-        chance: 5,
+        chance: 15,
       },
       {
         enemies: 20,
         spawnRate: 0.5,
         enemyHp: 15,
         reward: "whiteGem",
-        chance: 15,
+        chance: 35,
       },
       {
         enemies: 25,
         spawnRate: 0.5,
         enemyHp: 25,
         reward: "whiteGem",
-        chance: 25,
+        chance: 50,
       },
       {
         enemies: 25,
@@ -38,7 +38,7 @@ export default class Levels {
         spawnRate: 0.5,
         enemyHp: 20,
         reward: "whiteGem",
-        chance: 40,
+        chance: 100,
       },
       {
         icon: engine.images.get("dragon-green"),
@@ -46,7 +46,7 @@ export default class Levels {
         spawnRate: 1,
         enemyHp: 100,
         boss: true,
-        reward: "whiteGem",
+        reward: "blueGem",
         chance: 100,
       },
     ];

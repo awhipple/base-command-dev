@@ -28,7 +28,11 @@ export class Coord {
   }
 
   distanceTo(other) {
-    return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+    return Math.sqrt(this.squaredDistanceTo(other));
+  }
+
+  squaredDistanceTo(other) {
+    return Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2);
   }
   
   distanceToLessThan(other, distance) {

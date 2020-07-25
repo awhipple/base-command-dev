@@ -4,20 +4,51 @@ export default class Item {
   static list = {
     redGem: {type: "gem", value: 500, icon: "red-gem"},
     greenGem: {type: "gem", value: 500, icon: "green-gem"},
-    blueGem: {type: "gem", value: 500, icon: "blue-gem"},
-    whiteGem: {type: "gem", value: 500, icon: "white-gem", craft: {
-      whiteGem: "basic",
-    }},
-
-    "basic": {type: "weapon", value: 100, icon: "shot", craft: {
-      basic: "rapid",
-    }},
-    "rapid": {type: "weapon", value: 100, projectile: {
-      damage: 0.6,
-      speed: 2,
-      imageName: "triangle",
-      alternate: true,
-    }},
+    blueGem: {type: "gem", value: 500, icon: "blue-gem",
+      craft: {
+        basic: "homing",
+      }
+    },
+    whiteGem: {type: "gem", value: 500, icon: "white-gem", 
+      craft: {
+        whiteGem: "basic",
+      }
+    },
+    basic: {type: "weapon", value: 100, icon: "white-circle", 
+      craft: {
+        basic: "rapid",
+        blueGem: "homing",
+      }, 
+      projectile: {
+        imageName: "white-circle",
+      }
+    },
+    rapid: {type: "weapon", value: 100, icon: "white-rapid-icon",
+      projectile: {
+        damage: 0.6,
+        speed: 2,
+        imageName: "white-triangle",
+        alternate: true,
+      }
+    },
+    homing: {type: "weapon", value: 100, icon: "blue-circle", 
+      craft: {
+        homing: "homingRapid",
+      },
+      projectile: {
+        imageName: "blue-circle",
+        homing : true,
+      }
+    },
+    homingRapid: {type: "weapon", value: 100, icon: "blue-rapid-icon",
+      projectile: {
+        damage: 0.6,
+        speed: 2,
+        imageName: "blue-triangle",
+        alternate: true,
+        homing: true,
+      }
+    },
   }
 
   static ICON_SIZE = 40;

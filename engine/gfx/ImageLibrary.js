@@ -17,13 +17,17 @@ export default class ImageLibrary {
     if ( typeof name === 'string' ) {
       name = [ name ];
     }
-    for(var i = 0; i < name.length; i++) {
+    for ( var i = 0; i < name.length; i++ ) {
       this.get(name[i]);
     }
   }
 
   load() {
     return Promise.all(Object.values(this.preloadPromises));
+  }
+
+  save(img, name) {
+    this.images[name] = new Image(img);
   }
 
   _loadImage(name) {

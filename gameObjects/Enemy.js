@@ -51,6 +51,10 @@ export default class Enemy extends GameObject {
     }
   }
 
+  unregister() {
+    this.dead = true;
+  }
+
   draw(ctx) {
     this.rect.draw(ctx, this.type);
     Text.draw(ctx, Math.ceil(this.hp), this.x, this.y - 25, {center: true, fontColor: this.type, fontSize: 40});

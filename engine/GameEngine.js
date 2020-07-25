@@ -112,6 +112,7 @@ export default class GameEngine {
         this.unregister(obj);
       }
     } else {
+      object.unregister?.();
       var objectIndex = this.gameObjects.all.indexOf(object);
       if ( objectIndex !== -1 ) {
         this.gameObjects.all.splice(objectIndex, 1);
