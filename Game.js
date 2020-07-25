@@ -11,6 +11,7 @@ import Inventory from "./gameObjects/Inventory.js";
 import Cursor from "./gameObjects/Cursor.js";
 import Reward from "./gameObjects/Reward.js";
 import Circle from "./engine/gfx/shapes/Circle.js";
+import Item from "./gameObjects/Item.js";
 
 export default class Game {
   constructor() {
@@ -53,6 +54,7 @@ export default class Game {
       }
       
       this.inventory = this.engine.globals.inventory = new Inventory(engine);
+      Item.NONE.engine = this.engine;
       
       this.engine.register(this.engine.globals.base = new Base(engine), "base");
       

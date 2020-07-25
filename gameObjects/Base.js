@@ -1,6 +1,7 @@
 import GameObject from "../engine/objects/GameObject.js";
 import Sprite from "../engine/gfx/Sprite.js";
 import { getDirectionFrom, Coord } from "../engine/GameMath.js";
+import Item from "./Item.js";
 
 export default class Base extends GameObject {
   z = 5;
@@ -28,13 +29,14 @@ export default class Base extends GameObject {
   }
 
   update() {
+    var weapon = this.equip.primary ?? Item.NONE;
     this.fireIn -= 1/60;
     if ( this.fireIn < 0 ) {
-      this.fireIn += 1/(this.engine.globals.stats.speed.val * this.equip.primary.projectile.speed);
+      this.fireIn += 1/(this.engine.globals.stats.speed.val * weapon.projectile.speed);
 
       this.engine.sounds.play("shot", {volume: 0.5});
       setTimeout(() => 
-        this.equip.primary.shoot(this.firePos.x, this.firePos.y, this.sprite.rad),
+        weapon.shoot(this.firePos.x, this.firePos.y, this.sprite.rad),
       150);
     }
   }

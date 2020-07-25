@@ -168,6 +168,7 @@ class Items extends UIComponent {
     }
     event.relPos = event.pos;
     event.relPos.x -= this.menu.originX;
+    
     this.menu.onMouseMove(event);
   }
 
@@ -225,6 +226,7 @@ class ItemRow extends UIComponent {
 
   onMouseMove(event) {
     var drag = this.engine.globals.dragItem;
+    var foundTarget = false;
     if ( drag ) {
       this.iconRects.forEach((rect, i) => {
         if ( rect.contains(event.pos) ) {
@@ -232,10 +234,15 @@ class ItemRow extends UIComponent {
           if ( target && drag !== target ) {
             this.dropTarget = target;
             this.dropRect = rect;
+            foundTarget = true;
             return;
           }
         }
       });
+      if ( !foundTarget ) {
+        this.dropTarget = null;
+        this.dropRect = null;
+      }
     }
   }
 
@@ -256,7 +263,7 @@ class ItemRow extends UIComponent {
         this.iconRects[i] = new BoundingRect(x, 0, size, size);
       }
       var alpha = item === this.engine.globals.dragItem ? 0.3 : 1.0;
-      var borderColor = {weapon: "orange", gem: "white"}[item.type];
+      var borderColor = Item.borderColors[item.type];
       item.icon.draw(this.ctx, this.iconRects[i], {alpha});
       this.iconRects[i].draw(this.ctx, borderColor, undefined, alpha);
     }
@@ -302,6 +309,12 @@ class Equipment extends UIComponent {
     });
   }
 
+  onMouseClick(event) {
+    if ( this.equipHover ) {
+      this.engine.globals.inventory.unequip(this.equipHover);
+    }
+  }
+
   onMouseMove(event) {
     for ( var key in this.equipment ) {
       var slot = this.equipSlots[key];
@@ -320,9 +333,9 @@ class Equipment extends UIComponent {
     for ( var key in this.equipment ) {
       var equip = this.equipment[key];
       var slot = this.equipSlots[key];
-      equip.icon.draw(this.ctx, slot);
+      equip?.icon.draw(this.ctx, slot);
       slot.draw(
-        this.ctx, equip.borderColor,
+        this.ctx, equip?.borderColor ?? Item.borderColors.weapon,
       );
     }
   }

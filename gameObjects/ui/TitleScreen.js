@@ -35,6 +35,18 @@ export default class TitleScreen extends UIWindow {
   constructor(engine) {
     var stats = engine.globals.stats;
     var levels = engine.globals.levels;
+    var rewardText = () => {
+      var rewardText = "Reward: ";
+      if ( levels.current.reward ) {
+        rewardText += "   ";
+        if ( levels.current.reward && (levels.current.qty ?? 0) === 0 && (levels.current.chance ?? 100) !== 100) {
+          rewardText += "(" + levels.current.chance + "%)";
+        }
+        rewardText += " + ";
+      }
+      rewardText += "$" + levels.current.cash;
+      return rewardText;
+    }
     super(engine, {
       x: 0, y: 0,
       w: engine.window.width, h: engine.window.height,
@@ -76,7 +88,7 @@ export default class TitleScreen extends UIWindow {
         text: {
           level: () => "Level " + (levels.selected),
           enemies: () => "Enemies: " + (levels.current.enemies),
-          reward: () => "Reward: " + (levels.current.reward ? "   (" + levels.current.chance + "%) + $" : '$') + levels.current.cash,
+          reward: rewardText,
         }
       },
       {

@@ -1,10 +1,10 @@
 import GameObject from "../engine/objects/GameObject.js"
-import Circle from "../engine/gfx/shapes/Circle.js";
 import Sprite from "../engine/gfx/Sprite.js";
 import { getDirectionFrom, slideDirectionTowards } from "../engine/GameMath.js";
 
 export default class Projectile extends GameObject {
   z = 1;
+  alpha = 1;
 
   constructor(engine, x, y, dir, damage = 1, speed = 60, options = {}) {
     super(engine, {
@@ -21,12 +21,10 @@ export default class Projectile extends GameObject {
     this.target = null;
     this.targetRecompute = 0;
 
-    if ( options.image ) {
-      this.sprite = new Sprite(options.image.img, this.x, this.y);
-      this.sprite.rad = dir;
-    } else {
-      this.circle = new Circle(this.pos, 10, {color: options.color ?? "#fff"});
-    }
+    this.lifeSpanTicks = options.lifeSpan ? options.lifeSpan * 60 : null;
+
+    this.sprite = new Sprite(options.image.img, this.x, this.y, options.scale ?? 1);
+    this.sprite.rad = dir;
 
     this.onCollision(target => {
       target.damage(this.damage);
@@ -67,16 +65,23 @@ export default class Projectile extends GameObject {
         }
       }
     }
+
+    if ( this.lifeSpanTicks ) {
+      this.lifeSpanTicks--;
+      this.alpha = Math.min(this.lifeSpanTicks / 10, 1);
+      if ( this.lifeSpanTicks === 0 ) {
+        this.engine.unregister(this);
+      }
+    }
   }
 
   draw(ctx) {
-    if ( this.sprite ) {
-      this.sprite.x = this.x;
-      this.sprite.y = this.y;
-      this.sprite.draw(ctx);
-    } else {
-      this.circle.draw(ctx);
+    this.sprite.x = this.x;
+    this.sprite.y = this.y;
+    if ( this.sprite.alpha !== this.alpha ) {
+      this.sprite.alpha = this.alpha;
     }
+    this.sprite.draw(ctx);
   }
 
   get dir() {

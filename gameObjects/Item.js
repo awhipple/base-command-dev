@@ -1,6 +1,11 @@
 import Projectile from "./Projectile.js";
 
 export default class Item {
+  static borderColors = {
+    weapon: "orange",
+    gem: "white",
+  }
+
   static list = {
     redGem: {type: "gem", value: 500, icon: "red-gem"},
     greenGem: {type: "gem", value: 500, icon: "green-gem"},
@@ -49,25 +54,34 @@ export default class Item {
         homing: true,
       }
     },
+
+    none: {type: "weapon", value: 0, icon: "whiteGem",
+      projectile: {
+        speed: 0.5,
+        imageName: "white-circle",
+        lifeSpan: 1,
+        scale: 0.5,
+      }
+    },
   }
+
+  static NONE = new Item(null, "none");
 
   static ICON_SIZE = 40;
 
   constructor(engine, name) {
-    this.engine = engine;
-
     this.name = name;
     this.stats = Item.list[name];
-
-    this.borderColor = this.stats.borderColor = this.stats.borderColor ?? {weapon: "orange", gem: "white"}[this.stats.type];
-
-    this.icon = engine.images.get(this.stats.icon ?? name);
+    
+    this.borderColor = this.stats.borderColor = this.stats.borderColor ?? Item.borderColors[this.stats.type];
+    
     this.value = this.stats.value;
-
+    
     this.projectile = this.stats.projectile = this.stats.projectile ?? {};
     this.projectile.speed = this.projectile.speed ?? 1;
-    this.projectile.image = this.projectile.imageName && engine.images.get(this.projectile.imageName);
     this.projectile.damage = this.projectile.damage ?? 1;
+    
+    this.engine = engine;
   }
 
   shoot(x, y, dir) {
@@ -90,5 +104,18 @@ export default class Item {
 
   get type() {
     return Item.list[this.name].type;
+  }
+
+  get engine() {
+    return this._engine;
+  }
+
+  set engine(val) {
+    this._engine = val;
+
+    if ( this.engine ) {
+      this.icon = this.engine.images.get(this.stats.icon ?? name);
+      this.projectile.image = this.projectile.imageName && this.engine.images.get(this.projectile.imageName);
+    }
   }
 }

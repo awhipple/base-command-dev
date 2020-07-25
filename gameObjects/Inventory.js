@@ -15,13 +15,12 @@ export default class Inventory {
     }
 
     this.equipment = {
-      primary: new Item(engine, "basic"),
+      primary: null,
     };
   }
 
   add(item) {
     this.items.push(item);
-    this.items.sort((a, b) => a.type < b.type ? 1 : -1)
   }
 
   remove(item) {
@@ -30,8 +29,15 @@ export default class Inventory {
 
   equip(slot, item) {
     this.remove(item);
-    this.add(this.equipment[slot]);
+    this.unequip(slot);
     this.equipment[slot] = item;
+  }
+
+  unequip(slot) {
+    if ( this.equipment[slot]) {
+      this.add(this.equipment[slot]);
+    }
+    this.equipment[slot] = null;
   }
 
   attemptMerge(first, second) {

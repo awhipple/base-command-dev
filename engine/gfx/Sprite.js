@@ -1,5 +1,6 @@
 export default class Sprite {
   _rad = 0;
+  alpha = 1;
   rotated = false;
 
   constructor(img, x, y, scale = 1) {
@@ -36,8 +37,11 @@ export default class Sprite {
   }
 
   draw(ctx) {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
     ctx.drawImage(this.img, 
       this.x-this.img.width*this.scale/2, this.y-this.img.height*this.scale/2, 
       this.img.width*this.scale, this.img.height*this.scale);
+    ctx.restore();
   }
 }

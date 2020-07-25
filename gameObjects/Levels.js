@@ -7,9 +7,11 @@ export default class Levels {
     this.engine = engine;
     this.list = [
       {
-        enemies: 10,
-        spawnRate: 0.5,
+        enemies: 3,
+        spawnRate: 3,
         enemyHp: 2,
+        reward: "whiteGem",
+        qty: 2,
       },
       {
         enemies: 10,
@@ -55,16 +57,28 @@ export default class Levels {
   }
 
   rollForReward() {
-    if ( this.current.reward && Math.random() * 100 < this.current.chance) {
+    var chance = (this.current.qty ?? 0) > 0 ? 100 : (this.current.chance ?? 0);
+    if ( this.current.reward && Math.random() * 100 < chance) {
       var item = new Item(this.engine, this.current.reward);
       this.engine.globals.inventory.add(item);
       this.engine.trigger("displayReward", item);
+      
+      if ( (this.current.qty ?? 0) > 0 ) {
+        this.current.qty--;
+        if ( this.current.qty === 0 && !this.current.chance ) {
+          delete this.current.reward;
+        }
+      }
     }
   }
 
   get selectedReward() {
-    if ( this.current.reward && !this.current.rewardIcon ) {
-      this.current.rewardIcon = (new Item(this.engine, this.current.reward)).icon;
+    if ( this.current.reward ) {
+      if( !this.current.rewardIcon ) {
+        this.current.rewardIcon = (new Item(this.engine, this.current.reward)).icon;
+      }
+    } else {
+      this.current.rewardIcon = null;
     }
     return this.current.rewardIcon;
   }
