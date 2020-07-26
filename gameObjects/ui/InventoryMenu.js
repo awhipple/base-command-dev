@@ -232,11 +232,15 @@ class ItemRow extends UIComponent {
     super.initialize();
 
     this.iconRects = [];
+
+    this.engine.on("openInventory", () => {
+      this.iconRects = [];
+    });
   }
 
   onMouseClick(event) {
     for ( var i = 0; i < this.iconRects.length; i++ ) {
-      if ( this.iconRects[i].contains(event.pos) ) {
+      if ( this.iconRects[i]?.contains(event.pos) ) {
         this.engine.globals.dragItem = this.options.inventory.items[i + this.options.index];
       }
     }
