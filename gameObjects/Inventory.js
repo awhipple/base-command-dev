@@ -7,10 +7,9 @@ export default class Inventory {
     this.items = [];
 
     if ( engine.dev ) {
-      for ( var i = 0; i < 4; i++ ) {
+      for ( var i = 0; i < 6; i++ ) {
         this.items.push(new Item(engine, "whiteGem"));
         this.items.push(new Item(engine, "blueGem"));
-        this.items.push(new Item(engine, "rapid"));
       }
       this.sort();
     }
@@ -60,8 +59,9 @@ export default class Inventory {
       if ( mergeIndex >= 0) {
         this.remove(first);
         this.remove(second);
-        this.items[mergeIndex] = new Item(this.engine, first.stats.craft[second.name]);
+        return this.items[mergeIndex] = new Item(this.engine, first.stats.craft[second.name]);
       }
     }
+    return null;
   }
 }

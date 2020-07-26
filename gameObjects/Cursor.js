@@ -4,7 +4,7 @@ import Item from "./Item.js";
 export default class Cursor extends GameObject {
   z = 105;
   constructor(engine) {
-    super(engine, {x: 0, y: 0, w: Item.ICON_SIZE, h: Item.ICON_SIZE});
+    super(engine, { x: 0, y: 0, w: Item.ICON_SIZE, h: Item.ICON_SIZE });
 
     engine.onMouseMove(event => {
       this.x = event.pos.x;
@@ -12,7 +12,7 @@ export default class Cursor extends GameObject {
     });
 
     engine.onMouseUp(event => {
-      if ( this.engine.globals.dragItem ) {
+      if (this.engine.globals.dragItem) {
         this.engine.trigger("stopDragItem", this.engine.globals.dragItem);
         this.engine.globals.dragItem = null;
       }
@@ -20,7 +20,7 @@ export default class Cursor extends GameObject {
   }
 
   draw(ctx) {
-    if ( this.engine.globals.dragItem ) {
+    if (this.engine.globals.dragItem) {
       this.engine.globals.dragItem.icon.draw(ctx, this.rect);
       this.rect.draw(ctx, this.engine.globals.dragItem.borderColor);
     }

@@ -55,7 +55,7 @@ export default class Item {
       }
     },
 
-    none: {type: "weapon", value: 0, icon: "whiteGem",
+    none: {type: "weapon", value: 0, icon: "white-gem",
       projectile: {
         speed: 0.5,
         imageName: "white-circle",
@@ -100,6 +100,10 @@ export default class Item {
       300,
       this.projectile,
     ), "projectile");
+  }
+
+  mergesWith(other) {
+    return Object.keys(this.stats.craft ?? {}).indexOf(other.name) !== -1;
   }
 
   get type() {

@@ -33,7 +33,6 @@ export default class Game {
     ]);
     this.engine.sounds.preload([
       "shot", "spark", "explosion", "chime",
-      "lakitunes_chilled-beat.mp3",
       "tsuwami_generic-fighting-game-music.mp3"
     ]);
     this.engine.sounds.alias("music", "tsuwami_generic-fighting-game-music");
@@ -65,7 +64,7 @@ export default class Game {
       this.menu = new TitleScreen(this.engine);
       this.engine.register(this.menu);
 
-      this.engine.register(new Cursor(this.engine));
+      this.engine.register(this.engine.globals.cursor = new Cursor(this.engine));
 
       this.inventoryMenu = new InventoryMenu(this.engine, this.inventory);
       if ( this.engine.dev ) {

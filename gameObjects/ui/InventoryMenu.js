@@ -4,6 +4,7 @@ import { BoundingRect } from "../../engine/GameMath.js";
 import { UIComponent } from "../../engine/gfx/ui/window/UIComponent.js";
 import Item from "../Item.js";
 import Sprite from "../../engine/gfx/Sprite.js";
+import EffectRect from "../effects/EffectRect.js";
 
 export default class InventoryMenu extends UIWindow {
   constructor(engine, inventory) {
@@ -164,6 +165,10 @@ class Items extends UIComponent {
     });
   }
 
+  update() {
+    this.menu.update();
+  }
+
   onMouseMove(event) {
     this.hoverSell = this.sellRect.contains(event.pos);
     if ( this.hoverSell && this.engine.globals.dragItem ) {
@@ -246,6 +251,7 @@ class ItemRow extends UIComponent {
           var target = this.options.inventory.items[i + this.options.index];
           if ( target && drag !== target ) {
             this.dropTarget = target;
+            this.dropIndex = i;
             this.dropRect = rect;
             foundTarget = true;
             return;
@@ -254,6 +260,7 @@ class ItemRow extends UIComponent {
       });
       if ( !foundTarget ) {
         this.dropTarget = null;
+        this.dropIndex = null;
         this.dropRect = null;
       }
     }
@@ -262,8 +269,25 @@ class ItemRow extends UIComponent {
   onMouseUp(event) {
     var drag = this.engine.globals.dragItem;
     if ( drag && this.dropTarget ) {
-      this.engine.globals.inventory.attemptMerge(drag, this.dropTarget);
+      var newItem = this.engine.globals.inventory.attemptMerge(drag, this.dropTarget);
+      if ( newItem ) {
+        this.engine.register(new EffectRect(this.engine, this.engine.globals.cursor.rect, {
+          color: drag.borderColor,
+          icon: drag.icon,
+          grow: -0.6,
+          fade: 0.03,
+        }));
+        this.iconRects[this.dropIndex].pulse("white", 0.5);
+        this.iconRects[this.dropIndex].changeStateIn(1.5, {
+          icon: newItem.icon,
+          color: newItem.borderColor,
+        });
+      }
     }
+  }
+
+  update() {
+    this.iconRects.forEach(rect => rect.update());
   }
 
   drawComponent() {
@@ -274,12 +298,18 @@ class ItemRow extends UIComponent {
         if ( !this.iconRects[i] ) {
           var x = i * (this.options.iconSize + this.options.iconPadding);
           var size = this.options.iconSize;
-          this.iconRects[i] = new BoundingRect(x, 0, size, size);
+          this.iconRects[i] = new EffectRect(this.engine, {x, y: 0, w: size, h: size}, {
+            icon: item.icon,
+            color: Item.borderColors[item.type],
+          });
         }
-        var alpha = item === this.engine.globals.dragItem ? 0.3 : 1.0;
-        var borderColor = Item.borderColors[item.type];
-        item.icon.draw(this.ctx, this.iconRects[i], {alpha});
-        this.iconRects[i].draw(this.ctx, borderColor, undefined, alpha);
+        var dragItem = this.engine.globals.dragItem;
+        var alpha = 
+          item === dragItem || 
+          (dragItem && !dragItem.mergesWith(item)) ? 
+          0.3 : 1.0;
+        this.iconRects[i].alpha = alpha;
+        this.iconRects[i].draw(this.ctx);
       }
     }
   }
