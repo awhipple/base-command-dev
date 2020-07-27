@@ -7,7 +7,7 @@ export default class Inventory {
     this.items = [];
 
     if ( engine.dev ) {
-      for ( var i = 0; i < 2; i++ ) {
+      for ( var i = 0; i < 4; i++ ) {
         this.items.push(new Item(engine, "whiteGem"));
         this.items.push(new Item(engine, "blueGem"));
       }
@@ -58,6 +58,7 @@ export default class Inventory {
       this.add(this.equipment[slot]);
     }
     this.equipment[slot] = null;
+    this.engine.trigger("openInventory"); // Clear the inv menu and refreshes it
   }
 
   attemptMerge(first, second) {

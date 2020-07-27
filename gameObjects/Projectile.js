@@ -1,6 +1,7 @@
 import GameObject from "../engine/objects/GameObject.js"
 import Sprite from "../engine/gfx/Sprite.js";
 import { getDirectionFrom, slideDirectionTowards } from "../engine/GameMath.js";
+import DamageText from "./effects/DamageText.js";
 
 export default class Projectile extends GameObject {
   z = 1;
@@ -28,6 +29,7 @@ export default class Projectile extends GameObject {
 
     this.onCollision(target => {
       target.damage(this.damage);
+      this.engine.register(new DamageText(this.engine, this.damage, this.x, this.y));
       this.engine.unregister(this);
     }, "enemy");
 

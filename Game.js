@@ -24,7 +24,7 @@ export default class Game {
 
     // Debug
     window.engine = this.engine;
-    this.engine.setProd();
+    // this.engine.setProd();
   }
 
   start() {
