@@ -26,6 +26,9 @@ export default class Inventory {
   }
 
   add(item) {
+    if ( typeof item === "string" ) {
+      item = new Item(this.engine, item);
+    }
     var index = this.items.findIndex(item => !item);
     if ( index !== -1 ) {
       this.items[index] = item;
