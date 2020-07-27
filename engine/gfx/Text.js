@@ -15,6 +15,8 @@ export default class Text {
     this.fontStyle = options.fontStyle ?? "Lucida Console";
     this.fontColor = options.fontColor ?? "#000";
 
+    this.z = options.z ?? this.z;
+
     this._updateStyle();
     this.setText(str);
   }

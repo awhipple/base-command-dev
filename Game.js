@@ -12,6 +12,7 @@ import Cursor from "./gameObjects/Cursor.js";
 import Reward from "./gameObjects/Reward.js";
 import Circle from "./engine/gfx/shapes/Circle.js";
 import Item from "./gameObjects/Item.js";
+import Text from "./engine/gfx/Text.js";
 
 export default class Game {
   constructor() {
@@ -23,7 +24,7 @@ export default class Game {
 
     // Debug
     window.engine = this.engine;
-    // this.engine.setProd();
+    this.engine.setProd();
   }
 
   start() {
@@ -96,6 +97,11 @@ export default class Game {
         this.menu.hide = false;
         this.inventoryMenu.hide = false;
         this.engine.unregister("projectile");
+
+        if ( this.inventory.count("whiteGem") === 2 && this.engine.prod && !this.tutorialStarted) {
+          this._startMergeTutorial();
+          this.tutorialStarted = true;
+        }
       });
 
       this.engine.on("closeInventory", () => {
@@ -176,5 +182,28 @@ export default class Game {
     });
 
     return img;
+  }
+
+  _startMergeTutorial() {
+    var text;
+    this.engine.register(text = new Text("Open inventory ^", 300, 500, {
+      fontColor: "red",
+      fontSize: 30,
+      z: 500,
+    }));
+    this.engine.on("openInventory", () => {
+      this.invSlide = -20;
+      text.str = "^ Merge gems";
+      text.x = 156;
+      text.y = 180;
+      this.engine.on("itemsMerged", () => {
+        text.str = "Equip weapon ->";
+        text.x = 0;
+        text.y = 580;
+        this.engine.on("itemEquipped", () => {
+          this.engine.unregister(text);
+        })
+      });
+    });
   }
 }

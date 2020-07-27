@@ -7,7 +7,7 @@ export default class Inventory {
     this.items = [];
 
     if ( engine.dev ) {
-      for ( var i = 0; i < 6; i++ ) {
+      for ( var i = 0; i < 2; i++ ) {
         this.items.push(new Item(engine, "whiteGem"));
         this.items.push(new Item(engine, "blueGem"));
       }
@@ -32,6 +32,7 @@ export default class Inventory {
     } else {
       this.items.push(item);
     }
+    this.engine.trigger("itemAcquired");
   }
 
   remove(item) {
@@ -41,10 +42,15 @@ export default class Inventory {
     }
   }
 
+  count(itemName) {
+    return this.items.filter(item => item?.name === itemName).length;
+  }
+
   equip(slot, item) {
     this.remove(item);
     this.unequip(slot);
     this.equipment[slot] = item;
+    this.engine.trigger("itemEquipped");
   }
 
   unequip(slot) {
@@ -60,6 +66,7 @@ export default class Inventory {
       if ( mergeIndex >= 0) {
         this.remove(first);
         this.remove(second);
+        this.engine.trigger("itemsMerged");
         return this.items[mergeIndex] = new Item(this.engine, first.stats.craft[second.name]);
       }
     }
