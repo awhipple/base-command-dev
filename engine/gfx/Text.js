@@ -14,6 +14,7 @@ export default class Text {
     this.fontSize = options.fontSize ?? 50;
     this.fontStyle = options.fontStyle ?? "Lucida Console";
     this.fontColor = options.fontColor ?? "#000";
+    this.maxWidth = options.maxWidth ?? null;
 
     this.z = options.z ?? this.z;
 
@@ -23,11 +24,20 @@ export default class Text {
 
   draw(ctx) {
     ctx.save();
+
     ctx.globalAlpha = this.alpha;
     ctx.font = this.style;
-    var xShow = this.x - (this.center ? ctx.measureText(this.str).width/2 : 0);
     ctx.fillStyle = this.fontColor;
-    ctx.fillText(this.str, xShow, this.y + this.fontSize);
+
+    if ( !this.lines ) {
+      this._generateLines(ctx);
+    }
+
+    this.lines?.forEach((str, y) => {
+      var xShow = this.x - (this.center ? ctx.measureText(this.str).width/2 : 0);
+      ctx.fillText(str, xShow, this.y + this.fontSize*(y+1));
+    });
+
     ctx.restore();
   }
 
@@ -67,6 +77,16 @@ export default class Text {
     return this.textImage;    
   }
 
+  get str() {
+    return this._str;
+  }
+
+  set str(val) {
+    this._str = val;
+
+    this.lines = null;
+  }
+
   get fontSize() {
     return this._fontSize;
   }
@@ -85,6 +105,13 @@ export default class Text {
     this._updateStyle();
   }
 
+  get height() {
+    if ( this.str === "" ) {
+      return 0;
+    }
+    return (this.lines?.length ?? 0) * this.fontSize;
+  }
+
   _updateStyle() {
     this.style = this.fontWeight + this.fontSize + "px " + this.fontStyle;
   }
@@ -94,6 +121,28 @@ export default class Text {
       var ctx = this.textImage.img.getContext("2d");
       ctx.clearRect(0, 0, 400, 400);
       this.draw(ctx);
+    }
+  }
+
+  _generateLines(ctx) {
+    if ( !this.maxWidth ) {
+      this.lines = [ this.str ];
+      return;
+    }
+    this.lines = [];
+    var words = this.str?.split(" ");
+    var numWords = 0;
+    while ( words.length > 0 ) {
+      if ( numWords === words.length ) {
+        this.lines.push(words.join(" "));
+        break;
+      }
+      numWords++;
+      if( ctx.measureText(words.slice(0, numWords + 1).join(" ")).width > this.maxWidth) {
+        this.lines.push(words.slice(0, numWords).join(" "));
+        words.splice(0, numWords);
+        numWords = 0;
+      }
     }
   }
 }

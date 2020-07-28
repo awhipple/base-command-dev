@@ -1,4 +1,5 @@
 import Projectile from "./Projectile.js";
+import Image from "../engine/gfx/Image.js";
 
 export default class Item {
   static borderColors = {
@@ -7,19 +8,20 @@ export default class Item {
   }
 
   static list = {
-    redGem: {type: "gem", value: 500, icon: "red-gem"},
-    greenGem: {type: "gem", value: 500, icon: "green-gem"},
-    blueGem: {type: "gem", value: 2000, icon: "blue-gem",
+    redGem: {type: "gem", value: 500, icon: "red-gem", toolTipName: "Ruby"},
+    greenGem: {type: "gem", value: 500, icon: "green-gem", toolTipName: "Emerald"},
+    blueGem: {type: "gem", value: 2000, icon: "blue-gem", toolTipName: "Sapphire",
       craft: {
         basic: "homing",
       }
     },
-    whiteGem: {type: "gem", value: 500, icon: "white-gem", 
+    whiteGem: {type: "gem", value: 500, icon: "white-gem", toolTipName: "Diamond", 
       craft: {
         whiteGem: "basic",
       }
     },
-    basic: {type: "weapon", value: 750, icon: "white-circle", 
+    basic: {type: "weapon", value: 750, icon: "white-circle", toolTipName: "Basic",
+      description: "Fires white balls across the screen.",
       craft: {
         basic: "rapid",
         blueGem: "homing",
@@ -28,7 +30,7 @@ export default class Item {
         imageName: "white-circle",
       }
     },
-    rapid: {type: "weapon", value: 1500, icon: "white-rapid-icon",
+    rapid: {type: "weapon", value: 1500, icon: "white-rapid-icon", toolTipName: "Stinger",
       projectile: {
         damage: 0.6,
         speed: 2,
@@ -36,7 +38,7 @@ export default class Item {
         alternate: true,
       }
     },
-    homing: {type: "weapon", value: 2000, icon: "blue-circle", 
+    homing: {type: "weapon", value: 2000, icon: "blue-circle", toolTipName: "Homing", 
       craft: {
         homing: "homingRapid",
       },
@@ -45,7 +47,7 @@ export default class Item {
         homing : true,
       }
     },
-    homingRapid: {type: "weapon", value: 3500, icon: "blue-rapid-icon",
+    homingRapid: {type: "weapon", value: 3500, icon: "blue-rapid-icon", toolTipName: "Homing Stinger",
       projectile: {
         damage: 0.6,
         speed: 2,
@@ -65,6 +67,11 @@ export default class Item {
     },
   }
 
+  static dummyItems = {};
+  static get(engine, name) {
+    return this.dummyItems[name] = this.dummyItems[name] || new Item(engine, name);
+  }
+
   static NONE = new Item(null, "none");
 
   static ICON_SIZE = 40;
@@ -72,6 +79,9 @@ export default class Item {
   constructor(engine, name) {
     this.name = name;
     this.stats = Item.list[name];
+    this.craft = this.stats.craft ?? {};
+    this.toolTipName = this.stats.toolTipName ?? name;
+    this.description = this.stats.description ?? "";
     
     this.borderColor = this.stats.borderColor = this.stats.borderColor ?? Item.borderColors[this.stats.type];
     
@@ -106,8 +116,28 @@ export default class Item {
     return Object.keys(this.stats.craft ?? {}).indexOf(other.name) !== -1;
   }
 
+  get borderIcon() {
+    if ( !this._borderIcon ) {
+      var canvas = document.createElement("canvas");
+      canvas.width = canvas.height = Item.ICON_SIZE;
+      var ctx = canvas.getContext("2d");
+      this.icon.draw(ctx, 0, 0, Item.ICON_SIZE, Item.ICON_SIZE);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = this.borderColor;
+      ctx.strokeRect(0, 0, Item.ICON_SIZE, Item.ICON_SIZE);
+      this._borderIcon = new Image(canvas);
+    }
+
+    return this._borderIcon;
+  }
+
   get type() {
     return Item.list[this.name].type;
+  }
+
+  get merges() {
+    return Object.keys(this.craft).map(name => Item.get(this.engine, name));
+    // return [this];
   }
 
   get engine() {

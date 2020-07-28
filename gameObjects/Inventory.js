@@ -8,9 +8,10 @@ export default class Inventory {
 
     if ( engine.dev ) {
       for ( var i = 0; i < 4; i++ ) {
-        this.items.push(new Item(engine, "whiteGem"));
-        this.items.push(new Item(engine, "blueGem"));
+        this.add("whiteGem");
+        this.add("blueGem");
       }
+      this.add("basic");
       this.sort();
     }
 

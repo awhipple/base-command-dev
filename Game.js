@@ -13,6 +13,7 @@ import Reward from "./gameObjects/Reward.js";
 import Circle from "./engine/gfx/shapes/Circle.js";
 import Item from "./gameObjects/Item.js";
 import Text from "./engine/gfx/Text.js";
+import ToolTip from "./gameObjects/ui/ToolTip.js";
 
 export default class Game {
   constructor() {
@@ -39,7 +40,7 @@ export default class Game {
     this.engine.sounds.alias("music", "tsuwami_generic-fighting-game-music");
 
     ["white", "blue"].forEach(color => {
-      this.engine.images.save(this.generateCircleImage(10, color), color + "-circle");
+      this.engine.images.save(this.generateCircleImage(20, color), color + "-circle");
       this.engine.images.save(this.generateTriangleImage(15, color), color + "-triangle");
       this.engine.images.save(this.generateRapidIcon(color), color + "-rapid-icon");
     });
@@ -71,6 +72,8 @@ export default class Game {
       if ( this.engine.dev ) {
         this.engine.register(this.inventoryMenu);
       }
+
+      this.engine.register(this.engine.globals.toolTip = new ToolTip(this.engine));
 
       this.invSlide = this.engine.prod ? 20 : -20;
 

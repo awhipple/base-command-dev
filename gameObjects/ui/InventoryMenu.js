@@ -170,6 +170,7 @@ class Items extends UIComponent {
   }
 
   onMouseMove(event) {
+    this.engine.globals.toolTipItem = null;
     this.hoverSell = this.sellRect.contains(event.pos);
     if ( this.hoverSell && this.engine.globals.dragItem ) {
       this.sellValueText.setText("+$" + this.engine.globals.dragItem.value);
@@ -249,25 +250,27 @@ class ItemRow extends UIComponent {
   onMouseMove(event) {
     var drag = this.engine.globals.dragItem;
     var foundTarget = false;
-    if ( drag ) {
-      this.iconRects.forEach((rect, i) => {
-        if ( rect.contains(event.pos) ) {
-          var target = this.options.inventory.items[i + this.options.index];
-          if ( target && drag !== target ) {
-            this.dropTarget = target;
-            this.dropIndex = i;
-            this.dropRect = rect;
-            foundTarget = true;
-            return;
-          }
+    
+    this.iconRects.forEach((rect, i) => {
+      if ( rect.contains(event.pos) ) {
+        var target = this.options.inventory.items[i + this.options.index];
+        this.engine.globals.toolTipItem = target;
+        if ( target && drag && drag !== target ) {
+          this.dropTarget = target;
+          this.dropIndex = i;
+          this.dropRect = rect;
+          foundTarget = true;
+          return;
         }
-      });
-      if ( !foundTarget ) {
-        this.dropTarget = null;
-        this.dropIndex = null;
-        this.dropRect = null;
       }
+    });
+    if ( !foundTarget ) {
+      this.dropTarget = null;
+      this.dropIndex = null;
+      this.dropRect = null;
+      this.engine.trigger("unhoverItem");
     }
+
   }
 
   onMouseUp(event) {
