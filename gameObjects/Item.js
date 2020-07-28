@@ -8,7 +8,7 @@ export default class Item {
   }
 
   static list = {
-    redGem: {type: "gem", value: 500, icon: "red-gem", toolTipName: "Ruby"},
+    redGem: {type: "gem", value: 500, icon: "red-gem", toolTipName: "Ruby",},
     greenGem: {type: "gem", value: 500, icon: "green-gem", toolTipName: "Emerald"},
     blueGem: {type: "gem", value: 2000, icon: "blue-gem", toolTipName: "Sapphire",
       craft: {
@@ -21,7 +21,7 @@ export default class Item {
       }
     },
     basic: {type: "weapon", value: 750, icon: "white-circle", toolTipName: "Basic",
-      description: "Fires white balls across the screen.",
+      description: "Fires deadly white balls across the screen.",
       craft: {
         basic: "rapid",
         blueGem: "homing",
@@ -31,6 +31,7 @@ export default class Item {
       }
     },
     rapid: {type: "weapon", value: 1500, icon: "white-rapid-icon", toolTipName: "Stinger",
+      description: "A rapid fire weapon. Shots are a bit weaker but overall more powerful than the Basic weapon.",
       projectile: {
         damage: 0.6,
         speed: 2,
@@ -38,7 +39,8 @@ export default class Item {
         alternate: true,
       }
     },
-    homing: {type: "weapon", value: 2000, icon: "blue-circle", toolTipName: "Homing", 
+    homing: {type: "weapon", value: 2000, icon: "blue-circle", toolTipName: "Homing",
+      description: "Shots home in on enemies with deadly accuracy.",
       craft: {
         homing: "homingRapid",
       },
@@ -48,6 +50,7 @@ export default class Item {
       }
     },
     homingRapid: {type: "weapon", value: 3500, icon: "blue-rapid-icon", toolTipName: "Homing Stinger",
+      description: "A rapid fire version of the homing shot. Pure devastation.",
       projectile: {
         damage: 0.6,
         speed: 2,

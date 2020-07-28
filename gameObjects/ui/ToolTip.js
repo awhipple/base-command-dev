@@ -51,7 +51,7 @@ export default class ToolTip extends GameObject {
       this.descriptionText.x = this.originX + 10;
       this.descriptionText.y = descriptionTop;
       
-      this.mergeTop = descriptionTop + 10 + this.descriptionText.height;
+      this.mergeTop = descriptionTop + 25 + this.descriptionText.height;
 
       this.mergeText.x = this.originX + 10;
       this.mergeText.y = this.mergeTop;
