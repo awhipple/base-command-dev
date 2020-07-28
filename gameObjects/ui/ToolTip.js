@@ -1,6 +1,7 @@
 import GameObject from "../../engine/objects/GameObject.js";
 import EffectRect from "../effects/EffectRect.js";
 import Text from "../../engine/gfx/Text.js";
+import { constrain } from "../../engine/GameMath.js";
 
 export default class ToolTip extends GameObject {
   z = 200;
@@ -35,8 +36,13 @@ export default class ToolTip extends GameObject {
     })
 
     engine.onMouseMove(event => {
-      this.x = event.pos.x;
+      this.x = constrain(event.pos.x, this.rect.w/2 + 10, engine.window.width - this.rect.h - 10);
+      
       this.rect.y = event.pos.y + 40;
+      if ( this.rect.y + this.rect.h > engine.window.height - 10 ) {
+        this.rect.y = event.pos.y - 40 - this.rect.h;
+      }
+
       this.iconRect.x = this.originX + 10;
       this.iconRect.y = this.originY + 10;
 
@@ -59,9 +65,14 @@ export default class ToolTip extends GameObject {
       this.noneText.x = this.originX + 10;
       this.noneText.y = this.mergeTop + 25;
 
-      this.rect.h = this.mergeTop - this.originY + 75;
-
-      this.hide = false;
+      var newHeight = this.mergeTop - this.originY + 75;
+      
+      if ( Math.abs(this.rect.h - newHeight) > 1 ) {
+        this.rect.h = newHeight;
+        this.hide = true;
+      } else {
+        this.hide = false;
+      }
     });
   }
 

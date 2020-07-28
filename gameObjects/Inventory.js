@@ -7,11 +7,12 @@ export default class Inventory {
     this.items = [];
 
     if ( engine.dev ) {
-      for ( var i = 0; i < 4; i++ ) {
+      for ( var i = 0; i < 12; i++ ) {
         this.add("whiteGem");
+      }
+      for ( var i = 0; i < 3; i++ ) {
         this.add("blueGem");
       }
-      this.add("basic");
       this.sort();
     }
 

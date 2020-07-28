@@ -373,6 +373,7 @@ class Equipment extends UIComponent {
       slot.hover = slot.contains(event.pos);
       if ( slot.hover ) {
         this.equipHover = key;
+        this.engine.globals.toolTipItem = this.equipment[key];
         return;
       }
       this.equipHover = null;
