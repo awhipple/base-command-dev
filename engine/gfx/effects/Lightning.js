@@ -61,6 +61,9 @@ export default class Lightning extends GameObject {
   update() {
     if ( this.fade ) {
       this.alpha = Math.max(this.alpha - 1/(60*this.fade), 0);
+      if ( this.alpha <= 0 ) {
+        this.engine.unregister(this);
+      }
     }
 
     if ( !this.nextUpdate ) {

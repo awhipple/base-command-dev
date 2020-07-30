@@ -12,9 +12,9 @@ export default class Item {
       type: "gem", value: 500, icon: "red-gem", toolTipName: "Ruby",
     },
     greenGem: {
-      type: "gem", value: 500, icon: "green-gem", toolTipName: "Emerald",
+      type: "gem", value: 1000, icon: "green-gem", toolTipName: "Emerald",
       craft: {
-        basic: "lightning",
+        greenGem: "lightning",
       }
     },
     blueGem: {
@@ -75,12 +75,13 @@ export default class Item {
       }
     },
     lightning: {
-      type: "weapon", value: 999, icon: "yellow-circle", toolTipName: "Lightning",
+      type: "weapon", value: 1500, icon: "lightning-icon", toolTipName: "Lightning",
       description: "Unleash a powerful lightning bolt that chains to nearby enemies for partial damage.",
       projectile: {
         damage: 1.2,
         speed: 0.5,
         ray: true,
+        laserSight: true,
         imageName: "yellow-circle",
         scale: 0.5,
       }
@@ -133,13 +134,15 @@ export default class Item {
       y += Math.sin(mod) * dist; 
     }
     var Type = this.projectile.class ?? Projectile;
-    this.engine.register(new Type(
+    var proj = new Type(
       this.engine,
       x, y, dir,
       this.engine.globals.stats.power.val * this.projectile.damage,
       300,
       this.projectile,
-    ), "projectile");
+    );
+    this.engine.register(proj, "projectile");
+    return !this.projectile.ray || proj.hit;
   }
 
   mergesWith(other) {

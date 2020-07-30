@@ -29,6 +29,7 @@ export default class Projectile extends GameObject {
     this.sprite.rad = dir;
 
     this.onCollision(target => {
+      this.hit = true;
       target.damage(this.damage);
       this.engine.register(new DamageText(this.engine, this.damage, this.x, this.y));
       this.engine.unregister(this);
@@ -48,12 +49,13 @@ export default class Projectile extends GameObject {
         }
       });
       if ( point ) {
+        this.hit = true;
         this.engine.register(new Lightning(engine, {
           x1: this.x, y1: this.y,
           x2: point.x, y2: point.y,
           fade: 0.5,
         }));
-        target.damage(this.damage, "lightning");
+        target.damage(this.damage, {type: "lightning", chain: 2, weaken: 0.5});
         engine.register(new DamageText(this.engine, this.damage, point.x, point.y));
       }
     }

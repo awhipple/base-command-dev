@@ -17,7 +17,7 @@ export default class Inventory {
         this.add("blueGem");
       }
       this.add("greenGem");
-      this.equip("primary", this.add("lightning"));
+      this.add("greenGem");
       this.sort();
     }
   }

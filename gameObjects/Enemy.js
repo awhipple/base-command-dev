@@ -3,6 +3,7 @@ import { getDirectionFrom } from "../engine/GameMath.js";
 import Text from "../engine/gfx/Text.js";
 import Cash from "./Cash.js";
 import Lightning from "../engine/gfx/effects/Lightning.js";
+import DamageText from "./effects/DamageText.js";
 
 export default class Enemy extends GameObject {
   constructor(engine, x, y, hp, type = "white", initialXv = 0) {
@@ -32,8 +33,33 @@ export default class Enemy extends GameObject {
       this.engine.sounds.play("spark");
       this.engine.unregister(this);
     } 
-    if (this.type) {
+    if (type?.type === "lightning") {
       this.engine.register(Lightning.rect(this.engine, this.rect, {fade: 0.5}));
+      type.hit = type.hit ?? [];
+      type.hit.push(this);
+      if ( type.chain > 0 ) {
+        var closestEnemy, closestDist;
+        this.engine.getObjects("enemy").forEach(enemy => {
+          var sqDist = this.pos.squaredDistanceTo(enemy.pos);
+          if ( type.hit.indexOf(enemy) === -1 && (!closestEnemy || sqDist < closestDist) ) {
+            closestDist = sqDist;
+            closestEnemy = enemy;
+          }
+        });
+        if ( closestEnemy ) {
+          var totalDamage = dmg * (type.weaken ?? 1);
+          closestEnemy.damage(totalDamage, {type: "lightning", chain: type.chain - 1, hit: type.hit});
+          var enemyDir = getDirectionFrom(this.pos, closestEnemy.pos);
+          var point1 = this.lineIntercept(closestEnemy.x, closestEnemy.y, enemyDir + Math.PI);
+          var point2 = closestEnemy.lineIntercept(this.x, this.y, enemyDir);
+          this.engine.register(new Lightning(this.engine, {
+            x1: point1.x, y1: point1.y,
+            x2: point2.x, y2: point2.y,
+            fade: 0.5,
+          }));
+          engine.register(new DamageText(this.engine, totalDamage, point2.x, point2.y));
+        }
+      }
     }
   }
 

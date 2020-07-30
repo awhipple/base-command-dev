@@ -39,8 +39,8 @@ export default class Levels {
         enemyType: "red",
         spawnRate: 0.5,
         enemyHp: 20,
-        reward: "whiteGem",
-        chance: 100,
+        reward: "greenGem",
+        chance: 50,
       },
       {
         icon: engine.images.get("dragon-green"),

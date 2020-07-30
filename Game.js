@@ -15,6 +15,7 @@ import Item from "./gameObjects/Item.js";
 import Text from "./engine/gfx/Text.js";
 import ToolTip from "./gameObjects/ui/ToolTip.js";
 import Lightning from "./engine/gfx/effects/Lightning.js";
+import Image from "./engine/gfx/Image.js";
 
 export default class Game {
   constructor() {
@@ -35,7 +36,7 @@ export default class Game {
       "blue-gem", "green-gem", "red-gem", "white-gem",
     ]);
     this.engine.sounds.preload([
-      "shot", "spark", "explosion", "chime",
+      "shot", "spark", "explosion", "chime", "zap",
       "tsuwami_generic-fighting-game-music.mp3"
     ]);
     this.engine.sounds.alias("music", "tsuwami_generic-fighting-game-music");
@@ -45,6 +46,18 @@ export default class Game {
       this.engine.images.save(this.generateTriangleImage(15, color), color + "-triangle");
       this.engine.images.save(this.generateRapidIcon(color), color + "-rapid-icon");
     });
+    
+    var light = new Lightning(this.engine, {
+      x1: 20, y1: 20,
+      x2: 80, y2: 80,
+    });
+    var lightIcon = document.createElement("canvas");
+    lightIcon.width = lightIcon.height = 100;
+    var lightCtx = lightIcon.getContext("2d");
+
+    light.update();
+    light.draw(lightCtx);
+    this.engine.images.save(lightIcon, "lightning-icon");
     
     this.engine.globals.cash = this.engine.prod ? 0 : 50000;
     this.engine.globals.stats = stats;

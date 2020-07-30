@@ -53,7 +53,7 @@ export default class GameObject {
     var bottom = this.rect.y + this.rect.h;
 
     if ( y < this.rect.y ) {
-      var xIntTop = (rect.y - yInt) / slope;
+      var xIntTop = (this.rect.y - yInt) / slope;
       if ( xIntTop >= this.rect.x && xIntTop <= right ); {
         return {x: xIntTop, y: this.rect.y};
       }
