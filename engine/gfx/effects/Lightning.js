@@ -2,7 +2,8 @@ import GameObject from "../../objects/GameObject.js";
 import { Coord, getDirectionFrom } from "../../GameMath.js";
 
 export default class Lightning extends GameObject {
-  z = 1000;
+  alpha = 1
+  z = 200;
 
   constructor(engine, options = {}) {
     super(engine, {});
@@ -12,6 +13,8 @@ export default class Lightning extends GameObject {
     this.x2 = options.x2 ?? 0;
     this.y2 = options.y2 ?? 0;
     this.circRad = options.radius;
+
+    this.fade = options.fade ?? 0;
 
     this.dist = (new Coord(this.x1, this.y1)).distanceTo({x: this.x2, y: this.y2});
 
@@ -56,6 +59,10 @@ export default class Lightning extends GameObject {
   }
 
   update() {
+    if ( this.fade ) {
+      this.alpha = Math.max(this.alpha - 1/(60*this.fade), 0);
+    }
+
     if ( !this.nextUpdate ) {
       this.nextUpdate = 3;
 
@@ -77,6 +84,9 @@ export default class Lightning extends GameObject {
   }
 
   draw(ctx) {
+    ctx.save();
+
+    ctx.globalAlpha = this.alpha;
     if ( this.points ) {
       [
         {color: "orange", size: 6},
@@ -90,5 +100,32 @@ export default class Lightning extends GameObject {
         ctx.stroke();
       });
     }
+
+    ctx.restore();
+  }
+
+  static rect(engine, rect, options) {
+    return [
+      new Lightning(engine, {
+        x1: rect.x, y1: rect.y,
+        x2: rect.x + rect.w, y2: rect.y,
+        ...options,
+      }),
+      new Lightning(engine, {
+        x1: rect.x + rect.w, y1: rect.y,
+        x2: rect.x + rect.w, y2: rect.y + rect.h,
+        ...options,
+      }),
+      new Lightning(engine, {
+        x1: rect.x + rect.w, y1: rect.y + rect.h,
+        x2: rect.x, y2: rect.y + rect.h,
+        ...options,
+      }),
+      new Lightning(engine, {
+        x1: rect.x, y1: rect.y + rect.h,
+        x2: rect.x, y2: rect.y,
+        ...options,
+      }),
+    ];
   }
 }

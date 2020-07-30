@@ -39,7 +39,7 @@ export default class Item {
       projectile: {
         imageName: "white-circle",
         scale: 0.5,
-      }
+      },
     },
     rapid: {
       type: "weapon", value: 1500, icon: "white-rapid-icon", toolTipName: "Stinger",
@@ -76,7 +76,14 @@ export default class Item {
     },
     lightning: {
       type: "weapon", value: 999, icon: "yellow-circle", toolTipName: "Lightning",
-      description: "Unleash a powerful lightning bolt that chains to nearby enemies.",
+      description: "Unleash a powerful lightning bolt that chains to nearby enemies for partial damage.",
+      projectile: {
+        damage: 1.2,
+        speed: 0.5,
+        ray: true,
+        imageName: "yellow-circle",
+        scale: 0.5,
+      }
     },
 
     none: {

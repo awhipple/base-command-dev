@@ -2,6 +2,7 @@ import GameObject from "../engine/objects/GameObject.js"
 import Sprite from "../engine/gfx/Sprite.js";
 import { getDirectionFrom, slideDirectionTowards } from "../engine/GameMath.js";
 import DamageText from "./effects/DamageText.js";
+import Lightning from "../engine/gfx/effects/Lightning.js";
 
 export default class Projectile extends GameObject {
   z = 1;
@@ -34,9 +35,36 @@ export default class Projectile extends GameObject {
     }, "enemy");
 
     this.options = options;
+
+    this.ray = options.ray;
+    if ( this.ray ) {
+      this.hide = true;
+      var target = null, point = null;
+      engine.getObjects("enemy").forEach(enemy => {
+        var inter = enemy.lineIntercept(x, y, dir);
+        if ( inter && (!point || inter.y > point.y) ) {
+          target = enemy;
+          point = inter;
+        }
+      });
+      if ( point ) {
+        this.engine.register(new Lightning(engine, {
+          x1: this.x, y1: this.y,
+          x2: point.x, y2: point.y,
+          fade: 0.5,
+        }));
+        target.damage(this.damage, "lightning");
+        engine.register(new DamageText(this.engine, this.damage, point.x, point.y));
+      }
+    }
   }
 
   update() {
+    if ( this.ray ) {
+      this.engine.unregister(this);
+      return;
+    }
+
     this.x += this.xv;
     this.y += this.yv;
 

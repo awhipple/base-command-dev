@@ -83,6 +83,11 @@ export default class GameEngine {
   }
 
   register(object, name) {
+    if ( Array.isArray(object) ) {
+      object.forEach(obj => this.register(obj));
+      return;
+    }
+
     if (object === this) {
       console.log("You cannot register the engine as a game object!");
       console.trace();

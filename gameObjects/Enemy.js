@@ -2,6 +2,7 @@ import GameObject from "../engine/objects/GameObject.js";
 import { getDirectionFrom } from "../engine/GameMath.js";
 import Text from "../engine/gfx/Text.js";
 import Cash from "./Cash.js";
+import Lightning from "../engine/gfx/effects/Lightning.js";
 
 export default class Enemy extends GameObject {
   constructor(engine, x, y, hp, type = "white", initialXv = 0) {
@@ -20,7 +21,7 @@ export default class Enemy extends GameObject {
     this.hp = this.cash = hp;
   }
 
-  damage(dmg) {
+  damage(dmg, type) {
     this.hp -= dmg;
     if ( this.hp <= 0 ) {
       if ( this.type === "red" ) {
@@ -30,6 +31,9 @@ export default class Enemy extends GameObject {
       this._createCash();
       this.engine.sounds.play("spark");
       this.engine.unregister(this);
+    } 
+    if (this.type) {
+      this.engine.register(Lightning.rect(this.engine, this.rect, {fade: 0.5}));
     }
   }
 

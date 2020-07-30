@@ -40,6 +40,48 @@ export default class GameObject {
   onCollision(callback, target = "all") {
     this.collisionCallbacks[target] = callback;
   }
+
+  lineIntercept(x, y, dir) {
+    if ( this.rect.contains(x, y) ) {
+      return { x, y };
+    }
+
+    var slope = Math.tan(dir);
+    var yInt = y - (slope * x);
+    
+    var right = this.rect.x + this.rect.w;
+    var bottom = this.rect.y + this.rect.h;
+
+    if ( y < this.rect.y ) {
+      var xIntTop = (rect.y - yInt) / slope;
+      if ( xIntTop >= this.rect.x && xIntTop <= right ); {
+        return {x: xIntTop, y: this.rect.y};
+      }
+    }
+
+    if ( y > bottom ) {
+      var xIntBot = (bottom - yInt) / slope;
+      if ( xIntBot >= this.rect.x && xIntBot <= right ) {
+        return {x: xIntBot, y: bottom};
+      }
+    }
+
+    if ( x < this.rect.x ) {
+      var yIntLeft = slope * this.rect.x + yInt;
+      if ( yIntLeft >= this.rect.y && yIntLeft <= bottom ) {
+        return { x: this.rect.x, y: yIntLeft};
+      }
+    }
+
+    if ( x > right ) {
+      var yIntRight = slope * right + yInt;
+      if ( yIntRight >= this.rect.y && yIntRight <= bottom) {
+        return { x: right, y: yIntRight };
+      }
+    }
+    
+    return null;
+  }
     
   draw(ctx, engine, color = "#00f", borderColor = "#000") {
     ctx.save();
