@@ -14,6 +14,7 @@ import Circle from "./engine/gfx/shapes/Circle.js";
 import Item from "./gameObjects/Item.js";
 import Text from "./engine/gfx/Text.js";
 import ToolTip from "./gameObjects/ui/ToolTip.js";
+import Lightning from "./engine/gfx/effects/Lightning.js";
 
 export default class Game {
   constructor() {
@@ -71,6 +72,11 @@ export default class Game {
       this.inventoryMenu = new InventoryMenu(this.engine, this.inventory);
       if ( this.engine.dev ) {
         this.engine.register(this.inventoryMenu);
+        this.engine.onKeyDown(evt => {
+          if ( evt.key === "m" ) {
+            this.engine.sounds.play("music", { loop: true });
+          }
+        });
       }
 
       this.engine.register(this.engine.globals.toolTip = new ToolTip(this.engine));
