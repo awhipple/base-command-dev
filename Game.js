@@ -40,7 +40,7 @@ export default class Game {
     ]);
     this.engine.sounds.alias("music", "tsuwami_generic-fighting-game-music");
 
-    ["white", "blue"].forEach(color => {
+    ["white", "blue", "yellow"].forEach(color => {
       this.engine.images.save(this.generateCircleImage(20, color), color + "-circle");
       this.engine.images.save(this.generateTriangleImage(15, color), color + "-triangle");
       this.engine.images.save(this.generateRapidIcon(color), color + "-rapid-icon");

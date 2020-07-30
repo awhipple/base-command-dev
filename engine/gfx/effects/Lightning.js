@@ -41,12 +41,14 @@ export default class Lightning extends GameObject {
       }
     } else {
       this.segments.push({x: this.x1, y: this.y1, px: 0, py: 0, size: 0});
-      for ( var step = segLength; step < this.dist; step += segLength ) {
+      var numSteps = Math.ceil(this.dist / segLength) - 1;
+      var stepLength = this.dist / numSteps;
+      for ( var step = 1; step < numSteps; step++ ) {
         this.segments.push({
-          x: this.x1 + this.xv * step,
-          y: this.y1 + this.yv * step,
+          x: this.x1 + this.xv * step * stepLength,
+          y: this.y1 + this.yv * step * stepLength,
           px: this.pxv, py: this.pyv,
-          size: 10,
+          size: 50 * Math.min(step, numSteps - step) / numSteps,
         });
       }
       this.segments.push({x: this.x2, y: this.y2, px: 0, py: 0, size: 0});

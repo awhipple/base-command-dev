@@ -8,19 +8,29 @@ export default class Item {
   }
 
   static list = {
-    redGem: {type: "gem", value: 500, icon: "red-gem", toolTipName: "Ruby",},
-    greenGem: {type: "gem", value: 500, icon: "green-gem", toolTipName: "Emerald"},
-    blueGem: {type: "gem", value: 2000, icon: "blue-gem", toolTipName: "Sapphire",
+    redGem: {
+      type: "gem", value: 500, icon: "red-gem", toolTipName: "Ruby",
+    },
+    greenGem: {
+      type: "gem", value: 500, icon: "green-gem", toolTipName: "Emerald",
+      craft: {
+        basic: "lightning",
+      }
+    },
+    blueGem: {
+      type: "gem", value: 2000, icon: "blue-gem", toolTipName: "Sapphire",
       craft: {
         basic: "homing",
       }
     },
-    whiteGem: {type: "gem", value: 500, icon: "white-gem", toolTipName: "Diamond", 
+    whiteGem: {
+      type: "gem", value: 500, icon: "white-gem", toolTipName: "Diamond", 
       craft: {
         whiteGem: "basic",
       }
     },
-    basic: {type: "weapon", value: 750, icon: "white-circle", toolTipName: "Basic",
+    basic: {
+      type: "weapon", value: 750, icon: "white-circle", toolTipName: "Basic",
       description: "Fires deadly white balls across the screen.",
       craft: {
         basic: "rapid",
@@ -28,9 +38,11 @@ export default class Item {
       }, 
       projectile: {
         imageName: "white-circle",
+        scale: 0.5,
       }
     },
-    rapid: {type: "weapon", value: 1500, icon: "white-rapid-icon", toolTipName: "Stinger",
+    rapid: {
+      type: "weapon", value: 1500, icon: "white-rapid-icon", toolTipName: "Stinger",
       description: "A rapid fire weapon. Shots are a bit weaker but overall more powerful than the Basic weapon.",
       projectile: {
         damage: 0.6,
@@ -39,7 +51,8 @@ export default class Item {
         alternate: true,
       }
     },
-    homing: {type: "weapon", value: 2000, icon: "blue-circle", toolTipName: "Homing",
+    homing: {
+      type: "weapon", value: 2000, icon: "blue-circle", toolTipName: "Homing",
       description: "Shots home in on enemies with deadly accuracy.",
       craft: {
         homing: "homingRapid",
@@ -47,9 +60,11 @@ export default class Item {
       projectile: {
         imageName: "blue-circle",
         homing : true,
+        scale: 0.5,
       }
     },
-    homingRapid: {type: "weapon", value: 3500, icon: "blue-rapid-icon", toolTipName: "Homing Stinger",
+    homingRapid: {
+      type: "weapon", value: 3500, icon: "blue-rapid-icon", toolTipName: "Homing Stinger",
       description: "A rapid fire version of the homing shot. Pure devastation.",
       projectile: {
         damage: 0.6,
@@ -59,13 +74,18 @@ export default class Item {
         homing: true,
       }
     },
+    lightning: {
+      type: "weapon", value: 999, icon: "yellow-circle", toolTipName: "Lightning",
+      description: "Unleash a powerful lightning bolt that chains to nearby enemies.",
+    },
 
-    none: {type: "weapon", value: 0, icon: "white-gem",
+    none: {
+      type: "weapon", value: 0, icon: "white-gem",
       projectile: {
         speed: 0.5,
         imageName: "white-circle",
         lifeSpan: 1,
-        scale: 0.5,
+        scale: 0.2,
       }
     },
   }

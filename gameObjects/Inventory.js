@@ -5,6 +5,9 @@ export default class Inventory {
     this.engine = engine;
 
     this.items = [];
+    this.equipment = {
+      primary: null,
+    };
 
     if ( engine.dev ) {
       for ( var i = 0; i < 12; i++ ) {
@@ -13,12 +16,10 @@ export default class Inventory {
       for ( var i = 0; i < 3; i++ ) {
         this.add("blueGem");
       }
+      this.add("greenGem");
+      this.equip("primary", this.add("basic"));
       this.sort();
     }
-
-    this.equipment = {
-      primary: null,
-    };
   }
 
   sort() {
@@ -38,6 +39,7 @@ export default class Inventory {
       this.items.push(item);
     }
     this.engine.trigger("itemAcquired");
+    return item;
   }
 
   remove(item) {
