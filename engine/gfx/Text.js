@@ -12,7 +12,7 @@ export default class Text {
 
     this.fontWeight = options.fontWeight ? options.fontWeight + ' ' : '';
     this.fontSize = options.fontSize ?? 50;
-    this.fontStyle = options.fontStyle ?? "Lucida Console";
+    this.fontStyle = options.fontStyle ?? "Lucida Console,Menlo,monospace";
     this.fontColor = options.fontColor ?? "#000";
     this.maxWidth = options.maxWidth ?? null;
 
