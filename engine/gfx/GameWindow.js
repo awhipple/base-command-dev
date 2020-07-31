@@ -22,7 +22,10 @@ export default class GameWindow {
     } else if ( !options.width && !options.height ) {
       this.ratioStyle = "width: 100%; height: 100%;";
     }
-    this.canvas.style = this.ratioStyle + "padding-left: 0;margin-left: auto;margin-right: auto;display: block;"
+    this.canvas.style = engine.mobile ? 
+      "width: 100%; height: 100%;" :
+      this.ratioStyle + "padding-left: 0;margin-left: auto;margin-right: auto;display: block;";
+      
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.ctx = this.canvas.getContext("2d");

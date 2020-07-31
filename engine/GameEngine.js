@@ -20,6 +20,8 @@ export default class GameEngine {
   eventTimers = {};
 
   constructor(options = {}) {
+    this.mobile = (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+
     this.window = new GameWindow(this, "gameCanvas", this.gameObjects.all, options);
     this.images.preload("fullscreen");
 
