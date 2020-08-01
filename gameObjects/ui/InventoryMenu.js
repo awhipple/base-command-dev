@@ -7,7 +7,7 @@ import Sprite from "../../engine/gfx/Sprite.js";
 import EffectRect from "../effects/EffectRect.js";
 
 export default class InventoryMenu extends UIWindow {
-  constructor(engine, inventory) {
+  constructor(engine, inventory, synths) {
     super(engine, {
       x: engine.window.width, y: 0,
       w: engine.window.width, h: engine.window.height,
@@ -41,14 +41,14 @@ export default class InventoryMenu extends UIWindow {
       },
       {
         type: "title",
-        text: "Upgrades",
+        text: "Synthesis",
         fontSize: 40,
         fontColor: "white",
         center: true
       },
       {
-        type: Upgrades,
-        inventory: inventory,
+        type: Synthesis,
+        synths: synths,
       },
       {
         type: "spacer",
@@ -322,7 +322,7 @@ class ItemRow extends UIComponent {
   }
 }
 
-class Upgrades extends UIComponent {
+class Synthesis extends UIComponent {
   height = 159;
 
   initialize() {
