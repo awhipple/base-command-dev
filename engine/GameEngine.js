@@ -223,19 +223,26 @@ export default class GameEngine {
   }
 
   onMouseMove(callback) {
-    this.window.canvas.addEventListener('mousemove', event => {
-      callback({pos: this.getMouseCoord(event)});
-    });
+    if ( this.mobile ) {
+      this.onMouseDown(callback);
+      this.window.canvas.addEventListener('touchmove', event => {
+        callback({pos: this.getMouseCoord(event)});
+      })
+    } else {
+      this.window.canvas.addEventListener('mousemove', event => {
+        callback({pos: this.getMouseCoord(event)});
+      });
+    }
   }
 
   onMouseDown(callback) {
-    this.window.canvas.addEventListener('mousedown', event => {
+    this.window.canvas.addEventListener(this.mobile ? "touchstart" : 'mousedown', event => {
       callback(this._mouseEvent(event));
     });
   }
 
   onMouseUp(callback) {
-    this.window.canvas.addEventListener('mouseup', event => {
+    this.window.canvas.addEventListener(this.mobile ? "touchend" : 'mouseup', event => {
       callback(this._mouseEvent(event));
     });
   }
@@ -262,9 +269,11 @@ export default class GameEngine {
     var canvas = this.window.canvas;
     var rect = canvas.getBoundingClientRect();
     
+    var { clientX, clientY }  = this.mobile ? (event.touches?.[0] ?? event.changedTouches?.[0]) : event;
+
     return new Coord(
-      (event.clientX - rect.x) * canvas.width / rect.width,
-      (event.clientY - rect.y) * canvas.height / rect.height,
+      (clientX - rect.x) * canvas.width / rect.width,
+      (clientY - rect.y) * canvas.height / rect.height,
     );
   }
 
@@ -304,13 +313,17 @@ export default class GameEngine {
 
   _mouseEvent(event) {
     return {
-      button: MouseButtonNames[event.button] || event.button,
+      button: event.type === "touchstart" ? "left" : (MouseButtonNames[event.button] || event.button),
       pos: this.getMouseCoord(event),
       wheelDirection: event.wheelDeltaY < 0 ? "down" : "up",
     };
   }
 
   _sendMouseEvent(event, methodName) {
+    if ( this.mobile && methodName === "onMouseClick") {
+      this._sendMouseEvent(event, "onMouseMove");
+    }
+
     // The game window currently sorts all these objects in order of their z value
     for ( var i = this.gameObjects.all.length - 1; i >= 0; i-- ) {
       var obj = this.gameObjects.all[i];
