@@ -23,7 +23,7 @@ export default class GameWindow {
       this.ratioStyle = "width: 100%; height: 100%;";
     }
     if ( this.engine.mobile ) {
-      document.body.style = "overscroll-behavior: none";
+      document.body.style = "overscroll-behavior: none; touch-action: manipulation";
     }
     this.canvas.style = engine.mobile ? 
       "width: 100%; height: 100%;" :
