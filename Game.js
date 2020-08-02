@@ -47,17 +47,24 @@ export default class Game {
       this.engine.images.save(this.generateRapidIcon(color), color + "-rapid-icon");
     });
     
-    var light = new Lightning(this.engine, {
-      x1: 20, y1: 20,
-      x2: 80, y2: 80,
-    });
-    var lightIcon = document.createElement("canvas");
-    lightIcon.width = lightIcon.height = 100;
-    var lightCtx = lightIcon.getContext("2d");
+    [
+      ["lightning-icon", "yellow", "orange"],
+      ["zap-icon", "blue", "lightBlue"]
+    ].forEach(icon => {
+      var light = new Lightning(this.engine, {
+        x1: 20, y1: 20,
+        x2: 80, y2: 80,
+        innerCol: icon[1], outerCol: icon[2],
+      });
 
-    light.update();
-    light.draw(lightCtx);
-    this.engine.images.save(lightIcon, "lightning-icon");
+      var lightIcon = document.createElement("canvas");
+      lightIcon.width = lightIcon.height = 100;
+      var lightCtx = lightIcon.getContext("2d");
+
+      light.update();
+      light.draw(lightCtx);
+      this.engine.images.save(lightIcon, icon[0]);
+    });
     
     this.engine.globals.cash = this.engine.prod ? 0 : 50000;
     this.engine.globals.stats = stats;

@@ -34,7 +34,7 @@ export default class Enemy extends GameObject {
       this.engine.unregister(this);
     } 
     if (type?.type === "lightning") {
-      this.engine.register(Lightning.rect(this.engine, this.rect, {fade: 0.5}));
+      this.engine.register(Lightning.rect(this.engine, this.rect, {fade: 0.5, innerCol: type.innerCol, outerCol: type.outerCol}));
       type.hit = type.hit ?? [];
       type.hit.push(this);
       if ( type.chain > 0 ) {
@@ -48,7 +48,7 @@ export default class Enemy extends GameObject {
         });
         if ( closestEnemy ) {
           var totalDamage = dmg * (type.weaken ?? 1);
-          closestEnemy.damage(totalDamage, {type: "lightning", chain: type.chain - 1, hit: type.hit});
+          closestEnemy.damage(totalDamage, {type: "lightning", chain: type.chain - 1, hit: type.hit, innerCol: type.innerCol, outerCol: type.outerCol});
           var enemyDir = getDirectionFrom(this.pos, closestEnemy.pos);
           var point1 = this.lineIntercept(closestEnemy.x, closestEnemy.y, enemyDir + Math.PI);
           var point2 = closestEnemy.lineIntercept(this.x, this.y, enemyDir);
@@ -56,6 +56,7 @@ export default class Enemy extends GameObject {
             x1: point1.x, y1: point1.y,
             x2: point2.x, y2: point2.y,
             fade: 0.5,
+            innerCol: type.innerCol, outerCol: type.outerCol
           }));
           engine.register(new DamageText(this.engine, totalDamage, point2.x, point2.y));
         }

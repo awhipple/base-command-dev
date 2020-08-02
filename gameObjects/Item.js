@@ -77,11 +77,29 @@ export default class Item {
     lightning: {
       type: "weapon", value: 1500, icon: "lightning-icon", toolTipName: "Lightning",
       description: "Unleash a powerful lightning bolt that chains to nearby enemies for partial damage.",
+      craft: {
+        lightning: "zap",
+      },
       projectile: {
         damage: 2.2,
         speed: 0.5,
         ray: true,
         laserSight: true,
+        imageName: "yellow-circle",
+        scale: 0.5,
+      }
+    },
+    zap: {
+      type: "weapon", value: 1500, icon: "zap-icon", toolTipName: "Zap",
+      description: "The ultimate in lightning tech. Can chain forever.",
+      projectile: {
+        damage: 2.5,
+        speed: 0.75,
+        ray: true,
+        laserSight: true,
+        chain: 1000,
+        innerCol: "blue",
+        outerCol: "lightBlue",
         imageName: "yellow-circle",
         scale: 0.5,
       }

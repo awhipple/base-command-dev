@@ -16,8 +16,9 @@ export default class Inventory {
       for ( var i = 0; i < 3; i++ ) {
         this.add("blueGem");
       }
-      this.add("greenGem");
-      this.add("greenGem");
+      for ( var i = 0; i < 4; i++ ) {
+        this.add("greenGem");
+      }
       this.sort();
     }
   }

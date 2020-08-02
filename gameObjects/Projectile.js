@@ -54,8 +54,10 @@ export default class Projectile extends GameObject {
           x1: this.x, y1: this.y,
           x2: point.x, y2: point.y,
           fade: 0.5,
+          innerCol: options.innerCol ?? "yellow",
+          outerCol: options.outerCol ?? "orange",
         }));
-        target.damage(this.damage, {type: "lightning", chain: 2, weaken: 0.5});
+        target.damage(this.damage, {type: "lightning", chain: options.chain ?? 2, weaken: 0.5, innerCol: options.innerCol, outerCol: options.outerCol});
         engine.register(new DamageText(this.engine, this.damage, point.x, point.y));
       }
     }

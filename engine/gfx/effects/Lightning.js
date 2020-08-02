@@ -26,6 +26,9 @@ export default class Lightning extends GameObject {
     this.pxv = Math.cos(this.perpDir);
     this.pyv = Math.sin(this.perpDir);
 
+    this.innerCol = options.innerCol ?? "yellow";
+    this.outerCol = options.outerCol ?? "orange";
+
     var segLength = 10;
     this.segments = [];
     if ( this.circRad ) {
@@ -92,8 +95,8 @@ export default class Lightning extends GameObject {
     ctx.globalAlpha = this.alpha;
     if ( this.points ) {
       [
-        {color: "orange", size: 6},
-        {color: "yellow", size: 2},
+        {color: this.outerCol, size: 6},
+        {color: this.innerCol, size: 2},
       ].forEach(line => {
         ctx.lineWidth = line.size;
         ctx.strokeStyle = line.color;
