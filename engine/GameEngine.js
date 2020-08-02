@@ -198,7 +198,7 @@ export default class GameEngine {
       }
     });
 
-    if ( this.cursor !== this.window.canvas.style.cursor ) {
+    if ( !this.mobile && this.cursor !== this.window.canvas.style.cursor ) {
       this.window.canvas.style.cursor = this.cursor;
     }
     this.cursor = '';
