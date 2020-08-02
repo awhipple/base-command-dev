@@ -99,7 +99,7 @@ export default class ToolTip extends GameObject {
       this.itemName.draw(ctx);
 
       if ( this.item.type === "weapon" ) {
-        this.statText.str = "Damage: " + this.item.projectile.damage*100 + "%   Rate: " + this.item.projectile.speed*100 + "%";
+        this.statText.str = "Damage: " + Math.floor(this.item.projectile.damage*100) + "%   Rate: " + Math.floor(this.item.projectile.speed*100) + "%";
         this.statText.draw(ctx);
       } else {
         this.statText.str = "";

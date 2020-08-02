@@ -5,7 +5,7 @@ export default class DamageText extends Text {
   alpha = 1;
 
   constructor(engine, damage, x, y) {
-    super(damage, x + (Math.random()*20-15), y-20, {
+    super(Math.floor(damage*10)/10, x + (Math.random()*20-15), y-20, {
       fontColor: "red",
       fontSize: 15,
     });

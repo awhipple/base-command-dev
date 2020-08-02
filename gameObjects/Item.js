@@ -78,7 +78,7 @@ export default class Item {
       type: "weapon", value: 1500, icon: "lightning-icon", toolTipName: "Lightning",
       description: "Unleash a powerful lightning bolt that chains to nearby enemies for partial damage.",
       projectile: {
-        damage: 1.2,
+        damage: 2.2,
         speed: 0.5,
         ray: true,
         laserSight: true,
