@@ -15,14 +15,14 @@ import Item from "./gameObjects/Item.js";
 import Text from "./engine/gfx/Text.js";
 import ToolTip from "./gameObjects/ui/ToolTip.js";
 import Lightning from "./engine/gfx/effects/Lightning.js";
-import Image from "./engine/gfx/Image.js";
 
 export default class Game {
-  constructor() {
+  constructor(options = {}) {
     this.engine = new GameEngine({
       width: 600,
       height: 800,
       bgColor: "#000",
+      ...options
     });
 
     // Debug

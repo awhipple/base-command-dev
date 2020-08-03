@@ -28,7 +28,7 @@ export default class Base extends GameObject {
       this.pointTo(event.pos);
     });
 
-    this.equip = this.engine.globals.inventory.equipment;
+    this.equip = engine.globals.inventory.equipment;
   }
 
   update() {

@@ -84,7 +84,7 @@ export default class Projectile extends GameObject {
           this.target = null;
         }
         var closest = null;
-        engine.getObjects("enemy").forEach(enemy => {
+        this.engine.getObjects("enemy").forEach(enemy => {
           if ( closest === null || this.pos.squaredDistanceTo(enemy.pos) < closest) {
             closest = this.pos.squaredDistanceTo(enemy.pos);
             this.target = enemy;

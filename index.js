@@ -5,7 +5,7 @@ import Game from './Game.js';
 //   y = await y.json();
 //   return y;
 // }
-// Game$$Game().then(Game => {
+// getGameJS().then(Game => {
 
 window.onload = function() {
   var game = new Game();

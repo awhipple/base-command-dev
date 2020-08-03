@@ -58,7 +58,7 @@ export default class Enemy extends GameObject {
             fade: 0.5,
             innerCol: type.innerCol, outerCol: type.outerCol
           }));
-          engine.register(new DamageText(this.engine, totalDamage, point2.x, point2.y));
+          this.engine.register(new DamageText(this.engine, totalDamage, point2.x, point2.y));
         }
       }
     }
@@ -72,7 +72,7 @@ export default class Enemy extends GameObject {
     var absInitialXv = Math.abs(this.initialXv);
     if ( absInitialXv < 0.05 && absInitialXv > 0 ) {
       this.initialXv = 0;
-      this.dir = getDirectionFrom(this.pos, engine.globals.base.pos);
+      this.dir = getDirectionFrom(this.pos, this.engine.globals.base.pos);
 
     }
 
