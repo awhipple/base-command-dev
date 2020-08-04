@@ -148,15 +148,16 @@ export default class GameEngine {
   }
 
   startGameLoop() {
-    this.nextTick = (new Date).getTime();
+    this.nextTick = (new Date).getTime() - 100 * 1000;
 
     setInterval(() => {
       this.loops = 0;
-      while ((new Date).getTime() > this.nextTick && this.loops < 10) {
+      while (new Date().getTime() > this.nextTick && this.loops < 10) {
         this.update();
         this.nextTick += 1000/60;
         this.loops++;
       }
+      this.nextTick = Math.max(this.nextTick, new Date().getTime());
     }, 1000/60);
   }
 
