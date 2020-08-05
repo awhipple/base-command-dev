@@ -142,6 +142,11 @@ export default class Game {
         this.invSlide = -20;
       });
 
+      this.engine.on("toggleInventory", () => {
+        this.invSlide = -this.invSlide;
+        this.invHide = this.invSlide > 0;
+      })
+
       this.engine.on("displayReward", (item) => {
         this.engine.register(new Reward(this.engine, item));
       });

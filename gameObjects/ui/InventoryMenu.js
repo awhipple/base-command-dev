@@ -13,13 +13,8 @@ export default class InventoryMenu extends UIWindow {
       w: engine.window.width, h: engine.window.height,
     }, [
       {
-        type: "button",
-        text: {
-          button: "Close >",
-        },
-        fontColor: "#0f0",
-        fontSize: 20,
-        callback: () => engine.trigger("closeInventory"),
+        type: "spacer",
+        height: 28,
       },
       {
         type: "title",
@@ -64,14 +59,15 @@ export default class InventoryMenu extends UIWindow {
       z: 101,
     });
 
-    this.invText = new Text("Inventory ^", 0, 0, { fontColor: "white", fontSize: 22 }).asImage(150, 30).rotate("up");
-    this.invOpenRect = new BoundingRect(this.originX-48, 310, 48, 170);
-    this.invOpenClick = new BoundingRect(this.engine.window.width-48, 310, 48, 170);
+    this.invText = new Text("Inventory ↑", 0, 0, { fontColor: "white", fontSize: 22 }).asImage(150, 30).rotate("up");
+    this.closeText = new Text("↑ Close", 0, 0, { fontColor: "white", fontSize: 22 }).asImage(150, 30).rotate("down");
+    this.invOpenRect = new BoundingRect(this.originX-48, 310, 96, 170);
+    this.invOpenClick = new BoundingRect(this.engine.window.width-48, 310, 96, 170);
 
     this.engine.onMouseMove(event => {
       if ( 
         !this.hide && 
-        this.originX === this.engine.window.width && 
+        // this.originX === this.engine.window.width && 
         this.invOpenClick.contains(event.pos) 
       ) {
         this.hoverInv = true;
@@ -82,7 +78,7 @@ export default class InventoryMenu extends UIWindow {
 
     this.engine.onMouseDown(event => {
       if ( event.button === "left" && this.hoverInv ) {
-        this.engine.trigger("openInventory");
+        this.engine.trigger("toggleInventory");
       }
     });
   }
@@ -90,6 +86,7 @@ export default class InventoryMenu extends UIWindow {
   update() {
     super.update();
 
+    this.invOpenClick.x = this.originX-48;
     if ( this.hoverInv ) {
       this.engine.cursor = "pointer";
     }
@@ -100,6 +97,7 @@ export default class InventoryMenu extends UIWindow {
     this.invOpenRect.x = this.originX-48;
     this.invOpenRect.draw(ctx, "white", "black");
     this.invText.draw(ctx, this.originX-40, 320);
+    this.closeText.draw(ctx, this.originX+7, 344);
   }
 }
 
