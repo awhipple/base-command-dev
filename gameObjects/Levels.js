@@ -51,6 +51,11 @@ export default class Levels {
         reward: "greenGem",
         chance: 100,
       },
+      {
+        enemies: 25,
+        spawnRate: 0.75,
+        enemyHp: 999,
+      },
     ];
 
     this.selected = 1;
