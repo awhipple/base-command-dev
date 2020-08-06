@@ -2,9 +2,7 @@
 
 Dev version can be accessed at [https://dev.base-command.whipple.life]()
 
-```
-git push origin master
-```
+`git push origin master`
 
 ### Deploying Release (Prod)
 
@@ -17,7 +15,8 @@ Release version can be accessed at [https://base-command.whipple.life]()
    Filename: CNAME   Contents:`base-command.whipple.life`
 5. `git add CNAME`
 6. `git commit -m "Update release CNAME"`
-7. `git push release release`
+7. `git push --force release release`
+8. `git co master`
 
 ### Itemization / ArcPlan
 
