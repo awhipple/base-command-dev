@@ -32,7 +32,7 @@ export default class Levels {
         spawnRate: 0.5,
         enemyHp: 25,
         reward: "blueGem",
-        chance: 25,
+        chance: 50,
       },
       {
         enemies: 15,
@@ -40,7 +40,7 @@ export default class Levels {
         spawnRate: 0.5,
         enemyHp: 20,
         reward: "blueGem",
-        chance: 50,
+        chance: 100,
       },
       {
         icon: engine.images.get("dragon-green"),

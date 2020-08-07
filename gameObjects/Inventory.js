@@ -10,13 +10,13 @@ export default class Inventory {
     };
 
     if ( engine.dev ) {
-      for ( var i = 0; i < 12; i++ ) {
+      for ( var i = 0; i < 6; i++ ) {
         this.add("whiteGem");
       }
-      for ( var i = 0; i < 3; i++ ) {
+      for ( var i = 0; i < 6; i++ ) {
         this.add("blueGem");
       }
-      for ( var i = 0; i < 4; i++ ) {
+      for ( var i = 0; i < 6; i++ ) {
         this.add("greenGem");
       }
       this.sort();

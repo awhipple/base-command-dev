@@ -20,7 +20,7 @@ export default class Item {
     blueGem: {
       type: "gem", value: 2000, icon: "blue-gem", toolTipName: "Sapphire",
       craft: {
-        basic: "homing",
+        blueGem: "homing",
       }
     },
     whiteGem: {
@@ -34,7 +34,6 @@ export default class Item {
       description: "Fires deadly white balls across the screen.",
       craft: {
         basic: "rapid",
-        blueGem: "homing",
       }, 
       projectile: {
         imageName: "white-circle",
