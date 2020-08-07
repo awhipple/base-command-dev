@@ -147,6 +147,10 @@ export default class GameEngine {
     this.gameLoop = gameLoop;
   }
 
+  draw(drawLoop) {
+    this.window.drawLoop = drawLoop;
+  }
+
   startGameLoop() {
     this.nextTick = (new Date).getTime() - 100 * 1000;
 
@@ -178,9 +182,8 @@ export default class GameEngine {
     }
 
     // Developer provided game loop
-    if ( this.gameLoop ) {
-      this.gameLoop();
-    }
+    this.gameLoop?.();
+    
 
     // Game Object rectangle collision callbacks
     this.gameObjects.all.forEach(obj => {

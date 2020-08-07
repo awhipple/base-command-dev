@@ -112,6 +112,21 @@ export default class Image {
     return flippedImage;
   }
 
+  cut(width) {
+    var i = 0;
+    for ( var x = 0; x < this.width; x += width) {
+      var newCan = document.createElement("canvas");
+      newCan = document.createElement("canvas");
+      newCan.width = width;
+      newCan.height = this.height;
+      var newCtx = newCan.getContext("2d");
+      newCtx.drawImage(this.img, x, 0, width, this.height, 0, 0, width, this.height);
+      this[i] = new Image(newCan);
+      i++;
+    }
+    this.length = i;
+  }
+
   _rotateImage() {
     var newCanvas = document.createElement("canvas");
     newCanvas.width = this.img.height;

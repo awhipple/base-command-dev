@@ -33,7 +33,7 @@ export default class Game {
   start() {
     this.engine.images.preload([
       "base", "dragon-green",
-      "blue-gem", "green-gem", "red-gem", "white-gem",
+      "white-gems", "blue-gems", "yellow-gems",
     ]);
     this.engine.sounds.preload([
       "shot", "spark", "explosion", "chime", "zap",
@@ -74,7 +74,16 @@ export default class Game {
       if ( this.engine.prod ) {
         this.engine.on("firstInteraction", () => this.engine.sounds.play("music", {loop: true, volume: 0.6}));
       }
+
+      this.engine.images.get('white-gems').cut(50);
+      this.engine.images.save(this.engine.images.get('white-gems')[1], "white-gem");
       
+      this.engine.images.get('blue-gems').cut(50);
+      this.engine.images.save(this.engine.images.get('blue-gems')[3], "blue-gem");
+      
+      this.engine.images.get('yellow-gems').cut(50);
+      this.engine.images.save(this.engine.images.get('yellow-gems')[4], "yellow-gem");
+            
       this.inventory = this.engine.globals.inventory = new Inventory(engine);
       Item.NONE.engine = this.engine;
       

@@ -71,6 +71,7 @@ export default class GameWindow {
         this.objects[i].draw?.(this.ctx, this.engine);
       }
     }
+    this.drawLoop?.(this.ctx);
     if ( this.showFps ) {
       this.fpsText.draw(this.ctx);
     }

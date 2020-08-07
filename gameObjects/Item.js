@@ -12,7 +12,7 @@ export default class Item {
       type: "gem", value: 500, icon: "red-gem", toolTipName: "Ruby",
     },
     greenGem: {
-      type: "gem", value: 1000, icon: "green-gem", toolTipName: "Emerald",
+      type: "gem", value: 1000, icon: "yellow-gem", toolTipName: "Topaz",
       craft: {
         greenGem: "lightning",
       }
