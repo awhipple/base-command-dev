@@ -170,23 +170,22 @@ export default class Game {
           this.invHide = false;
         }
 
-        if ( Math.random() * 1 < 1 ) {
-          this.engine.register(new Particle(this.engine, {
-            start: {
-              x: 150, y: 455,
-              radius: 7,
-              r: 255, g: 255, b: 0,
-              alpha: 1,
-            }, 
-            end: {
-              x: 450, y: 455 + Math.random() * 100 - 50,
-              radius: 50,
-              r: Math.random() * 255, g: 0, b: 255,
-              alpha: 0.1,
-            },
-            lifeSpan: 1,
-          }));
-        }
+        // this.engine.register(new Particle(this.engine, {
+        //   start: {
+        //     x: 150, y: 455,
+        //     radius: 7,
+        //     r: 255, g: 255, b: 0,
+        //     alpha: 1,
+        //   }, 
+        //   end: {
+        //     x: 450, y: 455 + Math.random() * 100 - 50,
+        //     radius: 50,
+        //     r: Math.random() * 255, g: 0, b: 255,
+        //     alpha: 0.1,
+        //   },
+        //   lifeSpan: 1,
+        // }));
+
       });
     });
   }
