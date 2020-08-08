@@ -15,6 +15,7 @@ import Item from "./gameObjects/Item.js";
 import Text from "./engine/gfx/Text.js";
 import ToolTip from "./gameObjects/ui/ToolTip.js";
 import Lightning from "./engine/gfx/effects/Lightning.js";
+import Particle from "./engine/gfx/shapes/Particle.js";
 
 export default class Game {
   constructor(options = {}) {
@@ -33,7 +34,7 @@ export default class Game {
   start() {
     this.engine.images.preload([
       "base", "dragon-green",
-      "white-gems", "blue-gems", "yellow-gems",
+      "white-gems", "blue-gems", "yellow-gems", "purple-gems"
     ]);
     this.engine.sounds.preload([
       "shot", "spark", "explosion", "chime", "zap",
@@ -83,7 +84,9 @@ export default class Game {
       
       this.engine.images.get('yellow-gems').cut(50);
       this.engine.images.save(this.engine.images.get('yellow-gems')[4], "yellow-gem");
-            
+      
+      this.engine.images.get('purple-gems').cut(50);
+
       this.inventory = this.engine.globals.inventory = new Inventory(engine);
       Item.NONE.engine = this.engine;
       
@@ -165,6 +168,24 @@ export default class Game {
         if ( this.invHide && this.inventoryMenu.originX === this.engine.window.width ) {
           this.inventoryMenu.hideComponents();
           this.invHide = false;
+        }
+
+        if ( Math.random() * 1 < 1 ) {
+          this.engine.register(new Particle(this.engine, {
+            start: {
+              x: 150, y: 455,
+              radius: 7,
+              r: 255, g: 255, b: 0,
+              alpha: 1,
+            }, 
+            end: {
+              x: 450, y: 455 + Math.random() * 100 - 50,
+              radius: 50,
+              r: Math.random() * 255, g: 0, b: 255,
+              alpha: 0.1,
+            },
+            lifeSpan: 1,
+          }));
         }
       });
     });

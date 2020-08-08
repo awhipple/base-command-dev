@@ -4,6 +4,7 @@ export default class GameWindow {
   fpsUpdateNext = (new Date()).getTime() + 1000;
   frames = 0;
   fps = 0;
+  showFps = true;
 
   constructor(engine, canvasId, gameObjects, options = {}) {
     this.engine = engine;
