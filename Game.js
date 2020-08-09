@@ -15,7 +15,7 @@ import Item from "./gameObjects/Item.js";
 import Text from "./engine/gfx/Text.js";
 import ToolTip from "./gameObjects/ui/ToolTip.js";
 import Lightning from "./engine/gfx/effects/Lightning.js";
-import Particle from "./engine/gfx/shapes/Particle.js";
+import Image from "./engine/gfx/Image.js";
 
 export default class Game {
   constructor(options = {}) {
@@ -37,7 +37,7 @@ export default class Game {
       "white-gems", "blue-gems", "yellow-gems", "purple-gems"
     ]);
     this.engine.sounds.preload([
-      "shot", "spark", "explosion", "chime", "zap",
+      "shot", "spark", "explosion", "chime", "zap", "fireball",
       "tsuwami_generic-fighting-game-music.mp3"
     ]);
     this.engine.sounds.alias("music", "tsuwami_generic-fighting-game-music");
@@ -75,6 +75,8 @@ export default class Game {
       if ( this.engine.prod ) {
         this.engine.on("firstInteraction", () => this.engine.sounds.play("music", {loop: true, volume: 0.6}));
       }
+
+      this.engine.images.save(this.generateColoredImage(this.engine.images.get("dragon-green")), "dragon-flash");
 
       this.engine.images.get('white-gems').cut(50);
       this.engine.images.save(this.engine.images.get('white-gems')[1], "white-gem");
@@ -245,6 +247,20 @@ export default class Game {
     });
 
     return img;
+  }
+
+  generateColoredImage(img, color = "white") {
+    var can = document.createElement("canvas");
+    can.width = img.width;
+    can.height = img.height;
+    var ctx = can.getContext("2d");
+
+    img.draw(ctx, 0, 0);
+    ctx.globalCompositeOperation = "source-in";
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, can.width, can.height);
+
+    return new Image(can);
   }
 
   _startMergeTutorial() {

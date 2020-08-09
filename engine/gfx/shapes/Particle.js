@@ -10,7 +10,6 @@ export default class Particle extends GameObject {
     this.part = generateParticle();
     this.ctx = this.part.img.getContext("2d");
     this.ctx.globalCompositeOperation = "source-in";
-    this._changeColor("red");
 
     this.time = 0;
     this.lifeSpan = options.lifeSpan ?? 1;
@@ -20,7 +19,7 @@ export default class Particle extends GameObject {
     
     this.stateDelta = {};
     for(var key in options.start) {
-      if ( typeof options.start[key] === "number" && typeof options.end[key] === "number" ) {
+      if ( typeof options.start[key] === "number" && typeof options.end?.[key] === "number" ) {
         this.stateDelta[key] = options.end[key] - options.start[key];
       }
     }

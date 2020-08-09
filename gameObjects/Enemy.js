@@ -4,6 +4,7 @@ import Text from "../engine/gfx/Text.js";
 import Cash from "./Cash.js";
 import Lightning from "../engine/gfx/effects/Lightning.js";
 import DamageText from "./effects/DamageText.js";
+import Particle from "../engine/gfx/shapes/Particle.js";
 
 export default class Enemy extends GameObject {
   constructor(engine, x, y, hp, type = "white", initialXv = 0) {
@@ -19,7 +20,7 @@ export default class Enemy extends GameObject {
       this.dir = getDirectionFrom(this.pos, engine.globals.base.pos);
     }
 
-    this.hp = this.cash = hp;
+    this.hp = this.cash = this.maxHp = hp;
   }
 
   damage(dmg, type) {
@@ -73,12 +74,36 @@ export default class Enemy extends GameObject {
     if ( absInitialXv < 0.05 && absInitialXv > 0 ) {
       this.initialXv = 0;
       this.dir = getDirectionFrom(this.pos, this.engine.globals.base.pos);
-
     }
 
     if ( this.rect.y + this.rect.h > this.engine.window.height - 100 ) {
       this.engine.sounds.play("explosion");
       this.engine.trigger("enemyCollide");
+    }
+
+    if ( this.type === "fireBall" ) {
+      this.nextPart = this.nextPart ?? 1;
+      this.nextPart--;
+      if ( this.nextPart === 0 ) {
+        this.nextPart = 4;
+        this.engine.register(new Particle(
+          this.engine,
+          {
+            start: {
+              x: this.x, y: this.y,
+              r: 255, g: Math.random()*128, b: 0,
+              radius: 20,
+              alpha: 1,
+            },
+            end: {
+              x: this.x + Math.random()*80-40, y: this.y + Math.random()*80-40,
+              radius: 70,
+              alpha: 0,
+            },
+            lifeSpan: 1,
+          }
+        ));
+      }
     }
   }
 
@@ -87,8 +112,10 @@ export default class Enemy extends GameObject {
   }
 
   draw(ctx) {
-    this.rect.draw(ctx, this.type);
-    Text.draw(ctx, Math.ceil(this.hp), this.x, this.y - 25, {center: true, fontColor: this.type, fontSize: 40});
+    if ( !(this.type === "fireBall") ) {
+      this.rect.draw(ctx, this.type);
+      Text.draw(ctx, Math.ceil(this.hp), this.x, this.y - 25, {center: true, fontColor: this.type, fontSize: 40});
+    }
   }
 
   get dir() {
