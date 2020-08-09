@@ -1,13 +1,13 @@
 import Enemy from "./Enemy.js";
 
 export default class Boss extends Enemy {
-  constructor(engine, hp) {
+  constructor(engine, hp, type) {
     super(engine, engine.window.width/2, -100, hp, "purple");
     this.rect.x = this.rect.x - 30;
     this.rect.y = this.rect.y - 30;
     this.rect.w = this.rect.w + 60;
     this.rect.h = this.rect.h + 60;
-    this.img = engine.images.get("dragon-green");
+    this.img = engine.images.get("dragon-" + type);
 
     this.yv = 0;
     this.oX = this.oY = 0;
@@ -18,6 +18,11 @@ export default class Boss extends Enemy {
     this._setDest(300, 200);
 
     this.sizeBoost = 30;
+
+    this.bType = type;
+    if ( this.bType === "purple" ) {
+      this.hp = this.maxHp = hp * 5;
+    }
   }
 
   update() {
@@ -33,7 +38,7 @@ export default class Boss extends Enemy {
 
       if ( this.delta === Math.PI/2 ) {
         this.delta = null;
-        this.timeBetweenMoves = this.timeBetweenMoves ?? 3;
+        this.timeBetweenMoves = this.timeBetweenMoves ?? (this.bType === "purple" ? 1 : 3);
         this.timeBetweenMoves = Math.max(this.timeBetweenMoves - 0.15, 0);
         this.nextMove = this.timeBetweenMoves;
         this.fireBalls = 3;
@@ -59,7 +64,8 @@ export default class Boss extends Enemy {
         if ( this.fireBalls > 1 ) {
           fireBallXv = this.fireBalls === 3 ? -10 : 10;
         }
-        this.engine.register(new Enemy(this.engine, this.x, this.y, 22, "fireBall", fireBallXv), "enemy");
+        var fbHp = this.bType === "purple" ? 500 : 22;
+        this.engine.register(new Enemy(this.engine, this.x, this.y, fbHp, "fireBall", fireBallXv), "enemy");
         this.engine.sounds.play("fireball");
         this.fireBalls--;
         this.nextFire = 0.2;
@@ -86,8 +92,8 @@ export default class Boss extends Enemy {
     } 
   }
 
-  damage(dmg) {
-    super.damage(dmg);
+  damage(dmg, type) {
+    super.damage(dmg, type);
 
     this.oX = Math.random()*30-15;
     this.oY = Math.random()*30-15;

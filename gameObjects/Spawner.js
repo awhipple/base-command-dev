@@ -40,8 +40,9 @@ export default class Spawner {
 
     this.enemiesLeft = this.enemies + Object.keys(this.engine.gameObjects.enemy ?? {}).length;
     if ( this.enemiesLeft === 0 && !this.rewardAnim) {
-      if ( this.engine.globals.levels.current.boss && this.spawnBoss ) {
-        this.engine.register(new Boss(this.engine, 2200), "enemy");
+      var boss = this.engine.globals.levels.current.boss;
+      if ( boss && this.spawnBoss ) {
+        this.engine.register(new Boss(this.engine, 2200, boss), "enemy");
         this.spawnBoss = false;
       } else {
         this.engine.globals.base.on = false;

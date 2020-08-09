@@ -47,14 +47,16 @@ export default class Levels {
         enemies: 20,
         spawnRate: 1,
         enemyHp: 75,
-        boss: true,
+        boss: "green",
         reward: "greenGem",
         chance: 100,
       },
       {
+        icon: engine.images.get("dragon-purple"),
         enemies: 25,
         spawnRate: 0.75,
         enemyHp: 999,
+        boss: "purple",
       },
     ];
 
