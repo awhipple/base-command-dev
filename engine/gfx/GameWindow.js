@@ -1,4 +1,5 @@
 import Text from "./Text.js";
+import Particle from "./shapes/Particle.js";
 
 export default class GameWindow {
   fpsUpdateNext = (new Date()).getTime() + 1000;
@@ -72,6 +73,7 @@ export default class GameWindow {
         this.objects[i].draw?.(this.ctx, this.engine);
       }
     }
+    Particle.drawQueuedParticles(this.ctx);
     this.drawLoop?.(this.ctx);
     if ( this.showFps ) {
       this.fpsText.draw(this.ctx);

@@ -2,20 +2,28 @@ import Image from "../Image.js";
 import GameObject from "../../objects/GameObject.js";
 
 export default class Particle extends GameObject {
+  static drawQueue = [];
+  
   z = 1000;
 
   constructor(engine, options = {start:{}}) {
+
+    Particle.sheet = Particle.sheet ?? generateParticleSheet();
+    Particle.sheetCtx = Particle.sheetCtx ?? Particle.sheet.getContext("2d");
+    
     super(engine, {x: 50, y: 50, radius: 50});
 
     this.part = generateParticle();
     this.ctx = this.part.img.getContext("2d");
-    this.ctx.globalCompositeOperation = "source-in";
+    this.ctx.globalCompositeOperation = "source-atop";
 
     this.time = 0;
     this.lifeSpan = options.lifeSpan ?? 1;
 
     this.initial = options.start;
     this._setState(this.initial);
+
+    this.newRender = options.newRender ?? false;
     
     this.stateDelta = {};
     for(var key in options.start) {
@@ -34,12 +42,16 @@ export default class Particle extends GameObject {
   }
 
   draw(ctx) {
-    ctx.save();
-    ctx.globalAlpha = this.alpha;
-    this.ctx.fillStyle = this.col;
-    this.ctx.fillRect(0, 0, 100, 100);
-    this.part.draw(ctx, this.rect);
-    ctx.restore();
+    if ( this.newRender ) {
+      Particle._queueForDraw(this);
+    } else {
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      this.ctx.fillStyle = this.col;
+      this.ctx.fillRect(0, 0, 100, 100);
+      this.part.draw(ctx, this.rect);
+      ctx.restore();
+    }
   }
 
   get r() {
@@ -86,9 +98,37 @@ export default class Particle extends GameObject {
     }
     return newDeltaState;
   }
+
+  static _queueForDraw(particle) {
+    this.drawQueue.push(particle);
+  }
+
+  static drawQueuedParticles(ctx) {
+    if ( Particle.sheet ) {
+      var x = 0, y = 0;
+      var particleSegments = [];
+      this.drawQueue.forEach(particle => {
+        Particle.sheetCtx.fillStyle = particle.col;
+        Particle.sheetCtx.fillRect(x, y, 50, 50);
+        particleSegments.push({particle, x, y});
+        
+        x += 50;
+        if ( x >= 600 ) {
+          x = 0;
+          y += 50;
+        }
+      });
+      particleSegments.forEach(seg => {
+        var { x: px, y: py, w: pw, h: ph } = seg.particle.rect;
+        ctx.globalAlpha = seg.particle.alpha;
+        ctx.drawImage(Particle.sheet, seg.x, seg.y, 50, 50, px, py, pw, ph);
+      });
+      this.drawQueue = [];
+    }
+  }
 }
 
-function generateParticle(size = 100) {
+function generateParticle(size = 50) {
   if ( generateParticle.particle ) {
     return generateParticle.particle;
   }
@@ -113,4 +153,22 @@ function generateParticle(size = 100) {
 
   ctx.putImageData(iData, 0, 0);
   return generateParticle.particle = new Image(can);
+}
+
+function generateParticleSheet() {
+
+  var part = generateParticle();
+  var sheet = document.createElement("canvas");
+  sheet.width = sheet.height = 2000;
+  var ctx = sheet.getContext("2d");
+  
+  for ( var y = 0; y < 2000; y += 50 ) {
+    for ( var x = 0; x < 2000; x += 50 ) {
+      part.draw(ctx, x, y);
+    }
+  }
+
+  ctx.globalCompositeOperation = "source-atop";
+
+  return sheet;
 }

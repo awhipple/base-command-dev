@@ -16,6 +16,7 @@ import Text from "./engine/gfx/Text.js";
 import ToolTip from "./gameObjects/ui/ToolTip.js";
 import Lightning from "./engine/gfx/effects/Lightning.js";
 import Image from "./engine/gfx/Image.js";
+import Particle from "./engine/gfx/shapes/Particle.js";
 
 export default class Game {
   constructor(options = {}) {
@@ -172,21 +173,24 @@ export default class Game {
           this.invHide = false;
         }
 
-        // this.engine.register(new Particle(this.engine, {
-        //   start: {
-        //     x: 150, y: 455,
-        //     radius: 7,
-        //     r: 255, g: 255, b: 0,
-        //     alpha: 1,
-        //   }, 
-        //   end: {
-        //     x: 450, y: 455 + Math.random() * 100 - 50,
-        //     radius: 50,
-        //     r: Math.random() * 255, g: 0, b: 255,
-        //     alpha: 0.1,
-        //   },
-        //   lifeSpan: 1,
-        // }));
+        for ( var i = 0; i < 3; i++ ) {
+          this.engine.register(new Particle(this.engine, {
+            start: {
+              x: 150, y: 455,
+              radius: 7,
+              r: 255, g: 255, b: 0,
+              alpha: 1,
+            }, 
+            end: {
+              x: 450, y: 455 + Math.random() * 100 - 50,
+              radius: 50,
+              r: Math.random() * 255, g: 0, b: 255,
+              alpha: 0.1,
+            },
+            lifeSpan: 1,
+            newRender: true,
+          }));
+        }
 
       });
     });
