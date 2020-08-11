@@ -173,7 +173,7 @@ export default class Game {
           this.invHide = false;
         }
 
-        for ( var i = 0; i < 12; i++ ) {
+        for ( var i = 0; i < 0; i++ ) {
           this.engine.register(new Particle(this.engine, {
             start: {
               x: 150, y: 455,
@@ -273,8 +273,7 @@ export default class Game {
       fontSize: 30,
       z: 500,
     }));
-    this.engine.on("openInventory", () => {
-      this.invSlide = -20;
+    this.engine.on("toggleInventory", () => {
       text.str = "^ Merge gems";
       text.x = 156;
       text.y = 180;
