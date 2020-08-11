@@ -166,7 +166,6 @@ export default class Game {
         this.engine.register(new Reward(this.engine, item));
       });
 
-      var y = 455;
       this.engine.onUpdate(() => {
         this.inventoryMenu.originX = constrain(this.inventoryMenu.originX + this.invSlide, 0, this.engine.window.width);
         if ( this.invHide && this.inventoryMenu.originX === this.engine.window.width ) {
@@ -192,20 +191,19 @@ export default class Game {
         //   }));
         // }
 
-        // y -= 3;
         for ( var i = 0; i < 4; i++ ) {
           var g = Math.random()*256;
           var rad = Math.random()*Math.PI*2;
           this.engine.register(new Particle(this.engine, {
             start: {
-              x: 300, y: y,
+              x: 302, y: 602,
               radius: 5,
               g, b: 255,
               alpha: 1,
             }, 
             end: {
-              x: 300 + Math.cos(rad)*10, y: y + Math.sin(rad)*10,
-              radius: 20,
+              x: 302 + Math.cos(rad)*8, y: 602 + Math.sin(rad)*8,
+              radius: 17,
               alpha: 0,
             },
             lifeSpan: 0.5,
