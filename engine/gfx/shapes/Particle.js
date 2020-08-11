@@ -2,15 +2,12 @@ import Image from "../Image.js";
 import GameObject from "../../objects/GameObject.js";
 
 export default class Particle extends GameObject {
-  static drawQueue = [];
+  static drawQueue = []
+  static partSheets = [];
   
   z = 1000;
 
   constructor(engine, options = {start:{}}) {
-
-    Particle.sheet = Particle.sheet ?? generateParticleSheet();
-    Particle.sheetCtx = Particle.sheetCtx ?? Particle.sheet.getContext("2d");
-    
     super(engine, {x: 50, y: 50, radius: 50});
 
     this.part = generateParticle();
@@ -59,7 +56,7 @@ export default class Particle extends GameObject {
   }
 
   set r(val) {
-    this._r = val;
+    this._r = Math.floor(val);
     this._changeColor(this.r, this.g, this.b);
   }
   
@@ -68,7 +65,7 @@ export default class Particle extends GameObject {
   }
 
   set g(val) {
-    this._g = val;
+    this._g = Math.floor(val);
     this._changeColor(this.r, this.g, this.b);
   }
 
@@ -77,7 +74,7 @@ export default class Particle extends GameObject {
   }
 
   set b(val) {
-    this._b = val;
+    this._b = Math.floor(val);
     this._changeColor(this.r, this.g, this.b);
   }
 
@@ -104,27 +101,34 @@ export default class Particle extends GameObject {
   }
 
   static drawQueuedParticles(ctx) {
-    if ( Particle.sheet ) {
-      var x = 0, y = 0;
-      var particleSegments = [];
-      this.drawQueue.forEach(particle => {
-        Particle.sheetCtx.fillStyle = particle.col;
-        Particle.sheetCtx.fillRect(x, y, 50, 50);
-        particleSegments.push({particle, x, y});
-        
-        x += 50;
-        if ( x >= 600 ) {
-          x = 0;
-          y += 50;
+    var x = 0, y = 0, sheet = 0;
+    var particleSegments = [];
+    this.drawQueue.forEach(particle => {
+      if ( sheet >= Particle.partSheets.length ) {
+        var can = generateParticleSheet();
+        Particle.partSheets.push({can, ctx: can.getContext("2d")});
+      }
+      var ctx = Particle.partSheets[sheet].ctx;
+      ctx.fillStyle = particle.col;
+      ctx.fillRect(x, y, 50, 50);
+      particleSegments.push({particle, sheet, x, y});
+      x += 50;
+      if ( x >= 1000 ) {
+        x = 0;
+        y += 50;
+        if ( y >= 1000 ) {
+          y = 0;
+          sheet++;
         }
-      });
-      particleSegments.forEach(seg => {
-        var { x: px, y: py, w: pw, h: ph } = seg.particle.rect;
-        ctx.globalAlpha = seg.particle.alpha;
-        ctx.drawImage(Particle.sheet, seg.x, seg.y, 50, 50, px, py, pw, ph);
-      });
-      this.drawQueue = [];
-    }
+      }
+    });
+    // if ( Math.random() < 1/60 ) console.log("Part Count", this.drawQueue.length, "Sheet Count", Particle.partSheets.length, this.drawQueue[0].col);
+    particleSegments.forEach(seg => {
+      var { x: px, y: py, w: pw, h: ph } = seg.particle.rect;
+      ctx.globalAlpha = seg.particle.alpha;
+      ctx.drawImage(Particle.partSheets[seg.sheet].can, seg.x, seg.y, 50, 50, px, py, pw, ph);
+    });
+    this.drawQueue = [];
   }
 }
 
@@ -156,14 +160,13 @@ function generateParticle(size = 50) {
 }
 
 function generateParticleSheet() {
-
-  var part = generateParticle();
+  var part = generateParticle(50);
   var sheet = document.createElement("canvas");
-  sheet.width = sheet.height = 2000;
+  sheet.width = sheet.height = 1000;
   var ctx = sheet.getContext("2d");
   
-  for ( var y = 0; y < 2000; y += 50 ) {
-    for ( var x = 0; x < 2000; x += 50 ) {
+  for ( var y = 0; y < 1000; y += 50 ) {
+    for ( var x = 0; x < 1000; x += 50 ) {
       part.draw(ctx, x, y);
     }
   }

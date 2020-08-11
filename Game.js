@@ -173,7 +173,7 @@ export default class Game {
           this.invHide = false;
         }
 
-        for ( var i = 0; i < 3; i++ ) {
+        for ( var i = 0; i < 1; i++ ) {
           this.engine.register(new Particle(this.engine, {
             start: {
               x: 150, y: 455,
