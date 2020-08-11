@@ -2,7 +2,8 @@ import Image from "../Image.js";
 import GameObject from "../../objects/GameObject.js";
 
 export default class Particle extends GameObject {
-  static drawQueue = {};
+  static drawQueue = [];
+  static particleColorMap = {};
   static partSheets = [];
   
   z = 1000;
@@ -18,6 +19,11 @@ export default class Particle extends GameObject {
     this.lifeSpan = options.lifeSpan ?? 1;
 
     this.optimizeColorTransitions = options.optimizeColorTransitions ?? true;
+    if ( this.optimizeColorTransitions ) {
+      ['r', 'g', 'b'].forEach(col => {
+        this._normalizeColor(options, col);
+      });
+    }
 
     this.initial = options.start;
     this._setState(this.initial);
@@ -25,9 +31,6 @@ export default class Particle extends GameObject {
     this.stateDelta = {};
     for(var key in options.start) {
       if ( typeof options.start[key] === "number" && typeof options.end?.[key] === "number" ) {
-        if ( this.optimizeColorTransitions && ['r', 'g', 'b'].includes(key)) {
-          this._normalizeColor(options, key);
-        }
         this.stateDelta[key] = options.end[key] - options.start[key];
       }
     }
@@ -47,30 +50,30 @@ export default class Particle extends GameObject {
   }
 
   get r() {
-    return this._r;
+    return this._r ?? 0;
   }
 
   set r(val) {
     this._r = Math.floor(val);
-    this._changeColor(this.r, this.g, this.b);
+    this._changeColor();
   }
   
   get g() {
-    return this._g;
+    return this._g ?? 0;
   }
 
   set g(val) {
     this._g = Math.floor(val);
-    this._changeColor(this.r, this.g, this.b);
+    this._changeColor();
   }
 
   get b() {
-    return this._b;
+    return this._b ?? 0;
   }
 
   set b(val) {
     this._b = Math.floor(val);
-    this._changeColor(this.r, this.g, this.b);
+    this._changeColor();
   }
 
   _changeColor() {
@@ -92,56 +95,68 @@ export default class Particle extends GameObject {
   }
 
   _normalizeColor(options, color) {
-    if ( options.start ) {
-      [options.start, options.end].forEach(state => {
-        if ( state?.hasOwnProperty(color) ) {
-          state[color] = Math.round(state[color]/16)*16;
-        }
-      });
-    }
+    [options.start, options.end].forEach(state => {
+      if ( state?.hasOwnProperty(color) ) {
+        state[color] = Math.round(state[color]/16)*16;
+      }
+    });
   }
 
   static _queueForDraw(particle) {
-    this.drawQueue[particle.col] = this.drawQueue[particle.col] ?? [];
-    this.drawQueue[particle.col].push(particle);
+    Particle.drawQueue.push(particle);
+    if ( Particle.particleColorMap[particle.col] === undefined) {
+      Particle.particleColorMap[particle.col] = Particle._getNextSheetParticle();
+    }
+    particle.drawTarget = Particle.particleColorMap[particle.col];
   }
 
   static drawQueuedParticles(ctx) {
-    var x = 0, y = 0, sheet = 0;
-    var particleSegments = [];
-    if ( Particle.partSheets.length === 0 ) {
-      var can = generateParticleSheet();
-      Particle.partSheets.push({can, ctx: can.getContext("2d")});
-    }
-    for ( var key in this.drawQueue ) {
-      var particleList = this.drawQueue[key];
-
-      if ( sheet >= Particle.partSheets.length ) {
-        var can = generateParticleSheet();
-        Particle.partSheets.push({can, ctx: can.getContext("2d")});
-      }
-      var sheetCtx = Particle.partSheets[sheet].ctx;
-      sheetCtx.fillStyle = key;
-      sheetCtx.fillRect(x, y, 50, 50);
-
-      particleList.forEach(particle => particleSegments.push({particle, sheet, x, y}));
-      x += 50;
-      if ( x >= 1000 ) {
-        x = 0;
-        y += 50;
-        if ( y >= 1000 ) {
-          y = 0;
-          sheet++;
+    Particle.drawQueue.forEach(particle => {
+      var draw = particle.drawTarget;
+      if ( !Particle.particleColorMap[particle.col].drawn ) {
+        if ( draw.sheet >= Particle.partSheets.length ) {
+          var can = generateParticleSheet();
+          Particle.partSheets.push({can, ctx: can.getContext("2d")});
         }
+        var sheetCtx = Particle.partSheets[draw.sheet].ctx;
+        sheetCtx.fillStyle = particle.col;
+        sheetCtx.fillRect(draw.x, draw.y, 50, 50);
+        Particle.particleColorMap[particle.col].drawn = true;
       }
-    };
-    // console.log("Drawing " + Object.keys(this.drawQueue).length + "/" + particleSegments.length + " particles.");
-    particleSegments.forEach(seg => {
-      var { x: px, y: py, w: pw, h: ph } = seg.particle.rect;
-      ctx.globalAlpha = seg.particle.alpha;
-      ctx.drawImage(Particle.partSheets[seg.sheet].can, seg.x, seg.y, 50, 50, px, py, pw, ph);
     });
-    this.drawQueue = {};
+    // console.log("Drawing " + Object.keys(Particle.particleColorMap).length + "/" + Particle.drawQueue.length + " particles on " + Particle.partSheets.length + " sheets.");
+    this.drawQueue.forEach(particle => {
+      var { x: px, y: py, w: pw, h: ph } = particle.rect;
+      ctx.globalAlpha = particle.alpha;
+      ctx.drawImage(Particle.partSheets[particle.drawTarget.sheet].can, particle.drawTarget.x, particle.drawTarget.y, 50, 50, px, py, pw, ph);
+    });
+    this.drawQueue = [];
+    this.particleColorMap = {};
+    Particle._resetParticleSheet();
+  }
+
+  static _getNextSheetParticle() {
+    if ( Particle.tSheet === undefined ) {
+      Particle.tx = -50;
+      Particle.ty = 0;
+      Particle.tSheet = 0;
+    }
+
+    Particle.tx += 50;
+    if ( Particle.tx >= 1000 ) {
+      Particle.tx = 0;
+      Particle.ty += 50;
+      if ( Particle.ty >= 1000 ) {
+        Particle.ty = 0;
+        Particle.sheet = 0;
+      }
+    }
+
+    return { sheet: Particle.tSheet, x: Particle.tx, y: Particle.ty, drawn: false };
+  }
+
+  static _resetParticleSheet() {
+    Particle.tSheet = undefined;
   }
 }
 

@@ -166,6 +166,7 @@ export default class Game {
         this.engine.register(new Reward(this.engine, item));
       });
 
+      var y = 455;
       this.engine.onUpdate(() => {
         this.inventoryMenu.originX = constrain(this.inventoryMenu.originX + this.invSlide, 0, this.engine.window.width);
         if ( this.invHide && this.inventoryMenu.originX === this.engine.window.width ) {
@@ -173,21 +174,41 @@ export default class Game {
           this.invHide = false;
         }
 
-        for ( var i = 0; i < 0; i++ ) {
+        // for ( var i = 0; i < 1; i++ ) {
+        //   this.engine.register(new Particle(this.engine, {
+        //     start: {
+        //       x: 150, y: 455,
+        //       radius: 7,
+        //       r: 255, g: 255, b: 0,
+        //       alpha: 1,
+        //     }, 
+        //     end: {
+        //       x: 450, y: 455 + Math.random() * 100 - 50,
+        //       radius: 50,
+        //       r: Math.random() * 255, g: 0, b: 255,
+        //       alpha: 0.1,
+        //     },
+        //     lifeSpan: 1,
+        //   }));
+        // }
+
+        // y -= 3;
+        for ( var i = 0; i < 4; i++ ) {
+          var g = Math.random()*256;
+          var rad = Math.random()*Math.PI*2;
           this.engine.register(new Particle(this.engine, {
             start: {
-              x: 150, y: 455,
-              radius: 7,
-              r: 255, g: 255, b: 0,
+              x: 300, y: y,
+              radius: 5,
+              g, b: 255,
               alpha: 1,
             }, 
             end: {
-              x: 450, y: 455 + Math.random() * 100 - 50,
-              radius: 50,
-              r: Math.random() * 255, g: 0, b: 255,
-              alpha: 0.1,
+              x: 300 + Math.cos(rad)*10, y: y + Math.sin(rad)*10,
+              radius: 20,
+              alpha: 0,
             },
-            lifeSpan: 1,
+            lifeSpan: 0.5,
           }));
         }
 
