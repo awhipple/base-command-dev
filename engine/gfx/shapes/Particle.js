@@ -26,8 +26,6 @@ export default class Particle extends GameObject {
     this.initial = options.start;
     this._setState(this.initial);
 
-    this.newRender = options.newRender ?? false;
-
     this.stateDelta = {};
     for(var key in options.start) {
       if ( typeof options.start[key] === "number" && typeof options.end?.[key] === "number" ) {
@@ -46,16 +44,7 @@ export default class Particle extends GameObject {
   }
 
   draw(ctx) {
-    if ( this.newRender ) {
-      Particle._queueForDraw(this);
-    } else {
-      ctx.save();
-      ctx.globalAlpha = this.alpha;
-      this.ctx.fillStyle = this.col;
-      this.ctx.fillRect(0, 0, 100, 100);
-      this.part.draw(ctx, this.rect);
-      ctx.restore();
-    }
+    Particle._queueForDraw(this);
   }
 
   get r() {
@@ -149,11 +138,9 @@ export default class Particle extends GameObject {
         }
       }
     };
-    if ( Math.random() < 1/60 ) console.log("Part Count", particleSegments.length, "Diff Parts", Object.keys(this.drawQueue).length, "Sheet Count", Particle.partSheets.length);
     particleSegments.forEach(seg => {
       var { x: px, y: py, w: pw, h: ph } = seg.particle.rect;
       ctx.globalAlpha = seg.particle.alpha;
-      // console.log(seg);
       ctx.drawImage(Particle.partSheets[seg.sheet].can, seg.x, seg.y, 50, 50, px, py, pw, ph);
     });
     this.drawQueue = {};

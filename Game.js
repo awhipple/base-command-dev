@@ -173,7 +173,7 @@ export default class Game {
           this.invHide = false;
         }
 
-        for ( var i = 0; i < 0; i++ ) {
+        for ( var i = 0; i < 12; i++ ) {
           this.engine.register(new Particle(this.engine, {
             start: {
               x: 150, y: 455,
@@ -188,7 +188,6 @@ export default class Game {
               alpha: 0.1,
             },
             lifeSpan: 1,
-            newRender: true,
           }));
         }
 
