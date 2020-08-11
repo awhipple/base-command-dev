@@ -2,7 +2,7 @@ import Image from "../Image.js";
 import GameObject from "../../objects/GameObject.js";
 
 export default class Particle extends GameObject {
-  static drawQueue = []
+  static drawQueue = {};
   static partSheets = [];
   
   z = 1000;
@@ -17,17 +17,24 @@ export default class Particle extends GameObject {
     this.time = 0;
     this.lifeSpan = options.lifeSpan ?? 1;
 
+    this.optimizeColorTransitions = options.optimizeColorTransitions ?? true;
+    
+    if ( this.optimizeColorTransitions && (options.end?.r || options.end?.g || options.end?.b) ) {
+      this._normalizeColors(options);
+    }
+
     this.initial = options.start;
     this._setState(this.initial);
 
     this.newRender = options.newRender ?? false;
-    
+
     this.stateDelta = {};
     for(var key in options.start) {
       if ( typeof options.start[key] === "number" && typeof options.end?.[key] === "number" ) {
         this.stateDelta[key] = options.end[key] - options.start[key];
       }
     }
+
   }
 
   update(ctx) {
@@ -96,22 +103,42 @@ export default class Particle extends GameObject {
     return newDeltaState;
   }
 
+  _normalizeColors(options) {
+    if ( options.start ) {
+      [options.start, options.end].forEach(state => {
+        ['r', 'g', 'b'].forEach(col => {
+          if ( state?.hasOwnProperty(col) ) {
+            state[col] = Math.round(state[col]/16)*16;
+          }
+        });
+      });
+    }
+  }
+
   static _queueForDraw(particle) {
-    this.drawQueue.push(particle);
+    this.drawQueue[particle.col] = this.drawQueue[particle.col] ?? [];
+    this.drawQueue[particle.col].push(particle);
   }
 
   static drawQueuedParticles(ctx) {
     var x = 0, y = 0, sheet = 0;
     var particleSegments = [];
-    this.drawQueue.forEach(particle => {
+    if ( Particle.partSheets.length === 0 ) {
+      var can = generateParticleSheet();
+      Particle.partSheets.push({can, ctx: can.getContext("2d")});
+    }
+    for ( var key in this.drawQueue ) {
+      var particleList = this.drawQueue[key];
+
       if ( sheet >= Particle.partSheets.length ) {
         var can = generateParticleSheet();
         Particle.partSheets.push({can, ctx: can.getContext("2d")});
       }
-      var ctx = Particle.partSheets[sheet].ctx;
-      ctx.fillStyle = particle.col;
-      ctx.fillRect(x, y, 50, 50);
-      particleSegments.push({particle, sheet, x, y});
+      var sheetCtx = Particle.partSheets[sheet].ctx;
+      sheetCtx.fillStyle = key;
+      sheetCtx.fillRect(x, y, 50, 50);
+
+      particleList.forEach(particle => particleSegments.push({particle, sheet, x, y}));
       x += 50;
       if ( x >= 1000 ) {
         x = 0;
@@ -121,14 +148,15 @@ export default class Particle extends GameObject {
           sheet++;
         }
       }
-    });
-    // if ( Math.random() < 1/60 ) console.log("Part Count", this.drawQueue.length, "Sheet Count", Particle.partSheets.length, this.drawQueue[0].col);
+    };
+    if ( Math.random() < 1/60 ) console.log("Part Count", particleSegments.length, "Diff Parts", Object.keys(this.drawQueue).length, "Sheet Count", Particle.partSheets.length);
     particleSegments.forEach(seg => {
       var { x: px, y: py, w: pw, h: ph } = seg.particle.rect;
       ctx.globalAlpha = seg.particle.alpha;
+      // console.log(seg);
       ctx.drawImage(Particle.partSheets[seg.sheet].can, seg.x, seg.y, 50, 50, px, py, pw, ph);
     });
-    this.drawQueue = [];
+    this.drawQueue = {};
   }
 }
 
