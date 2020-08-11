@@ -18,10 +18,6 @@ export default class Particle extends GameObject {
     this.lifeSpan = options.lifeSpan ?? 1;
 
     this.optimizeColorTransitions = options.optimizeColorTransitions ?? true;
-    
-    if ( this.optimizeColorTransitions && (options.end?.r || options.end?.g || options.end?.b) ) {
-      this._normalizeColors(options);
-    }
 
     this.initial = options.start;
     this._setState(this.initial);
@@ -29,6 +25,9 @@ export default class Particle extends GameObject {
     this.stateDelta = {};
     for(var key in options.start) {
       if ( typeof options.start[key] === "number" && typeof options.end?.[key] === "number" ) {
+        if ( this.optimizeColorTransitions && ['r', 'g', 'b'].includes(key)) {
+          this._normalizeColor(options, key);
+        }
         this.stateDelta[key] = options.end[key] - options.start[key];
       }
     }
@@ -92,14 +91,12 @@ export default class Particle extends GameObject {
     return newDeltaState;
   }
 
-  _normalizeColors(options) {
+  _normalizeColor(options, color) {
     if ( options.start ) {
       [options.start, options.end].forEach(state => {
-        ['r', 'g', 'b'].forEach(col => {
-          if ( state?.hasOwnProperty(col) ) {
-            state[col] = Math.round(state[col]/16)*16;
-          }
-        });
+        if ( state?.hasOwnProperty(color) ) {
+          state[color] = Math.round(state[color]/16)*16;
+        }
       });
     }
   }
@@ -138,6 +135,7 @@ export default class Particle extends GameObject {
         }
       }
     };
+    // console.log("Drawing " + Object.keys(this.drawQueue).length + "/" + particleSegments.length + " particles.");
     particleSegments.forEach(seg => {
       var { x: px, y: py, w: pw, h: ph } = seg.particle.rect;
       ctx.globalAlpha = seg.particle.alpha;
