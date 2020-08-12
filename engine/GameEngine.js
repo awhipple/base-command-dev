@@ -41,10 +41,12 @@ export default class GameEngine {
     });
 
     this.onMouseDown(event => {
-      if ( !this.firstInteraction ) {
-        this.firstInteraction = true;
-        this.trigger("firstInteraction")
-      }
+      setTimeout(() => {
+        if ( !this.firstInteraction ) {
+          this.firstInteraction = true;
+          this.trigger("firstInteraction")
+        }
+      }, 0);
       this.mouse[MouseButtonNames[event.button] || event.button] = true;
 
       this._sendMouseEvent(event, "onMouseClick");
@@ -273,7 +275,7 @@ export default class GameEngine {
     var canvas = this.window.canvas;
     var rect = canvas.getBoundingClientRect();
     
-    var { clientX, clientY }  = this.mobile ? (event.touches?.[0] ?? event.changedTouches?.[0]) : event;
+    var { clientX, clientY } = event.touches?.[0] ?? event.changedTouches?.[0] ?? event;
 
     return new Coord(
       (clientX - rect.x) * canvas.width / rect.width,
