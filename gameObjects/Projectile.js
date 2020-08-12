@@ -1,12 +1,11 @@
 import GameObject from "../engine/objects/GameObject.js"
-import Sprite from "../engine/gfx/Sprite.js";
 import { getDirectionFrom, slideDirectionTowards } from "../engine/GameMath.js";
 import DamageText from "./effects/DamageText.js";
 import Lightning from "../engine/gfx/effects/Lightning.js";
+import Particle from "../engine/gfx/shapes/Particle.js";
 
 export default class Projectile extends GameObject {
   z = 1;
-  alpha = 1;
 
   constructor(engine, x, y, dir, damage = 1, speed = 60, options = {}) {
     super(engine, {
@@ -19,14 +18,15 @@ export default class Projectile extends GameObject {
     this.speed = speed;
     this.dir = dir;
 
+    this.scaleDown = options.scaleDown ?? false;
+
     this.homing = options.homing ?? false;
     this.target = null;
     this.targetRecompute = 0;
 
-    this.lifeSpanTicks = options.lifeSpan ? options.lifeSpan * 60 : null;
+    this.trail = options.trail;
 
-    this.sprite = new Sprite(options.image.img, this.x, this.y, options.scale ?? 1);
-    this.sprite.rad = dir;
+    this.img = options.image;
 
     this.onCollision(target => {
       this.hit = true;
@@ -98,24 +98,41 @@ export default class Projectile extends GameObject {
           this.sprite.rad = this.dir;
         }
       }
-    }
 
-    if ( this.lifeSpanTicks ) {
-      this.lifeSpanTicks--;
-      this.alpha = Math.min(this.lifeSpanTicks / 10, 1);
-      if ( this.lifeSpanTicks === 0 ) {
-        this.engine.unregister(this);
+    }
+    
+    if ( this.trail ) {
+      this.nextTrail = this.nextTrail ?? 0;
+      this.nextTrail -= 1/60;
+      if ( this.nextTrail <= 0 ) {
+        this.nextTrail += 1/30;
+        this.engine.register(new Particle(
+          this.engine,
+          {
+            start: {
+              x: this.x, y: this.y,
+              radius: 17,
+              alpha: 0.6,
+              ...Projectile.TRAIL[this.trail],
+            },
+            end: {
+              radius: 5,
+              alpha: 0,
+            },
+            lifeSpan: 0.5,
+          }
+        ));
       }
     }
+
   }
 
   draw(ctx) {
-    this.sprite.x = this.x;
-    this.sprite.y = this.y;
-    if ( this.sprite.alpha !== this.alpha ) {
-      this.sprite.alpha = this.alpha;
+    if ( this.sprite ) {
+      this.sprite.x = this.x;
+      this.sprite.y = this.y;
     }
-    this.sprite.draw(ctx);
+    this.img.draw(ctx, this.rect.grow(this.scaleDown ? 0 : 15));
   }
 
   get dir() {
@@ -132,4 +149,12 @@ export default class Projectile extends GameObject {
     this.xv = Math.cos(this.dir) * (this.speed / 60);
     this.yv = Math.sin(this.dir) * (this.speed / 60);
   }
+
+  static TRAIL = {
+    white: {r: 255, g: 255, b: 255},
+    smallWhite: {r: 255, g: 255, b: 255, radius: 8},
+    
+    blue: {r: 0, g: 128, b: 255},
+    smallBlue: {r: 0, g: 128, b: 255, radius: 8},
+  };
 }

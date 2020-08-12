@@ -7,7 +7,7 @@ export default class Levels {
     this.engine = engine;
     this.list = [
       {
-        enemies: 3,
+        enemies: 4,
         spawnRate: 3,
         enemyHp: 2,
         reward: "whiteGem",

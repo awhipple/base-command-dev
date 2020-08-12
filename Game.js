@@ -16,7 +16,7 @@ import Text from "./engine/gfx/Text.js";
 import ToolTip from "./gameObjects/ui/ToolTip.js";
 import Lightning from "./engine/gfx/effects/Lightning.js";
 import Image from "./engine/gfx/Image.js";
-import Particle from "./engine/gfx/shapes/Particle.js";
+import { whiteCircle, blueCircle } from "./gameObjects/effects/ParticleSprites.js";
 
 export default class Game {
   constructor(options = {}) {
@@ -47,6 +47,14 @@ export default class Game {
       this.engine.images.save(this.generateCircleImage(20, color), color + "-circle");
       this.engine.images.save(this.generateTriangleImage(15, color), color + "-triangle");
       this.engine.images.save(this.generateRapidIcon(color), color + "-rapid-icon");
+    });
+
+    [ 
+      [whiteCircle, "white-part-circle"],
+      [blueCircle, "blue-part-circle"],
+    ].forEach(pSprite => {
+      this.engine.register(pSprite[0]);
+      this.engine.images.save(pSprite[0].img, pSprite[1]);
     });
     
     [
@@ -172,44 +180,6 @@ export default class Game {
           this.inventoryMenu.hideComponents();
           this.invHide = false;
         }
-
-        // for ( var i = 0; i < 1; i++ ) {
-        //   this.engine.register(new Particle(this.engine, {
-        //     start: {
-        //       x: 150, y: 455,
-        //       radius: 7,
-        //       r: 255, g: 255, b: 0,
-        //       alpha: 1,
-        //     }, 
-        //     end: {
-        //       x: 450, y: 455 + Math.random() * 100 - 50,
-        //       radius: 50,
-        //       r: Math.random() * 255, g: 0, b: 255,
-        //       alpha: 0.1,
-        //     },
-        //     lifeSpan: 1,
-        //   }));
-        // }
-
-        for ( var i = 0; i < 4; i++ ) {
-          var g = Math.random()*256;
-          var rad = Math.random()*Math.PI*2;
-          this.engine.register(new Particle(this.engine, {
-            start: {
-              x: 302, y: 602,
-              radius: 5,
-              g, b: 255,
-              alpha: 1,
-            }, 
-            end: {
-              x: 302 + Math.cos(rad)*8, y: 602 + Math.sin(rad)*8,
-              radius: 17,
-              alpha: 0,
-            },
-            lifeSpan: 0.5,
-          }));
-        }
-
       });
     });
   }

@@ -13,9 +13,15 @@ export default class Image {
     this.orientation = orientation;
     this.flip = flip;
     this.orientationMap = orientationMap || { right: { normal: this } };
+    this.lastDrawn = new Date().getTime();
+  }
+
+  drawnWithin(sec) {
+    return (new Date().getTime()) - this.lastDrawn < sec*1000;
   }
   
   draw(ctx, a, b, c, d, e) {
+    this.lastDrawn = new Date().getTime();
     var x = null, y = null,
         w = null, h = null,
         coord = null, 

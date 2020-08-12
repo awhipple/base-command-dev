@@ -39,7 +39,7 @@ export default class Particle extends GameObject {
 
   update(ctx) {
     this.time += 1/60;
-    if ( this.time > this.lifeSpan ) {
+    if ( this.engine && this.time > this.lifeSpan ) {
       this.engine.unregister(this);
     }
     this._setState(this._generateDeltaState(this.time / this.lifeSpan));
@@ -202,4 +202,65 @@ function generateParticleSheet() {
   ctx.globalCompositeOperation = "source-atop";
 
   return sheet;
+}
+
+export class ParticleSprite extends GameObject {
+  z = 1000;
+  constructor(engine, shape, options = {}) {
+    super(engine, shape);
+
+    this.pw = options.pw ?? 50;
+    this.ph = options.ph ?? 50;
+
+    this.qty = options.qty ?? 1;
+    this.nextQty = 0;
+
+    this.generator = options.generator ?? (() => ({
+      start: {
+        x: 25, y: 25,
+        radius: 5,
+        r: 255, g: 255, b: 255,
+        alpha: 1,
+      },
+      end: {
+        x: Math.random()*50, y: Math.random()*50,
+        alpha: 0,
+      },
+      lifespan: 1,
+    }));
+
+    this.particles = [];
+    
+    this.can = document.createElement("canvas");
+    this.can.width = this.pw;
+    this.can.height = this.ph;
+    this.ctx = this.can.getContext("2d");
+    this.img = new Image(this.can);
+  }
+
+  update() {
+    if ( this.img.drawnWithin(1)) {
+      this.nextQty += this.qty;
+      while ( this.nextQty >= 1 ) {
+        this.particles.push(new Particle(null, this.generator()));
+        this.nextQty--;
+      }
+
+      this.particles.forEach(particle => {
+        particle.update();
+      });
+      this.particles = this.particles.filter(particle => particle.time <= particle.lifeSpan);
+
+      this.ctx.clearRect(0, 0, this.pw, this.ph);
+      this.particles.forEach(particle => {
+        particle.draw(this.ctx);
+      });
+
+      Particle.drawQueuedParticles(this.ctx);
+    }
+  }
+
+  draw(ctx) {
+    this.img.draw(ctx, this.rect);
+  }
 }

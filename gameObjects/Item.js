@@ -30,14 +30,14 @@ export default class Item {
       }
     },
     basic: {
-      type: "weapon", value: 750, icon: "white-circle", toolTipName: "Basic",
+      type: "weapon", value: 750, icon: "white-part-circle", toolTipName: "Basic",
       description: "Fires deadly white balls across the screen.",
       craft: {
         basic: "rapid",
       }, 
       projectile: {
-        imageName: "white-circle",
-        scale: 0.5,
+        imageName: "white-part-circle",
+        trail: "white",
       },
     },
     rapid: {
@@ -46,20 +46,22 @@ export default class Item {
       projectile: {
         damage: 0.6,
         speed: 2,
-        imageName: "white-triangle",
+        imageName: "white-part-circle",
         alternate: true,
+        scaleDown: true,
+        trail: "smallWhite",
       }
     },
     homing: {
-      type: "weapon", value: 2000, icon: "blue-circle", toolTipName: "Homing",
+      type: "weapon", value: 2000, icon: "blue-part-circle", toolTipName: "Homing",
       description: "Shots home in on enemies with deadly accuracy.",
       craft: {
         homing: "homingRapid",
       },
       projectile: {
-        imageName: "blue-circle",
+        imageName: "blue-part-circle",
         homing : true,
-        scale: 0.5,
+        trail: "blue",
       }
     },
     homingRapid: {
@@ -68,9 +70,11 @@ export default class Item {
       projectile: {
         damage: 0.6,
         speed: 2,
-        imageName: "blue-triangle",
+        imageName: "blue-part-circle",
         alternate: true,
         homing: true,
+        scaleDown: true,
+        trail: "smallBlue",
       }
     },
     lightning: {
@@ -85,7 +89,6 @@ export default class Item {
         ray: true,
         laserSight: true,
         imageName: "yellow-circle",
-        scale: 0.5,
       }
     },
     zap: {
@@ -100,7 +103,6 @@ export default class Item {
         innerCol: "blue",
         outerCol: "lightBlue",
         imageName: "yellow-circle",
-        scale: 0.5,
       }
     },
 
@@ -109,8 +111,7 @@ export default class Item {
       projectile: {
         speed: 0.5,
         imageName: "white-circle",
-        lifeSpan: 1,
-        scale: 0.2,
+        scaleDown: true,
       }
     },
   }
@@ -145,7 +146,7 @@ export default class Item {
   shoot(x, y, dir) {
     if ( this.projectile.alternate ) {
       this.alt = !this.alt;
-      var dist = this.alt ? 10 : 18;
+      var dist = 13;
       var mod = dir + (this.alt ? -Math.PI/2 : Math.PI/2);
       x += Math.cos(mod) * dist;
       y += Math.sin(mod) * dist; 
