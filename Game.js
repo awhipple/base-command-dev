@@ -65,6 +65,7 @@ export default class Game {
         x1: 20, y1: 20,
         x2: 80, y2: 80,
         innerCol: icon[1], outerCol: icon[2],
+        spawnParticles: false,
       });
 
       var lightIcon = document.createElement("canvas");

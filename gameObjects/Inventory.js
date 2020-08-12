@@ -19,7 +19,7 @@ export default class Inventory {
       for ( var i = 0; i < 6; i++ ) {
         this.add("greenGem");
       }
-      this.equip("primary", this.add("rapid"));
+      this.equip("primary", this.add("lightning"));
       this.sort();
     }
   }
