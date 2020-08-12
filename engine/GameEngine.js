@@ -46,7 +46,7 @@ export default class GameEngine {
           this.firstInteraction = true;
           this.trigger("firstInteraction")
         }
-      }, 0);
+      }, 50);
       this.mouse[MouseButtonNames[event.button] || event.button] = true;
 
       this._sendMouseEvent(event, "onMouseClick");
