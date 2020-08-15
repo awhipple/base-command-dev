@@ -25,6 +25,9 @@ export default class Particle extends GameObject {
         this.transitions.push(options.end);
       }
     }
+    if ( this.transitions.length === 1 ) {
+      this.transitions.push({});
+    }
     this._hydrateTransitions();
     
     this.optimizeColorTransitions = options.optimizeColorTransitions ?? true;
@@ -49,6 +52,7 @@ export default class Particle extends GameObject {
     this.currentTran = 0;
     this.lifeSpan = this.transitions[this.transitions.length-1].time;
 
+    this.z = options.z ?? this.z;
     this.timer = 0;
   }
 
@@ -62,11 +66,16 @@ export default class Particle extends GameObject {
       this.engine.unregister(this);
     }
     var tran = this.transitions[this.currentTran];
+
     this._setState(this._generateDeltaState(((this.timer - tran.time) / tran.duration)));
   }
 
   draw(ctx) {
-    Particle._queueForDraw(this);
+    var { x: px, y: py, w: pw, h: ph } = this.rect;
+    var old = ctx.globalAlpha;
+    ctx.globalAlpha = this.alpha;
+    ctx.drawImage(Particle.partSheets[this.drawTarget.sheet].can, this.drawTarget.x, this.drawTarget.y, 50, 50, px, py, pw, ph);
+    ctx.globalAlpha = old;
   }
 
   get r() {
@@ -108,9 +117,23 @@ export default class Particle extends GameObject {
 
   _generateDeltaState(delta) {
     var newDeltaState = {};
-    var tran = this.transitions[this.currentTran], tranDelt = this.transitionDeltas[this.currentTran];
+    var tran = this.transitions[this.currentTran];
+    var tranDelt = this.transitionDeltas[this.currentTran];
     for ( var key in tranDelt ) {
       newDeltaState[key] = tran[key] + tranDelt[key] * delta;
+    }
+    if ( tran.bezierBeginPointer !== undefined ) {
+      var firstTran = this.transitions[tran.bezierBeginPointer];
+      var secondTran = this.transitions[tran.bezierEndPointer];
+      var bTime = this.timer - firstTran.time;
+      var bRatio = bTime / (secondTran.time - firstTran.time);
+      
+      var nx1 = firstTran.x + bRatio * (secondTran.bx - firstTran.x);
+      var ny1 = firstTran.y + bRatio * (secondTran.by - firstTran.y);
+      var nx2 = secondTran.bx + bRatio * (secondTran.x - secondTran.bx);
+      var ny2 = secondTran.by + bRatio * (secondTran.y - secondTran.by);
+      newDeltaState.x = nx1 + bRatio * (nx2 - nx1);
+      newDeltaState.y = ny1 + bRatio * (ny2 - ny1);
     }
     return newDeltaState;
   }
@@ -126,7 +149,25 @@ export default class Particle extends GameObject {
   _hydrateTransitions() {
     var time = 0;
     var prevTran;
-    this.transitions.forEach(tran => {
+    this.transitions.forEach((tran, i) => {
+      if ( 
+        i > 0 &&
+        (tran.x !== undefined || tran.y !== undefined) &&
+        tran.bx !== undefined && tran.by !== undefined 
+      ) {
+        var current = i - 1;
+        while ( 
+          current > 0 && 
+          (this.transitions[current].x === undefined && this.transitions[current].y === undefined )
+        ) {
+          current--;
+        }
+        for ( var k = current; k < i; k++ ) {
+          this.transitions[k].bezierBeginPointer = current;
+          this.transitions[k].bezierEndPointer = i;
+        }
+      }
+
       tran.duration = tran.duration ?? 1;
       
       tran.time = time;
@@ -162,6 +203,18 @@ export default class Particle extends GameObject {
     return {nextVal: this.transitions[i][key], nextTime: this.transitions[i].time};
   }
 
+  static prepParticlesForDraw(particles) {
+    this._resetParticleSheet();
+    particles.forEach(part => this._queueForDraw(part));
+    this._drawParticleSheets();
+  }
+
+  static _resetParticleSheet() {
+    this.drawQueue = [];
+    this.particleColorMap = {};
+    Particle.tSheet = undefined;
+  }
+
   static _queueForDraw(particle) {
     Particle.drawQueue.push(particle);
     if ( Particle.particleColorMap[particle.col] === undefined) {
@@ -170,7 +223,7 @@ export default class Particle extends GameObject {
     particle.drawTarget = Particle.particleColorMap[particle.col];
   }
 
-  static drawQueuedParticles(ctx) {
+  static _drawParticleSheets() {
     Particle.drawQueue.forEach(particle => {
       var draw = particle.drawTarget;
       if ( !Particle.particleColorMap[particle.col].drawn ) {
@@ -185,14 +238,6 @@ export default class Particle extends GameObject {
       }
     });
     // console.log("Drawing " + Object.keys(Particle.particleColorMap).length + "/" + Particle.drawQueue.length + " particles on " + Particle.partSheets.length + " sheets.");
-    this.drawQueue.forEach(particle => {
-      var { x: px, y: py, w: pw, h: ph } = particle.rect;
-      ctx.globalAlpha = particle.alpha;
-      ctx.drawImage(Particle.partSheets[particle.drawTarget.sheet].can, particle.drawTarget.x, particle.drawTarget.y, 50, 50, px, py, pw, ph);
-    });
-    this.drawQueue = [];
-    this.particleColorMap = {};
-    Particle._resetParticleSheet();
   }
 
   static _getNextSheetParticle() {
@@ -213,10 +258,6 @@ export default class Particle extends GameObject {
     }
 
     return { sheet: Particle.tSheet, x: Particle.tx, y: Particle.ty, drawn: false };
-  }
-
-  static _resetParticleSheet() {
-    Particle.tSheet = undefined;
   }
 }
 

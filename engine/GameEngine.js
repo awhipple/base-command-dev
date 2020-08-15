@@ -6,6 +6,7 @@ import Button from './objects/Button.js';
 import FullscreenSplash from './objects/FullScreenSplash.js';
 import AudioLibrary from './AudioLibrary.js';
 import FlashText from './gfx/FlashText.js';
+import Particle from './gfx/shapes/Particle.js';
 
 export default class GameEngine {
   images = new ImageLibrary();
@@ -23,7 +24,6 @@ export default class GameEngine {
     this.mobile = (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
 
     this.window = new GameWindow(this, options.canvasID ?? "gameCanvas", this.gameObjects.all, options);
-    this.images.preload("fullscreen");
 
     this.dev = window.location.href.indexOf("localhost") !== -1;
 
@@ -110,12 +110,18 @@ export default class GameEngine {
       this.gameObjects.all.push(object);
 
       // Store in its own collection if requested
-      if ( name ) {
+      var addNamedObject = name => {
         this.gameObjects[name] = this.gameObjects[name] || {};
         do {
           object._hash = Math.floor(Math.random()*1000000000);
         } while (this.gameObjects[name][object._hash]);
         this.gameObjects[name][object._hash] = object;
+      }
+      if ( name ) {
+        addNamedObject(name);
+      }
+      if ( name !== "particle" && object instanceof Particle ) {
+        addNamedObject("particle");
       }
     }
   }
