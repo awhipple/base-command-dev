@@ -1,7 +1,6 @@
 import { ParticleSprite } from "../../engine/gfx/shapes/Particle.js";
 
 var whiteCircle = new ParticleSprite(
-  null,
   {x: 25, y: 25, radius: 25},
   { 
     pw: 50, px: 50,
@@ -28,7 +27,6 @@ var whiteCircle = new ParticleSprite(
   whiteCircle.hide = true;
   
 var blueCircle = new ParticleSprite(
-  null,
   {x: 25, y: 25, radius: 25},
   { 
     pw: 50, px: 50,

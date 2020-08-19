@@ -317,8 +317,8 @@ function generateParticleSheet() {
 
 export class ParticleSprite extends GameObject {
   z = 1000;
-  constructor(engine, shape, options = {}) {
-    super(engine, shape);
+  constructor(shape, options = {}) {
+    super(null, shape);
 
     this.pw = options.pw ?? 50;
     this.ph = options.ph ?? 50;
@@ -353,21 +353,20 @@ export class ParticleSprite extends GameObject {
     if ( this.img.drawnWithin(1)) {
       this.nextQty += this.qty;
       while ( this.nextQty >= 1 ) {
-        this.particles.push(new Particle(null, this.generator()));
+        this.particles.push(new Particle(this.generator()));
         this.nextQty--;
       }
 
       this.particles.forEach(particle => {
         particle.update();
       });
-      this.particles = this.particles.filter(particle => particle.time <= particle.lifeSpan);
+      this.particles = this.particles.filter(particle => particle.timer <= particle.lifeSpan);
 
+      Particle.prepParticlesForDraw(this.particles);
       this.ctx.clearRect(0, 0, this.pw, this.ph);
       this.particles.forEach(particle => {
         particle.draw(this.ctx);
       });
-
-      Particle.drawQueuedParticles(this.ctx);
     }
   }
 

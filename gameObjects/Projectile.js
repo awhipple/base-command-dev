@@ -107,7 +107,6 @@ export default class Projectile extends GameObject {
       if ( this.nextTrail <= 0 ) {
         this.nextTrail += 1/30;
         this.engine.register(new Particle(
-          this.engine,
           {
             start: {
               x: this.x, y: this.y,

@@ -96,7 +96,6 @@ export default class Enemy extends GameObject {
       if ( this.nextPart === 0 ) {
         this.nextPart = 4;
         this.engine.register(new Particle(
-          this.engine,
           {
             start: {
               x: this.x, y: this.y,

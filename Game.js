@@ -17,6 +17,7 @@ import ToolTip from "./gameObjects/ui/ToolTip.js";
 import Lightning from "./engine/gfx/effects/Lightning.js";
 import Image from "./engine/gfx/Image.js";
 import { whiteCircle, blueCircle } from "./gameObjects/effects/ParticleSprites.js";
+import Particle from "./engine/gfx/shapes/Particle.js";
 
 export default class Game {
   constructor(options = {}) {

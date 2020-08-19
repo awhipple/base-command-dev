@@ -8,7 +8,7 @@ export function explosion(x, y, options = {}) {
     var rad = Math.random() * Math.PI * 2;
     var dist = Math.random() * 75 * size;
     var g = Math.random() * 150 + 20;
-    particles.push(new Particle(null, {
+    particles.push(new Particle({
       start: {
         x, y,
         radius:  3 * size,
@@ -21,7 +21,7 @@ export function explosion(x, y, options = {}) {
       },
       lifeSpan: 1,
     }));
-    particles.push(new Particle(null, {
+    particles.push(new Particle({
       start: {
         x, y,
         radius: Math.random() * 40 + 10,
@@ -34,7 +34,7 @@ export function explosion(x, y, options = {}) {
       },
       lifeSpan: options.smokeLife ?? 1,
     }));
-    particles.push(new Particle(null, {
+    particles.push(new Particle({
       start: {
         x, y,
         radius: (Math.random() * 40 + 10) * size,
