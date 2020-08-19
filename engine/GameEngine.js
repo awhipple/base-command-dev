@@ -22,6 +22,7 @@ export default class GameEngine {
 
   constructor(options = {}) {
     this.mobile = (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+    this.mobileStretch = options.mobileStretch ?? true;
 
     this.window = new GameWindow(this, options.canvasID ?? "gameCanvas", this.gameObjects.all, options);
 
@@ -303,6 +304,13 @@ export default class GameEngine {
 
   setProd() {
     this.dev = false;
+  }
+
+  once(callback) {
+    if ( !this.onceCompleted ) {
+      callback();
+      this.onceCompleted = true;
+    }
   }
 
   // Used for console logs to prevent them from spamming
