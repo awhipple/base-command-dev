@@ -1,4 +1,4 @@
-import GameEngine from "./engine/GameEngine.js";
+import GameEngine from "./node_modules/avocado2d/GameEngine.js";
 import Base from "./gameObjects/Base.js";
 import Spawner from "./gameObjects/Spawner.js";
 import GameUI from "./gameObjects/ui/GameUI.js";
@@ -17,7 +17,6 @@ import ToolTip from "./gameObjects/ui/ToolTip.js";
 import Lightning from "./engine/gfx/effects/Lightning.js";
 import Image from "./engine/gfx/Image.js";
 import { whiteCircle, blueCircle } from "./gameObjects/effects/ParticleSprites.js";
-import Particle from "./engine/gfx/shapes/Particle.js";
 
 export default class Game {
   constructor(options = {}) {
