@@ -1,5 +1,5 @@
 import Projectile from "./Projectile.js";
-import Image from "../engine/gfx/Image.js";
+import Image from "../node_modules/avocado2d/gfx/Image.js";
 
 export default class Item {
   static borderColors = {

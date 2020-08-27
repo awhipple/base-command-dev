@@ -1,5 +1,5 @@
 import Enemy from "./Enemy.js";
-import Circle from "../engine/gfx/shapes/Circle.js";
+import Circle from "../node_modules/avocado2d/gfx/shapes/Circle.js";
 import Boss from "./Boss.js";
 
 export default class Spawner {

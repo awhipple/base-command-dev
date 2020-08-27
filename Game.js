@@ -1,21 +1,21 @@
-import GameEngine from "./node_modules/avocado2d/GameEngine.js";
+import GameEngine from "./node_modules/avocado2d/engine/GameEngine.js";
 import Base from "./gameObjects/Base.js";
 import Spawner from "./gameObjects/Spawner.js";
 import GameUI from "./gameObjects/ui/GameUI.js";
 import TitleScreen from "./gameObjects/ui/TitleScreen.js";
 import stats from "./gameObjects/Stats.js";
 import Levels from "./gameObjects/Levels.js";
-import { constrain } from "./engine/GameMath.js";
+import { constrain } from "./node_modules/avocado2d/engine/GameMath.js";
 import InventoryMenu from "./gameObjects/ui/InventoryMenu.js";
 import Inventory from "./gameObjects/Inventory.js";
 import Cursor from "./gameObjects/Cursor.js";
 import Reward from "./gameObjects/Reward.js";
-import Circle from "./engine/gfx/shapes/Circle.js";
+import Circle from "./node_modules/avocado2d/gfx/shapes/Circle.js";
 import Item from "./gameObjects/Item.js";
-import Text from "./engine/gfx/Text.js";
+import Text from "./node_modules/avocado2d/gfx/Text.js";
 import ToolTip from "./gameObjects/ui/ToolTip.js";
-import Lightning from "./engine/gfx/effects/Lightning.js";
-import Image from "./engine/gfx/Image.js";
+import Lightning from "./node_modules/avocado2d/gfx/effects/Lightning.js";
+import Image from "./node_modules/avocado2d/gfx/Image.js";
 import { whiteCircle, blueCircle } from "./gameObjects/effects/ParticleSprites.js";
 
 export default class Game {
@@ -29,7 +29,7 @@ export default class Game {
 
     // Debug
     window.engine = this.engine;
-    // this.engine.setProd();
+    this.engine.setProd();
   }
 
   start() {

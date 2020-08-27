@@ -1,6 +1,6 @@
-import GameObject from "../engine/objects/GameObject.js";
+import GameObject from "../node_modules/avocado2d/objects/GameObject.js";
 import Item from "./Item.js";
-import { BoundingRect } from "../engine/GameMath.js";
+import { BoundingRect } from "../node_modules/avocado2d/engine/GameMath.js";
 
 export default class Reward extends GameObject {
   z = 110;

@@ -1,4 +1,4 @@
-import { ParticleSprite } from "../../engine/gfx/shapes/Particle.js";
+import { ParticleSprite } from "../../node_modules/avocado2d/gfx/shapes/Particle.js";
 
 var whiteCircle = new ParticleSprite(
   {x: 25, y: 25, radius: 25},

@@ -1,7 +1,7 @@
-import GameObject from "../../engine/objects/GameObject.js";
+import GameObject from "../../node_modules/avocado2d/objects/GameObject.js";
 import EffectRect from "../effects/EffectRect.js";
-import Text from "../../engine/gfx/Text.js";
-import { constrain } from "../../engine/GameMath.js";
+import Text from "../../node_modules/avocado2d/gfx/Text.js";
+import { constrain } from "../../node_modules/avocado2d/engine/GameMath.js";
 
 export default class ToolTip extends GameObject {
   z = 200;

@@ -1,4 +1,4 @@
-import Particle from "../../engine/gfx/shapes/Particle.js";
+import Particle from "../../node_modules/avocado2d/gfx/shapes/Particle.js";
 
 export function explosion(x, y, options = {}) {
   var particles = [];

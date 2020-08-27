@@ -1,10 +1,10 @@
-import GameObject from "../engine/objects/GameObject.js";
-import { getDirectionFrom } from "../engine/GameMath.js";
-import Text from "../engine/gfx/Text.js";
+import GameObject from "../node_modules/avocado2d/objects/GameObject.js";
+import { getDirectionFrom } from "../node_modules/avocado2d/engine/GameMath.js";
+import Text from "../node_modules/avocado2d/gfx/Text.js";
 import Cash from "./Cash.js";
-import Lightning from "../engine/gfx/effects/Lightning.js";
+import Lightning from "../node_modules/avocado2d/gfx/effects/Lightning.js";
 import DamageText from "./effects/DamageText.js";
-import Particle from "../engine/gfx/shapes/Particle.js";
+import Particle from "../node_modules/avocado2d/gfx/shapes/Particle.js";
 
 export default class Enemy extends GameObject {
   constructor(engine, x, y, hp, type = "white", initialXv = 0) {

@@ -1,4 +1,4 @@
-import GameObject from "../engine/objects/GameObject.js";
+import GameObject from "../node_modules/avocado2d/objects/GameObject.js";
 import Item from "./Item.js";
 
 export default class Cursor extends GameObject {

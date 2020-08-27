@@ -1,5 +1,5 @@
-import GameObject from "../engine/objects/GameObject.js";
-import { slideDirectionTowards, getDirectionFrom } from "../engine/GameMath.js";
+import GameObject from "../node_modules/avocado2d/objects/GameObject.js";
+import { slideDirectionTowards, getDirectionFrom } from "../node_modules/avocado2d/engine/GameMath.js";
 import FadeLine from "./effects/FadeLine.js";
 
 export default class Cash extends GameObject {

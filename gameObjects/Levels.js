@@ -1,5 +1,5 @@
 import Enemy from "./Enemy.js";
-import Image from "../engine/gfx/Image.js";
+import Image from "../node_modules/avocado2d/gfx/Image.js";
 import Item from "./Item.js";
 
 export default class Levels {

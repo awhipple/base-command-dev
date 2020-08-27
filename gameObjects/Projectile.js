@@ -1,8 +1,8 @@
-import GameObject from "../engine/objects/GameObject.js"
-import { getDirectionFrom, slideDirectionTowards } from "../engine/GameMath.js";
+import GameObject from "../node_modules/avocado2d/objects/GameObject.js"
+import { getDirectionFrom, slideDirectionTowards } from "../node_modules/avocado2d/engine/GameMath.js";
 import DamageText from "./effects/DamageText.js";
-import Lightning from "../engine/gfx/effects/Lightning.js";
-import Particle from "../engine/gfx/shapes/Particle.js";
+import Lightning from "../node_modules/avocado2d/gfx/effects/Lightning.js";
+import Particle from "../node_modules/avocado2d/gfx/shapes/Particle.js";
 
 export default class Projectile extends GameObject {
   z = 1;

@@ -1,4 +1,4 @@
-import Text from "../../engine/gfx/Text.js";
+import Text from "../../node_modules/avocado2d/gfx/Text.js";
 
 export default class GameUI {
   z = 5;

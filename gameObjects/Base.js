@@ -1,8 +1,8 @@
-import GameObject from "../engine/objects/GameObject.js";
-import Sprite from "../engine/gfx/Sprite.js";
-import { getDirectionFrom, Coord } from "../engine/GameMath.js";
+import GameObject from "../node_modules/avocado2d/objects/GameObject.js";
+import Sprite from "../node_modules/avocado2d/gfx/Sprite.js";
+import { getDirectionFrom, Coord } from "../node_modules/avocado2d/engine/GameMath.js";
 import Item from "./Item.js";
-import Circle from "../engine/gfx/shapes/Circle.js";
+import Circle from "../node_modules/avocado2d/gfx/shapes/Circle.js";
 
 export default class Base extends GameObject {
   static ZAP_SOUNDS = ["lightning", "zap"];

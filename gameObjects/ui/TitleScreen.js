@@ -1,8 +1,8 @@
-import UIWindow from "../../engine/gfx/ui/window/index.js";
+import UIWindow from "../../node_modules/avocado2d/gfx/ui/window/index.js";
 import Upgrade from "./Upgrade.js";
-import { UIComponent } from "../../engine/gfx/ui/window/UIComponent.js";
-import { BoundingRect } from "../../engine/GameMath.js";
-import Text from "../../engine/gfx/Text.js";
+import { UIComponent } from "../../node_modules/avocado2d/gfx/ui/window/UIComponent.js";
+import { BoundingRect } from "../../node_modules/avocado2d/engine/GameMath.js";
+import Text from "../../node_modules/avocado2d/gfx/Text.js";
 import Item from "../Item.js";
 
 function upgradeStat(stat, globals) {

@@ -1,4 +1,4 @@
-import { BoundingRect } from "../../engine/GameMath.js";
+import { BoundingRect } from "../../node_modules/avocado2d/engine/GameMath.js";
 
 export default class EffectRect extends BoundingRect {
   z = 200;

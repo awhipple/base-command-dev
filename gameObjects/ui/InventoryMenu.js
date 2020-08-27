@@ -1,9 +1,9 @@
-import UIWindow from "../../engine/gfx/ui/window/index.js";
-import Text from "../../engine/gfx/Text.js";
-import { BoundingRect } from "../../engine/GameMath.js";
-import { UIComponent } from "../../engine/gfx/ui/window/UIComponent.js";
+import UIWindow from "../../node_modules/avocado2d/gfx/ui/window/index.js";
+import Text from "../../node_modules/avocado2d/gfx/Text.js";
+import { BoundingRect } from "../../node_modules/avocado2d/engine/GameMath.js";
+import { UIComponent } from "../../node_modules/avocado2d/gfx/ui/window/UIComponent.js";
 import Item from "../Item.js";
-import Sprite from "../../engine/gfx/Sprite.js";
+import Sprite from "../../node_modules/avocado2d/gfx/Sprite.js";
 import EffectRect from "../effects/EffectRect.js";
 
 export default class InventoryMenu extends UIWindow {

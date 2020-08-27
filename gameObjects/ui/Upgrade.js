@@ -1,4 +1,4 @@
-import Button from "../../engine/gfx/ui/window/components/Button.js";
+import Button from "../../node_modules/avocado2d/gfx/ui/window/components/Button.js";
 
 export default class Upgrade extends Button {
   initialize() {
